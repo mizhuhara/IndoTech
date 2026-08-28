@@ -1,165 +1,228 @@
 @extends('layouts.app')
 
-@section('title', 'IndoTech — Platform Magang & Beasiswa')
+@section('title', 'IndoTech — Connect With Indonesia\'s IT Ecosystem')
 
 @section('content')
     {{-- HERO --}}
-    <section id="beranda" class="relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600"></div>
-        <div class="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-3xl"></div>
-        <div class="absolute -bottom-32 right-0 h-80 w-80 rounded-full bg-cyan-300/20 blur-3xl"></div>
-
-        <div class="relative mx-auto max-w-6xl px-4 py-20 text-center text-white md:py-28">
-            <span class="inline-block rounded-full bg-white/15 px-4 py-1.5 text-xs font-semibold tracking-wide backdrop-blur">
-                Platform Magang, Beasiswa & Volunteer Indonesia
-            </span>
-            <h1 class="mx-auto mt-6 max-w-3xl text-4xl font-extrabold leading-tight md:text-6xl">
-                Temukan Program Magang & Beasiswa Impianmu
-            </h1>
-            <p class="mx-auto mt-5 max-w-2xl text-slate-100">
-                Ribuan peluang dari perusahaan, kampus, dan organisasi terpercaya tersedia untuk membantu kamu mengembangkan karier.
+    <section class="it-hero">
+        <div class="it-hero-content">
+            <h1>Connect With Indonesia's IT Ecosystem</h1>
+            <p class="it-hero-sub">
+                Your premier platform for discovering top education, leading tech companies,
+                vibrant communities, and career opportunities in Indonesia's digital landscape.
             </p>
 
-            {{-- Search --}}
-            <form class="mx-auto mt-10 flex max-w-2xl flex-col gap-3 rounded-2xl bg-white p-2 text-left shadow-xl sm:flex-row sm:items-center">
-                <input type="text" placeholder="Cari program, perusahaan, atau kata kunci..."
-                    class="flex-1 rounded-xl border-0 bg-transparent px-4 py-3 text-sm text-slate-900 outline-none placeholder:text-slate-400">
-                <select class="rounded-xl border-0 bg-slate-100 px-4 py-3 text-sm font-medium text-slate-700 outline-none">
-                    <option>Semua Kategori</option>
-                    <option>Teknologi</option>
-                    <option>Bisnis</option>
-                    <option>Desain</option>
-                    <option>Pendidikan</option>
-                </select>
-                <button type="submit" class="rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white hover:bg-emerald-700">
-                    Cari
-                </button>
+            {{-- Search Bar --}}
+            <form class="it-hero-search" action="/search" method="GET">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="7"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" name="q" placeholder="Search for campuses, schools, companies, jobs, internships, events, courses, or opportunities...">
+                <button type="submit">Search</button>
             </form>
 
-            <div class="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4">
-                <div>
-                    <p class="text-3xl font-extrabold">2.500+</p>
-                    <p class="mt-1 text-sm text-slate-200">Program Tersedia</p>
-                </div>
-                <div>
-                    <p class="text-3xl font-extrabold">1.200+</p>
-                    <p class="mt-1 text-sm text-slate-200">Perusahaan Partner</p>
-                </div>
-                <div>
-                    <p class="text-3xl font-extrabold">89.000+</p>
-                    <p class="mt-1 text-sm text-slate-200">Mahasiswa Terdaftar</p>
-                </div>
-                <div>
-                    <p class="text-3xl font-extrabold">4.9/5</p>
-                    <p class="mt-1 text-sm text-slate-200">Rating Pengguna</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    {{-- KATEGORI --}}
-    <section id="kategori" class="mx-auto max-w-6xl px-4 py-16">
-        <div class="text-center">
-            <h2 class="text-3xl font-extrabold text-slate-900">Jelajahi Berdasarkan Kategori</h2>
-            <p class="mt-3 text-slate-500">Pilih bidang yang paling sesuai dengan minat dan keahlianmu</p>
-        </div>
-
-        <div class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
-            @php
-                $kategori = [
-                    ['💻', 'Teknologi', '1.200 Program'],
-                    ['💼', 'Bisnis & Finance', '850 Program'],
-                    ['🎨', 'Desain & Kreatif', '640 Program'],
-                    ['📚', 'Pendidikan', '520 Program'],
-                    ['⚕️', 'Kesehatan', '310 Program'],
-                    ['🔬', 'Sains & Riset', '280 Program'],
-                    ['🎭', 'Seni & Media', '240 Program'],
-                    ['⚖️', 'Hukum & Politik', '190 Program'],
-                ];
-            @endphp
-            @foreach ($kategori as [$ikon, $nama, $jumlah])
-                <a href="#" class="group rounded-2xl bg-white p-6 text-center shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-1 hover:shadow-lg">
-                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-3xl transition group-hover:bg-emerald-600/10">
-                        {{ $ikon }}
-                    </div>
-                    <h3 class="mt-4 font-bold text-slate-900">{{ $nama }}</h3>
-                    <p class="mt-1 text-sm text-slate-500">{{ $jumlah }}</p>
+            {{-- Category Icons --}}
+            <div class="it-categories">
+                <a href="/campus" class="it-cat-item">
+                    <span class="it-cat-icon">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"/>
+                        </svg>
+                    </span>
+                    Campus
                 </a>
-            @endforeach
+                <a href="/vocational" class="it-cat-item">
+                    <span class="it-cat-icon">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25"/>
+                        </svg>
+                    </span>
+                    Vocational School
+                </a>
+                <a href="/company" class="it-cat-item">
+                    <span class="it-cat-icon">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/>
+                        </svg>
+                    </span>
+                    Company
+                </a>
+                <a href="/jobs" class="it-cat-item">
+                    <span class="it-cat-icon">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
+                        </svg>
+                    </span>
+                    Jobs
+                </a>
+                <a href="/internship" class="it-cat-item">
+                    <span class="it-cat-icon">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/>
+                        </svg>
+                    </span>
+                    Internship
+                </a>
+                <a href="/scholarship" class="it-cat-item">
+                    <span class="it-cat-icon">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                    </span>
+                    Scholarship
+                </a>
+                <a href="/events" class="it-cat-item">
+                    <span class="it-cat-icon">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
+                        </svg>
+                    </span>
+                    Events
+                </a>
+                <a href="/knowledge-hub" class="it-cat-item">
+                    <span class="it-cat-icon">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/>
+                        </svg>
+                    </span>
+                    Knowledge
+                </a>
+            </div>
         </div>
     </section>
 
-    {{-- PROGRAM UNGGULAN --}}
-    <section id="program" class="bg-white py-16">
-        <div class="mx-auto max-w-6xl px-4">
-            <div class="flex flex-wrap items-end justify-between gap-4">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-slate-900">Program Populer Saat Ini</h2>
-                    <p class="mt-3 text-slate-500">Peluang terbaik yang sedang dibuka, jangan sampai terlewat</p>
+    {{-- FEATURED OPPORTUNITIES --}}
+    <section class="it-featured">
+        <div class="it-featured-header">
+            <div>
+                <h2>Featured Opportunities</h2>
+                <p>Discover curated opportunities to advance your tech career.</p>
+            </div>
+            <a href="/opportunities">View All &rarr;</a>
+        </div>
+
+        <div class="it-cards-grid">
+            {{-- Card 1: Jobs --}}
+            <div class="it-card">
+                <div class="it-card-top">
+                    <div class="it-card-logo" style="background:#16a34a;">GT</div>
+                    <span class="it-card-tag jobs">Jobs</span>
                 </div>
-                <a href="#" class="font-semibold text-emerald-600 hover:text-emerald-700">Lihat Semua &rarr;</a>
+                <h3 class="it-card-title">Senior Frontend Developer</h3>
+                <p class="it-card-company">GoTech Indonesia</p>
+                <div class="it-card-details">
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
+                        </svg>
+                        Jakarta, Indonesia (Hybrid)
+                    </div>
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                        Full-Time
+                    </div>
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
+                        </svg>
+                        Closes: Oct 30, 2024
+                    </div>
+                </div>
+                <div class="it-card-bottom">
+                    <span class="it-status"><span class="it-status-dot"></span> Open</span>
+                    <a href="#" class="it-apply-btn">Apply Now</a>
+                </div>
             </div>
 
-            <div class="mt-10 grid gap-6 md:grid-cols-3">
-                @php
-                    $program = [
-                        [
-                            'PT Aplikasi Nusantara', 'Magang Software Engineer',
-                            'Jakarta (Hybrid)', '3 bulan', 'Teknologi', 'Dibuka',
-                            ['React', 'Laravel', 'SQL'],
-                        ],
-                        [
-                            'Universitas Indonesia', 'Beasiswa S1/ S2 Penuh',
-                            'Depok, Jawa Barat', 'Fleksibel', 'Pendidikan', 'Tutup 7 hari lagi',
-                            ['S1', 'S2', 'GPA 3.5+'],
-                        ],
-                        [
-                            'BRI Ventures', 'Young Talent Program',
-                            'Jakarta (Onsite)', '3 bulan', 'Bisnis', 'Dibuka',
-                            ['Analisis', 'Finance', 'Excel'],
-                        ],
-                    ];
-                @endphp
-                @foreach ($program as [$penyedia, $judul, $lokasi, $durasi, $kategoriProgram, $status, $tag])
-                    <article class="overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-                        <div class="relative flex h-36 items-center justify-center bg-gradient-to-br from-emerald-500 to-teal-600 text-5xl font-extrabold text-white">
-                            {{ strtoupper(substr($penyedia, 0, 1)) }}
-                            <span class="absolute right-3 top-3 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur">{{ $status }}</span>
-                        </div>
-                        <div class="p-5">
-                            <p class="text-sm font-semibold text-emerald-600">{{ $penyedia }}</p>
-                            <h3 class="mt-1 text-lg font-bold text-slate-900">{{ $judul }}</h3>
-                            <div class="mt-3 flex flex-wrap gap-2 text-xs">
-                                @foreach ($tag as $t)
-                                    <span class="rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-600">{{ $t }}</span>
-                                @endforeach
-                            </div>
-                            <div class="mt-4 flex items-center justify-between border-t border-dashed border-slate-200 pt-4 text-sm text-slate-500">
-                                <span>📍 {{ $lokasi }}</span>
-                                <span>⏱ {{ $durasi }}</span>
-                            </div>
-                            <button class="mt-4 w-full rounded-xl bg-slate-900 py-2.5 text-sm font-bold text-white hover:bg-emerald-600 transition">
-                                Daftar Sekarang
-                            </button>
-                        </div>
-                    </article>
-                @endforeach
+            {{-- Card 2: Internship --}}
+            <div class="it-card">
+                <div class="it-card-top">
+                    <div class="it-card-logo" style="background:#2563eb;">DF</div>
+                    <span class="it-card-tag internship">Internship</span>
+                </div>
+                <h3 class="it-card-title">Data Science Internship</h3>
+                <p class="it-card-company">DataFlow Analytics</p>
+                <div class="it-card-details">
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
+                        </svg>
+                        Bandung, Indonesia (Remote)
+                    </div>
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                        3 Months
+                    </div>
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
+                        </svg>
+                        Closes: Nov 15, 2024
+                    </div>
+                </div>
+                <div class="it-card-bottom">
+                    <span class="it-status"><span class="it-status-dot"></span> Open</span>
+                    <a href="#" class="it-apply-btn">Apply Now</a>
+                </div>
+            </div>
+
+            {{-- Card 3: Scholarship --}}
+            <div class="it-card">
+                <div class="it-card-top">
+                    <div class="it-card-logo" style="background:#7c3aed;">MC</div>
+                    <span class="it-card-tag scholarship">Scholarship</span>
+                </div>
+                <h3 class="it-card-title">Future Tech Leaders Scholarship</h3>
+                <p class="it-card-company">Ministry of Communication and IT</p>
+                <div class="it-card-details">
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
+                        </svg>
+                        National (Indonesia)
+                    </div>
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347"/>
+                        </svg>
+                        Bachelor's Degree
+                    </div>
+                    <div class="it-card-detail">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
+                        </svg>
+                        Closes: Dec 01, 2024
+                    </div>
+                </div>
+                <div class="it-card-bottom">
+                    <span class="it-status"><span class="it-status-dot"></span> Open</span>
+                    <a href="#" class="it-apply-btn">Apply Now</a>
+                </div>
             </div>
         </div>
     </section>
 
     {{-- CTA --}}
-    <section class="mx-auto max-w-6xl px-4 py-16">
-        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 to-teal-600 px-8 py-14 text-center text-white md:px-16">
-            <div class="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-2xl"></div>
-            <div class="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-cyan-300/20 blur-2xl"></div>
-            <h2 class="relative text-3xl font-extrabold md:text-4xl">Siap Memulai Karier Impianmu?</h2>
-            <p class="relative mx-auto mt-4 max-w-xl text-emerald-50">
-                Daftar gratis sekarang dan mulai melamar program pertama kamu hari ini.
-            </p>
-            <a href="#" class="relative mt-8 inline-block rounded-xl bg-white px-8 py-3.5 font-bold text-emerald-700 shadow-lg hover:bg-slate-50">
-                Buat Akun Gratis
-            </a>
+    <div class="it-cta-wrap">
+        <div class="it-cta">
+            <div class="it-cta-text">
+                <h2>Build Your Future in Technology</h2>
+                <p>Join Indonesia's rapidly growing IT ecosystem.
+                   Connect with peers, find mentors, and discover opportunities
+                   that match your skills.</p>
+            </div>
+            <div class="it-cta-btns">
+                <a href="/register" class="it-cta-btn-primary">Create Your Profile</a>
+                <a href="/opportunities" class="it-cta-btn-secondary">Explore Opportunities</a>
+            </div>
         </div>
-    </section>
+    </div>
 @endsection
