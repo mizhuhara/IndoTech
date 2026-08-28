@@ -207,8 +207,8 @@
         }
         .it-f-tagline {
             font-size: 13.5px;
-            font-weight: 600;
-            color: #2563eb;
+            font-weight: 500;
+            color: #475569;
             margin-top: 5px;
             line-height: 1.45;
         }
@@ -228,7 +228,7 @@
         .it-si {
             width: 34px;
             height: 34px;
-            border-radius: 50%;
+            border-radius: 8px;
             border: 1.5px solid #cbd5e1;
             display: flex;
             align-items: center;
@@ -306,21 +306,21 @@
         .it-hero::before {
             content: '';
             position: absolute;
-            top: -100px;
-            left: -100px;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
+            top: -120px;
+            left: -120px;
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%);
             border-radius: 50%;
         }
         .it-hero::after {
             content: '';
             position: absolute;
-            bottom: -60px;
-            right: -60px;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(147,197,253,0.12) 0%, transparent 70%);
+            bottom: -80px;
+            right: -80px;
+            width: 380px;
+            height: 380px;
+            background: radial-gradient(circle, rgba(147,197,253,0.08) 0%, transparent 70%);
             border-radius: 50%;
         }
         .it-hero-content {
@@ -554,16 +554,19 @@
             justify-content: space-between;
         }
         .it-status {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-            font-size: 12.5px;
+            font-size: 12px;
             font-weight: 600;
-            color: #16a34a;
+            color: #15803d;
+            background: #dcfce7;
+            padding: 3px 10px;
+            border-radius: 999px;
         }
         .it-status-dot {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: #16a34a;
         }
