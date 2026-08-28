@@ -20,14 +20,18 @@ composer install
 npm install
 cp .env.example .env
 php artisan key:generate
-touch database/database.sqlite
 php artisan migrate --seed
 npm run dev
 ```
 
+Setup database MySQL terlebih dahulu:
+```bash
+mysql -u root -e "CREATE DATABASE IndoTech;"
+```
+
 Lalu buka `http://localhost:8000`.
 
-> `.env` dan `database.sqlite` bersifat lokal, jangan pernah di-commit atau dibagikan.
+> `.env` bersifat lokal, jangan pernah di-commit atau dibagikan. Pastikan MySQL running sebelum `migrate`.
 
 ## Alur Kerja Tim
 
