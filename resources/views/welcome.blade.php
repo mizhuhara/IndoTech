@@ -4,7 +4,7 @@
 
 @section('content')
     {{-- HERO --}}
-    <section class="it-hero">
+    <section class="it-hero bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white py-20 flex items-center justify-center"
         <div class="it-hero-content">
             <h1>Connect With Indonesia's IT Ecosystem</h1>
             <p class="it-hero-sub">
@@ -13,7 +13,7 @@
             </p>
 
             {{-- Search Bar --}}
-            <form class="it-hero-search" action="/search" method="GET">
+            <form class="it-hero-search flex items-center space-x-2 bg-white rounded-md p-2 w-full max-w-xl mx-auto" action="/search" method="GET">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="7"/>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -23,8 +23,8 @@
             </form>
 
             {{-- Category Icons --}}
-            <div class="it-categories">
-                <a href="/campus" class="it-cat-item">
+            <div class="it-categories flex flex-wrap justify-center gap-4 mt-8">
+                <a href="/campus" class="it-cat-item flex flex-col items-center text-white hover:scale-105 transition-transform">
                     <span class="it-cat-icon">
                         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"/>
@@ -102,9 +102,9 @@
             <a href="/opportunities">View All &rarr;</a>
         </div>
 
-        <div class="it-cards-grid">
+        <div class="it-cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {{-- Card 1: Jobs --}}
-            <div class="it-card">
+            <div class="it-card bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow p-6">
                 <div class="it-card-top">
                     <div class="it-card-logo" style="background:#16a34a;">GT</div>
                     <span class="it-card-tag jobs">Jobs</span>
@@ -139,7 +139,7 @@
             </div>
 
             {{-- Card 2: Internship --}}
-            <div class="it-card">
+            <div class="it-card bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow p-6">
                 <div class="it-card-top">
                     <div class="it-card-logo" style="background:#2563eb;">DF</div>
                     <span class="it-card-tag internship">Internship</span>
@@ -174,7 +174,7 @@
             </div>
 
             {{-- Card 3: Scholarship --}}
-            <div class="it-card">
+            <div class="it-card bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow p-6">
                 <div class="it-card-top">
                     <div class="it-card-logo" style="background:#7c3aed;">MC</div>
                     <span class="it-card-tag scholarship">Scholarship</span>
@@ -211,17 +211,17 @@
     </section>
 
     {{-- CTA --}}
-    <div class="it-cta-wrap">
-        <div class="it-cta">
+    <div class="it-cta-wrap bg-gradient-to-r from-slate-900 to-slate-800 py-16">
+        <div class="it-cta max-w-4xl mx-auto px-8 text-center text-white flex flex-col items-center gap-8">
             <div class="it-cta-text">
                 <h2>Build Your Future in Technology</h2>
                 <p>Join Indonesia's rapidly growing IT ecosystem.
                    Connect with peers, find mentors, and discover opportunities
                    that match your skills.</p>
             </div>
-            <div class="it-cta-btns">
-                <a href="/register" class="it-cta-btn-primary">Create Your Profile</a>
-                <a href="/opportunities" class="it-cta-btn-secondary">Explore Opportunities</a>
+            <div class="it-cta-btns flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/register" class="it-cta-btn-primary bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">Create Your Profile</a>
+                <a href="/opportunities" class="it-cta-btn-secondary border-2 border-white text-white hover:bg-white hover:text-slate-900 px-8 py-3 rounded-lg font-semibold transition-colors">Explore Opportunities</a>
             </div>
         </div>
     </div>
