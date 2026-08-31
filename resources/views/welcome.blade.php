@@ -4,21 +4,21 @@
 
 @section('content')
     {{-- ===== HERO ===== --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-indigo-700 via-indigo-600 to-blue-500 text-white">
-        <div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-400/20 blur-3xl"></div>
-        <div class="absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-indigo-400/20 blur-3xl"></div>
+    <section class="relative overflow-hidden bg-gradient-to-b from-blue-50 to-slate-50 text-slate-900">
+        <div class="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-blue-100/60 blur-3xl"></div>
+        <div class="absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-sky-100/50 blur-3xl"></div>
 
         <div class="relative mx-auto max-w-5xl px-6 py-24 text-center sm:py-28">
-            <h1 class="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+            <h1 class="text-4xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-5xl md:text-6xl">
                 Connect With Indonesia's IT Ecosystem
             </h1>
-            <p class="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-indigo-100 sm:text-lg">
+            <p class="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-500 sm:text-lg">
                 Your premier platform for discovering top education, leading tech companies,
                 vibrant communities, and career opportunities in Indonesia's digital landscape.
             </p>
 
             {{-- Search Bar --}}
-            <form action="/search" method="GET" class="mx-auto mt-8 flex max-w-xl overflow-hidden rounded-full bg-white p-1.5 shadow-xl">
+            <form action="/search" method="GET" class="mx-auto mt-8 flex max-w-xl overflow-hidden rounded-full border border-slate-200 bg-white p-1.5 shadow-sm">
                 <div class="flex flex-1 items-center pl-4">
                     <svg class="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -26,7 +26,7 @@
                     <input type="text" name="q" placeholder="Search campuses, schools, companies, jobs..."
                            class="w-full border-none bg-transparent px-3 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none">
                 </div>
-                <button type="submit" class="shrink-0 rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-700">
+                <button type="submit" class="shrink-0 rounded-full bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700">
                     Search
                 </button>
             </form>
@@ -50,13 +50,13 @@
             @endphp
 
             @foreach ($cats as [$label, $url, $path])
-                <a href="{{ $url }}" class="group flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-1 hover:border-indigo-300 hover:shadow-lg">
-                    <span class="flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-500 transition-colors group-hover:border-indigo-200 group-hover:bg-indigo-50 group-hover:text-indigo-600">
+                <a href="{{ $url }}" class="group flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg">
+                    <span class="flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-500 transition-colors group-hover:border-blue-200 group-hover:bg-blue-50 group-hover:text-blue-600">
                         <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="{{ $path }}"/>
                         </svg>
                     </span>
-                    <span class="text-center text-[13px] font-semibold text-slate-700 group-hover:text-indigo-600">{{ $label }}</span>
+                    <span class="text-center text-[13px] font-semibold text-slate-700 group-hover:text-blue-600">{{ $label }}</span>
                 </a>
             @endforeach
         </div>
@@ -69,7 +69,7 @@
                 <h2 class="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">Featured Opportunities</h2>
                 <p class="mt-1 text-sm text-slate-500">Discover curated opportunities to advance your tech career.</p>
             </div>
-            <a href="/opportunities" class="shrink-0 text-sm font-semibold text-indigo-600 transition-colors hover:text-indigo-700">
+            <a href="/opportunities" class="shrink-0 text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700">
                 View All &rarr;
             </a>
         </div>
@@ -115,7 +115,7 @@
                         <span class="flex items-center gap-1.5 text-[13px] font-semibold text-emerald-600">
                             <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Open
                         </span>
-                        <a href="#" class="text-sm font-semibold text-indigo-600 transition-colors hover:text-indigo-700">Apply Now &rarr;</a>
+                        <a href="#" class="text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700">Apply Now &rarr;</a>
                     </div>
                 </article>
             @endforeach
@@ -131,7 +131,7 @@
                 and discover opportunities that match your skills.
             </p>
             <div class="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                <a href="/register" class="rounded-lg bg-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-900/40 transition-colors hover:bg-indigo-500">
+                <a href="/register" class="rounded-lg bg-blue-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-900/40 transition-colors hover:bg-blue-500">
                     Create Your Profile
                 </a>
                 <a href="/opportunities" class="rounded-lg border-2 border-white/20 px-8 py-3.5 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/10">
