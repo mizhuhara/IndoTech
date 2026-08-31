@@ -66,6 +66,38 @@ class CareerController extends Controller
         ]);
     }
 
+    public function apply(int $id)
+    {
+        $job = collect($this->jobs())->firstWhere('id', $id);
+
+        abort_if($job === null, 404);
+
+        return view('career.apply', compact('job'));
+    }
+
+    public function storeApplication(Request $request, int $id)
+    {
+        $job = collect($this->jobs())->firstWhere('id', $id);
+
+        abort_if($job === null, 404);
+
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'email', 'max:150'],
+            'phone' => ['required', 'string', 'max:30'],
+            'linkedin' => ['nullable', 'url', 'max:200'],
+            'portfolio' => ['nullable', 'url', 'max:200'],
+            'cover_letter' => ['required', 'string', 'min:50', 'max:3000'],
+            'resume' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+        ]);
+
+        // In a real application you would store the application in the database.
+        // Here we flash success and redirect back to the career listing.
+        return redirect()
+            ->route('career.index', ['type' => $job['category']])
+            ->with('apply_success', "Lamaran kamu untuk \"{$job['title']}\" di {$job['company']} berhasil dikirim!");
+    }
+
     private function jobs(): array
     {
         return [

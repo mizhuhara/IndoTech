@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@yield('title', config('app.name', 'IndoTech'))</title>
 
-        @fonts
-
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+            @fonts
+
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
             <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,6 +21,10 @@
 
         {{-- ===== NAVBAR & FOOTER STYLES ===== --}}
         <style>
+        /* ---- UTILITIES ---- */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         /* ---- NAVBAR ---- */
         #it-navbar {
             position: sticky;
