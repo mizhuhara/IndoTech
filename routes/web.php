@@ -30,7 +30,7 @@ Route::post('/login', function () {
     return back()->withErrors(['email' => 'Login belum tersedia.']);
 })->name('login.submit');
 
-Route::view('/register', 'auth.login')->name('register');
+Route::view('/register', 'auth.register')->name('register');
 Route::post('/register', function () {
     // TODO: handle register — stub, belum ada auth logic
     return back()->withErrors(['email' => 'Register belum tersedia.']);
