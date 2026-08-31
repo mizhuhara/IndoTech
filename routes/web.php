@@ -23,6 +23,19 @@ Route::get('/event/{id}', function ($id) {
     return redirect()->route('event.show', $id);
 });
 
+// Auth Routes
+Route::view('/login', 'auth.login')->name('login');
+Route::post('/login', function () {
+    // TODO: handle login — stub, belum ada auth logic
+    return back()->withErrors(['email' => 'Login belum tersedia.']);
+})->name('login.submit');
+
+Route::view('/register', 'auth.login')->name('register');
+Route::post('/register', function () {
+    // TODO: handle register — stub, belum ada auth logic
+    return back()->withErrors(['email' => 'Register belum tersedia.']);
+})->name('register.submit');
+
 // Knowledge Hub Routes
 Route::get('/knowledge-hub', [KnowledgeController::class, 'index'])->name('knowledge.index');
 Route::get('/knowledge-hub/ai', [KnowledgeController::class, 'ai'])->name('knowledge.ai');
