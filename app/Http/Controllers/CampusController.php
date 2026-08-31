@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class CampusController extends Controller
 {
     private function getCampusesData()
@@ -34,20 +32,20 @@ class CampusController extends Controller
                     'national_ranking' => '#1',
                     'it_programs' => '12',
                     'active_students' => '28,500',
-                    'research_centers' => '35+'
+                    'research_centers' => '35+',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Computer Science (Ilmu Komputer)',
                         'icon' => 'code',
-                        'desc' => 'Focuses on software engineering, artificial intelligence, algorithms, and computational theory.'
+                        'desc' => 'Focuses on software engineering, artificial intelligence, algorithms, and computational theory.',
                     ],
                     [
                         'name' => 'Information Systems (Sistem Informasi)',
                         'icon' => 'server',
-                        'desc' => 'Covers enterprise systems, business analytics, and IT strategy and management.'
-                    ]
-                ]
+                        'desc' => 'Covers enterprise systems, business analytics, and IT strategy and management.',
+                    ],
+                ],
             ],
             [
                 'id' => 'binus-kampus',
@@ -74,20 +72,20 @@ class CampusController extends Controller
                     'national_ranking' => '#6',
                     'it_programs' => '9',
                     'active_students' => '12,300',
-                    'international_partners' => '260+'
+                    'international_partners' => '260+',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Software Engineering (S1/Informatics)',
                         'icon' => 'code',
-                        'desc' => 'Covers software development lifecycle, programming paradigms, and enterprise application design.'
+                        'desc' => 'Covers software development lifecycle, programming paradigms, and enterprise application design.',
                     ],
                     [
                         'name' => 'Data Science & Cybersecurity',
                         'icon' => 'server',
-                        'desc' => 'Specializations in data analytics, machine learning, and information security.'
-                    ]
-                ]
+                        'desc' => 'Specializations in data analytics, machine learning, and information security.',
+                    ],
+                ],
             ],
             [
                 'id' => 'itb-kampus',
@@ -114,20 +112,20 @@ class CampusController extends Controller
                     'national_ranking' => '#2',
                     'it_programs' => '8',
                     'active_students' => '24,800',
-                    'research_output' => 'Top 1%'
+                    'research_output' => 'Top 1%',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Computer Science & Information Systems',
                         'icon' => 'code',
-                        'desc' => 'Program covers software engineering, artificial intelligence, data engineering, and computational systems.'
+                        'desc' => 'Program covers software engineering, artificial intelligence, data engineering, and computational systems.',
                     ],
                     [
                         'name' => 'Information Engineering',
                         'icon' => 'server',
-                        'desc' => 'Focuses on network systems, telecommunications, and digital infrastructure.'
-                    ]
-                ]
+                        'desc' => 'Focuses on network systems, telecommunications, and digital infrastructure.',
+                    ],
+                ],
             ],
             [
                 'id' => 'ugm-kampus',
@@ -154,20 +152,20 @@ class CampusController extends Controller
                     'national_ranking' => '#3',
                     'it_programs' => '7',
                     'active_students' => '21,700',
-                    'international_ranking' => 'Top 400'
+                    'international_ranking' => 'Top 400',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Informatics Engineering (Teknik Informatika)',
                         'icon' => 'code',
-                        'desc' => 'Software engineering, data structures, algorithms, and artificial intelligence.'
+                        'desc' => 'Software engineering, data structures, algorithms, and artificial intelligence.',
                     ],
                     [
                         'name' => 'Information Systems (Sistem Informasi)',
                         'icon' => 'server',
-                        'desc' => 'Enterprise systems, information architecture, and business process management.'
-                    ]
-                ]
+                        'desc' => 'Enterprise systems, information architecture, and business process management.',
+                    ],
+                ],
             ],
             [
                 'id' => 'ipb-kampus',
@@ -194,20 +192,20 @@ class CampusController extends Controller
                     'national_ranking' => '#5',
                     'it_programs' => '6',
                     'active_students' => '19,600',
-                    'agritech_focus' => 'Top 10 Asia'
+                    'agritech_focus' => 'Top 10 Asia',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Computer Science & Information Systems',
                         'icon' => 'code',
-                        'desc' => 'Software engineering, computational modeling, and data science for agriculture and industry.'
+                        'desc' => 'Software engineering, computational modeling, and data science for agriculture and industry.',
                     ],
                     [
                         'name' => 'Information Technology',
                         'icon' => 'server',
-                        'desc' => 'IT infrastructure, information systems, and digital transformation in agriculture.'
-                    ]
-                ]
+                        'desc' => 'IT infrastructure, information systems, and digital transformation in agriculture.',
+                    ],
+                ],
             ],
             [
                 'id' => 'undip-kampus',
@@ -234,22 +232,23 @@ class CampusController extends Controller
                     'national_ranking' => '#7',
                     'it_programs' => '5',
                     'active_students' => '15,200',
-                    'community_engagement' => 'High'
+                    'community_engagement' => 'High',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Information Engineering',
                         'icon' => 'code',
-                        'desc' => 'Software development, information systems, and digital technology innovation.'
-                    ]
-                ]
-            ]
+                        'desc' => 'Software development, information systems, and digital technology innovation.',
+                    ],
+                ],
+            ],
         ];
     }
 
     public function index()
     {
         $campuses = $this->getCampusesData();
+
         return view('education.campus.index', compact('campuses'));
     }
 
@@ -258,10 +257,10 @@ class CampusController extends Controller
         $campuses = $this->getCampusesData();
 
         $campus = collect($campuses)->first(function ($c) use ($id) {
-            return $c['id'] === $id || (string)$c['numeric_id'] === (string)$id;
+            return $c['id'] === $id || (string) $c['numeric_id'] === (string) $id;
         });
 
-        if (!$campus) {
+        if (! $campus) {
             $campus = $campuses[0];
         }
 
