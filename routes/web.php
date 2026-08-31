@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CareerController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\EducationController;
 use App\Http\Controllers\CampusController;
+use App\Http\Controllers\CareerController;
+use App\Http\Controllers\EducationController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\KnowledgeController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +32,9 @@ Route::get('/event', function () {
 Route::get('/event/{id}', function ($id) {
     return redirect()->route('event.show', $id);
 });
+
+// Admin Dashboard
+Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
 
 // Auth Routes
 Route::view('/login', 'auth.login')->name('login');
