@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 class EducationController extends Controller
 {
     private function getSchoolsData()
@@ -33,25 +31,25 @@ class EducationController extends Controller
                     'placement_rate' => '88%',
                     'industry_partners' => '65+',
                     'active_students' => '1450',
-                    'modern_labs' => '18'
+                    'modern_labs' => '18',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Software Engineering (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Focused on software engineering, web development, mobile app creation, and modern programming paradigms.'
+                        'desc' => 'Focused on software engineering, web development, mobile app creation, and modern programming paradigms.',
                     ],
                     [
                         'name' => 'Computer Network Engineering (TKJ)',
                         'icon' => 'server',
-                        'desc' => 'Covers network infrastructure, cloud computing, cybersecurity, and system administration.'
+                        'desc' => 'Covers network infrastructure, cloud computing, cybersecurity, and system administration.',
                     ],
                     [
                         'name' => 'Multimedia & Graphic Design',
                         'icon' => 'palette',
-                        'desc' => 'Training in UI/UX design, 2D/3D animation, video production, and digital graphic design.'
-                    ]
-                ]
+                        'desc' => 'Training in UI/UX design, 2D/3D animation, video production, and digital graphic design.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-telkom-bandung',
@@ -77,20 +75,20 @@ class EducationController extends Controller
                     'placement_rate' => '92%',
                     'industry_partners' => '80+',
                     'active_students' => '1600',
-                    'modern_labs' => '20'
+                    'modern_labs' => '20',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Computer Network Engineering (TKJ)',
                         'icon' => 'server',
-                        'desc' => 'Comprehensive Cisco networking, fiber optics, server administration, and cloud operations.'
+                        'desc' => 'Comprehensive Cisco networking, fiber optics, server administration, and cloud operations.',
                     ],
                     [
                         'name' => 'Digital Broadcasting & Media',
                         'icon' => 'video',
-                        'desc' => 'Mastery in audio-visual broadcasting, streaming technology, and digital media production.'
-                    ]
-                ]
+                        'desc' => 'Mastery in audio-visual broadcasting, streaming technology, and digital media production.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-raden-umar-said',
@@ -116,20 +114,20 @@ class EducationController extends Controller
                     'placement_rate' => '95%',
                     'industry_partners' => '45+',
                     'active_students' => '980',
-                    'modern_labs' => '12'
+                    'modern_labs' => '12',
                 ],
                 'competencies' => [
                     [
                         'name' => '3D Animation & VFX',
                         'icon' => 'cube',
-                        'desc' => 'Professional 3D modeling, character rigging, lighting, texturing, and digital visual effects.'
+                        'desc' => 'Professional 3D modeling, character rigging, lighting, texturing, and digital visual effects.',
                     ],
                     [
                         'name' => 'Software Engineering (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Game development, interactive software programming, and mobile app design.'
-                    ]
-                ]
+                        'desc' => 'Game development, interactive software programming, and mobile app design.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-negeri-1-teknologi-inovasi',
@@ -155,20 +153,20 @@ class EducationController extends Controller
                     'placement_rate' => '85%',
                     'industry_partners' => '50+',
                     'active_students' => '1200',
-                    'modern_labs' => '15'
+                    'modern_labs' => '15',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Software Engineering (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Focused on software engineering, web development, mobile app creation, and modern programming paradigms.'
+                        'desc' => 'Focused on software engineering, web development, mobile app creation, and modern programming paradigms.',
                     ],
                     [
                         'name' => 'Computer Network Engineering (TKJ)',
                         'icon' => 'server',
-                        'desc' => 'Covers network infrastructure, cloud computing, cybersecurity, and system administration.'
-                    ]
-                ]
+                        'desc' => 'Covers network infrastructure, cloud computing, cybersecurity, and system administration.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-negeri-1-denpasar',
@@ -194,20 +192,20 @@ class EducationController extends Controller
                     'placement_rate' => '87%',
                     'industry_partners' => '40+',
                     'active_students' => '1350',
-                    'modern_labs' => '14'
+                    'modern_labs' => '14',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Rekayasa Perangkat Lunak (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Pengembangan aplikasi web, pemrograman mobile Android/iOS, serta arsitektur basis data.'
+                        'desc' => 'Pengembangan aplikasi web, pemrograman mobile Android/iOS, serta arsitektur basis data.',
                     ],
                     [
                         'name' => 'Teknik Komputer dan Jaringan (TKJ)',
                         'icon' => 'server',
-                        'desc' => 'Administrasi server, administrasi jaringan mikrotik & cisco, dan teknologi cloud.'
-                    ]
-                ]
+                        'desc' => 'Administrasi server, administrasi jaringan mikrotik & cisco, dan teknologi cloud.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-telkom-medan',
@@ -233,20 +231,20 @@ class EducationController extends Controller
                     'placement_rate' => '91%',
                     'industry_partners' => '60+',
                     'active_students' => '1400',
-                    'modern_labs' => '16'
+                    'modern_labs' => '16',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Teknik Komputer dan Jaringan (TKJ)',
                         'icon' => 'server',
-                        'desc' => 'Jaringan komputer terdistribusi, serat optik, dan manajemen infrastruktur data.'
+                        'desc' => 'Jaringan komputer terdistribusi, serat optik, dan manajemen infrastruktur data.',
                     ],
                     [
                         'name' => 'Rekayasa Perangkat Lunak (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Pemrograman aplikasi berbasis web modern dan teknologi cloud.'
-                    ]
-                ]
+                        'desc' => 'Pemrograman aplikasi berbasis web modern dan teknologi cloud.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-negeri-2-makassar',
@@ -272,20 +270,20 @@ class EducationController extends Controller
                     'placement_rate' => '86%',
                     'industry_partners' => '35+',
                     'active_students' => '1250',
-                    'modern_labs' => '14'
+                    'modern_labs' => '14',
                 ],
                 'competencies' => [
                     [
                         'name' => 'SIJA (Sistem Informasi, Jaringan, & Aplikasi)',
                         'icon' => 'server',
-                        'desc' => 'Program 4 tahun penguasaan cloud computing, DevOps, dan keamanan sistem.'
+                        'desc' => 'Program 4 tahun penguasaan cloud computing, DevOps, dan keamanan sistem.',
                     ],
                     [
                         'name' => 'Rekayasa Perangkat Lunak (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Pengembangan perangkat lunak skala UKM dan aplikasi industri modern.'
-                    ]
-                ]
+                        'desc' => 'Pengembangan perangkat lunak skala UKM dan aplikasi industri modern.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-negeri-1-yogyakarta',
@@ -311,20 +309,20 @@ class EducationController extends Controller
                     'placement_rate' => '94%',
                     'industry_partners' => '55+',
                     'active_students' => '1100',
-                    'modern_labs' => '15'
+                    'modern_labs' => '15',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Rekayasa Perangkat Lunak (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Pengembangan aplikasi bisnis, UI/UX design, dan teknologi front-end/back-end.'
+                        'desc' => 'Pengembangan aplikasi bisnis, UI/UX design, dan teknologi front-end/back-end.',
                     ],
                     [
                         'name' => 'Multimedia & Animasi',
                         'icon' => 'palette',
-                        'desc' => 'Desain grafis, produksi video digital, dan animasi 2D/3D.'
-                    ]
-                ]
+                        'desc' => 'Desain grafis, produksi video digital, dan animasi 2D/3D.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-telkom-banjarbaru',
@@ -350,20 +348,20 @@ class EducationController extends Controller
                     'placement_rate' => '89%',
                     'industry_partners' => '42+',
                     'active_students' => '950',
-                    'modern_labs' => '12'
+                    'modern_labs' => '12',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Teknik Komputer & Jaringan (TKJ)',
                         'icon' => 'server',
-                        'desc' => 'Manajemen jaringan komputer, sistem operasi server, dan serat optik.'
+                        'desc' => 'Manajemen jaringan komputer, sistem operasi server, dan serat optik.',
                     ],
                     [
                         'name' => 'Rekayasa Perangkat Lunak (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Pemrograman web modern, basis data relational, dan aplikasi mobile.'
-                    ]
-                ]
+                        'desc' => 'Pemrograman web modern, basis data relational, dan aplikasi mobile.',
+                    ],
+                ],
             ],
             [
                 'id' => 'smk-negeri-1-jayapura',
@@ -389,40 +387,41 @@ class EducationController extends Controller
                     'placement_rate' => '85%',
                     'industry_partners' => '30+',
                     'active_students' => '850',
-                    'modern_labs' => '10'
+                    'modern_labs' => '10',
                 ],
                 'competencies' => [
                     [
                         'name' => 'Teknik Komputer & Jaringan (TKJ)',
                         'icon' => 'server',
-                        'desc' => 'Dasar infrastruktur internet, administrasi jaringan lokal & nirkabel.'
+                        'desc' => 'Dasar infrastruktur internet, administrasi jaringan lokal & nirkabel.',
                     ],
                     [
                         'name' => 'Rekayasa Perangkat Lunak (RPL)',
                         'icon' => 'code',
-                        'desc' => 'Pemrograman dasar, pembuatan situs web, dan aplikasi perkantoran.'
-                    ]
-                ]
-            ]
+                        'desc' => 'Pemrograman dasar, pembuatan situs web, dan aplikasi perkantoran.',
+                    ],
+                ],
+            ],
         ];
     }
 
     public function index()
     {
         $schools = $this->getSchoolsData();
+
         return view('education.index', compact('schools'));
     }
 
     public function show($id)
     {
         $schools = $this->getSchoolsData();
-        
+
         // Find school by slug id or numeric id
         $school = collect($schools)->first(function ($s) use ($id) {
-            return $s['id'] === $id || (string)$s['numeric_id'] === (string)$id;
+            return $s['id'] === $id || (string) $s['numeric_id'] === (string) $id;
         });
 
-        if (!$school) {
+        if (! $school) {
             // Default to school 4 (SMK Negeri 1 Teknologi Inovasi) if not found
             $school = $schools[3];
         }
