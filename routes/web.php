@@ -43,6 +43,12 @@ Route::get('/admin/user', function () {
     return redirect()->route('admin.users.index');
 });
 
+// Admin Reports
+Route::view('/admin/reports', 'admin.reports.index')->name('admin.reports.index');
+Route::get('/admin/reports/{id}', function ($id) {
+    return view('admin.reports.show', compact('id'));
+})->name('admin.reports.show');
+
 // Auth Routes
 Route::view('/login', 'auth.login')->name('login');
 Route::post('/login', function () {
