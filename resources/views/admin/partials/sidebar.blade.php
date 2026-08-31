@@ -22,7 +22,7 @@
     <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         @php
             $menu = [
-                ['label' => 'Dashboard', 'icon' => 'grid', 'active' => request()->routeIs('admin.dashboard'), 'href' => '#'],
+                ['label' => 'Dashboard', 'icon' => 'grid', 'active' => request()->routeIs('admin.dashboard'), 'href' => route('admin.dashboard')],
                 ['label' => 'User and Verification', 'icon' => 'users', 'active' => false, 'href' => '#', 'arrow' => true],
                 ['label' => 'School', 'icon' => 'school', 'active' => false, 'href' => '#'],
                 ['label' => 'University', 'icon' => 'university', 'active' => false, 'href' => '#'],
@@ -32,7 +32,7 @@
                 ['label' => 'Events', 'icon' => 'events', 'active' => false, 'href' => '#'],
                 ['label' => 'Articles', 'icon' => 'articles', 'active' => false, 'href' => '#'],
                 ['label' => 'Community', 'icon' => 'community', 'active' => false, 'href' => '#'],
-                ['label' => 'Reports', 'icon' => 'reports', 'active' => false, 'href' => '#'],
+                ['label' => 'Reports', 'icon' => 'reports', 'active' => request()->routeIs('admin.reports.*'), 'href' => route('admin.reports.index')],
             ];
         @endphp
 
