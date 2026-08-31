@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>@yield('title', config('app.name', 'IndoTech'))</title>
 
-        @fonts
-
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
+            @fonts
+
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
             <link rel="preconnect" href="https://fonts.googleapis.com">
