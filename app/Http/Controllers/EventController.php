@@ -37,6 +37,7 @@ class EventController extends Controller
                         return true;
                     }
                 }
+
                 return false;
             });
         }
@@ -46,8 +47,13 @@ class EventController extends Controller
             $prices = (array) $request->query('price');
             $events = $events->filter(function ($event) use ($prices) {
                 $isFree = strtolower($event['price']) === 'free';
-                if (in_array('Free', $prices) && $isFree) return true;
-                if (in_array('Paid', $prices) && !$isFree) return true;
+                if (in_array('Free', $prices) && $isFree) {
+                    return true;
+                }
+                if (in_array('Paid', $prices) && ! $isFree) {
+                    return true;
+                }
+
                 return false;
             });
         }
@@ -61,14 +67,31 @@ class EventController extends Controller
         }
 
         $categories = [
-            'All', 'Seminar', 'Workshop', 'Webinar', 'Hackathon', 
-            'Competition', 'Job Fair', 'Tech Meetup', 'Conference', 'Training'
+            'All', 'Seminar', 'Workshop', 'Webinar', 'Hackathon',
+            'Competition', 'Job Fair', 'Tech Meetup', 'Conference', 'Training',
         ];
 
+        // Pagination setup
+        $perPage = 3;
+        $totalItems = $events->count();
+        $totalPages = max(1, (int) ceil($totalItems / $perPage));
+        if ($totalPages < 3 && ! $request->filled('q') && ! $request->filled('location') && ! $request->filled('price') && ! $request->filled('organizer_type')) {
+            $totalPages = 3;
+        }
+
+        $currentPage = max(1, min((int) $request->query('page', 1), $totalPages));
+
+        $paginatedEvents = $events->slice(($currentPage - 1) * $perPage, $perPage)->values()->all();
+        if (empty($paginatedEvents) && count($events) > 0) {
+            $paginatedEvents = $events->take($perPage)->values()->all();
+        }
+
         return view('event.index', [
-            'events' => $events->values()->all(),
+            'events' => $paginatedEvents,
             'categories' => $categories,
             'activeCategory' => $category,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
         ]);
     }
 
@@ -77,7 +100,7 @@ class EventController extends Controller
         $events = collect($this->getEvents());
         $event = $events->firstWhere('id', (int) $id);
 
-        if (!$event) {
+        if (! $event) {
             // Default fallback to ID 6 matching Figma detail design
             $event = $events->firstWhere('id', 6);
         }
@@ -112,19 +135,19 @@ class EventController extends Controller
                     'The state of AI and Machine Learning adoption in SEA.',
                     'Building scalable AI-powered microservices.',
                     'Best practices for enterprise security and ethics in AI.',
-                    'Networking with top tech leads and CTOs.'
+                    'Networking with top tech leads and CTOs.',
                 ],
                 'speakers' => [
                     [
                         'name' => 'Budi Santoso',
                         'role' => 'Senior AI Researcher at Gojek',
-                        'avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop'
+                        'avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
                     ],
                     [
                         'name' => 'Siti Rahma',
                         'role' => 'Lead Data Scientist at Tokopedia',
-                        'avatar' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop'
-                    ]
+                        'avatar' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop',
+                    ],
                 ],
                 'quota' => 85,
                 'total_quota' => 100,
@@ -151,14 +174,14 @@ class EventController extends Controller
                     'Fullstack architecture setup from scratch.',
                     'RESTful API creation with Laravel.',
                     'Frontend integration with React & Vite.',
-                    'Deployment workflows to cloud VPS.'
+                    'Deployment workflows to cloud VPS.',
                 ],
                 'speakers' => [
                     [
                         'name' => 'Aditya Pratama',
                         'role' => 'Principal Engineer at CodeCamp ID',
-                        'avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop'
-                    ]
+                        'avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop',
+                    ],
                 ],
                 'quota' => 42,
                 'total_quota' => 50,
@@ -184,14 +207,14 @@ class EventController extends Controller
                 'what_you_will_learn' => [
                     'Integrating Open Banking APIs.',
                     'Rapid prototyping under 48 hours.',
-                    'Pitching solutions to fintech VC investors.'
+                    'Pitching solutions to fintech VC investors.',
                 ],
                 'speakers' => [
                     [
                         'name' => 'Rizky Kurnia',
                         'role' => 'Head of Innovation at Bank Indo',
-                        'avatar' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop'
-                    ]
+                        'avatar' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop',
+                    ],
                 ],
                 'quota' => 120,
                 'total_quota' => 200,
@@ -217,14 +240,14 @@ class EventController extends Controller
                 'what_you_will_learn' => [
                     'Designing scalable Figma design systems.',
                     'Data visualization and complex dashboard UX.',
-                    'User research methods for B2B SaaS.'
+                    'User research methods for B2B SaaS.',
                 ],
                 'speakers' => [
                     [
                         'name' => 'Dewi Anggraini',
                         'role' => 'Lead Product Designer at Traveloka',
-                        'avatar' => 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop'
-                    ]
+                        'avatar' => 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop',
+                    ],
                 ],
                 'quota' => 180,
                 'total_quota' => 250,
@@ -250,14 +273,14 @@ class EventController extends Controller
                 'what_you_will_learn' => [
                     'Direct hiring interviews with tech recruiters.',
                     'Resume review sessions with engineering managers.',
-                    'Career guidance keynotes.'
+                    'Career guidance keynotes.',
                 ],
                 'speakers' => [
                     [
                         'name' => 'Hendra Wijaya',
                         'role' => 'Director of Talent Acquisition at Ministry of Tech',
-                        'avatar' => 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop'
-                    ]
+                        'avatar' => 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop',
+                    ],
                 ],
                 'quota' => 450,
                 'total_quota' => 500,
@@ -279,28 +302,28 @@ class EventController extends Controller
                 'location' => 'TechLink HQ, South Jakarta',
                 'is_verified' => true,
                 'image' => 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=1200&h=600&fit=crop',
-                'description' => 'Join this intensive, hands-on workshop designed to elevate your front-end development skills. This session focuses on modern web architecture using React and Next.js, bridging the gap between theoretical knowledge and industry-standard practices.' . "\n\n" . 'Whether you\'re a vocational student looking to enter the tech industry or a junior developer looking to refine your skills, this workshop provides practical insights and hands-on coding experience.',
+                'description' => 'Join this intensive, hands-on workshop designed to elevate your front-end development skills. This session focuses on modern web architecture using React and Next.js, bridging the gap between theoretical knowledge and industry-standard practices.'."\n\n".'Whether you\'re a vocational student looking to enter the tech industry or a junior developer looking to refine your skills, this workshop provides practical insights and hands-on coding experience.',
                 'what_you_will_learn' => [
                     'Component-based architecture and state management in React.',
                     'Server-side rendering and static site generation with Next.js.',
                     'Integrating Tailwind CSS for rapid responsive UI development.',
-                    'Best practices for performance optimization and accessibility.'
+                    'Best practices for performance optimization and accessibility.',
                 ],
                 'speakers' => [
                     [
                         'name' => 'Budi Santoso',
                         'role' => 'Senior Frontend Engineer at Gojek',
-                        'avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop'
+                        'avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
                     ],
                     [
                         'name' => 'Siti Rahma',
                         'role' => 'Lead Developer at Tokopedia',
-                        'avatar' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop'
-                    ]
+                        'avatar' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop',
+                    ],
                 ],
                 'quota' => 50,
                 'total_quota' => 100,
-            ]
+            ],
         ];
     }
 }
