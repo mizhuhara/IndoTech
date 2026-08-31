@@ -15,7 +15,7 @@
 </section>
 
 {{-- Main Content Container --}}
-<div class="max-w-6xl mx-auto px-4 pb-16">
+<div class="max-w-6xl mx-auto px-4 pb-28 sm:pb-36">
 
     {{-- Filter Bar Toolbar --}}
     <div class="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 mb-8 shadow-xs">
@@ -177,7 +177,7 @@
     </div>
 
     {{-- Pagination Navigation --}}
-    <div id="paginationBar" class="flex items-center justify-center gap-2 mt-10">
+    <div id="paginationBar" class="flex items-center justify-center gap-2 mt-14 mb-6">
         <button type="button" id="prevPageBtn" onclick="changePage(currentPage - 1)" class="w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-semibold flex items-center justify-center hover:bg-slate-50 hover:border-slate-300 transition cursor-pointer" aria-label="Previous">
             <svg class="w-4 h-4 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <polyline points="15 18 9 12 15 6"></polyline>

@@ -7,7 +7,7 @@
         {{-- Desktop Nav --}}
         <nav id="it-nav">
             <a href="/" class="{{ request()->is('/') ? 'it-active' : '' }}">Home</a>
-            <a href="/education" class="{{ request()->is('education*') ? 'it-active' : '' }}">Education</a>
+            <a href="/education" class="{{ request()->is('education*') || request()->is('campus*') ? 'it-active' : '' }}">Education</a>
             <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industry</a>
             <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Career</a>
             <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Events</a>
@@ -36,7 +36,7 @@
     {{-- Mobile Menu --}}
     <div id="it-mobile-menu">
         <a href="/" class="{{ request()->is('/') ? 'it-active' : '' }}">Home</a>
-        <a href="/education" class="{{ request()->is('education*') ? 'it-active' : '' }}">Education</a>
+        <a href="/education" class="{{ request()->is('education*') || request()->is('campus*') ? 'it-active' : '' }}">Education</a>
         <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industry</a>
         <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Career</a>
         <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Events</a>
