@@ -10,17 +10,25 @@
         padding: 0 24px;
     }
     .cr-tabs {
-        display: flex;
-        gap: 4px;
-        border-bottom: 1px solid #e2e8f0;
-        overflow-x: auto;
-        background: #fff;
         position: sticky;
         top: 62px;
         z-index: 20;
-        margin: 0 -24px;
+        background: #fff;
+        border-bottom: 1px solid #e2e8f0;
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+    }
+    .cr-tabs-inner {
+        display: flex;
+        gap: 4px;
+        overflow-x: auto;
+        scrollbar-width: none;   /* Firefox */
+        -ms-overflow-style: none; /* IE/Edge */
+        max-width: 1200px;
+        margin: 0 auto;
         padding: 0 24px;
     }
+    .cr-tabs-inner::-webkit-scrollbar { display: none; } /* Chrome/Safari */
     .cr-tabs a {
         flex-shrink: 0;
         padding: 14px 16px;
@@ -329,12 +337,28 @@
 
 <div class="cr-page">
     <nav class="cr-tabs" aria-label="Career categories">
-        @foreach($tabs as $key => $label)
-            <a href="{{ route('career.index', array_merge(request()->except('type'), ['type' => $key])) }}"
-               class="{{ $tab === $key ? 'on' : '' }}"
-               id="tab-{{ $key }}">{{ $label }}</a>
-        @endforeach
+        <div class="cr-tabs-inner">
+            @foreach($tabs as $key => $label)
+                <a href="{{ route('career.index', array_merge(request()->except('type'), ['type' => $key])) }}"
+                   class="{{ $tab === $key ? 'on' : '' }}"
+                   id="tab-{{ $key }}">{{ $label }}</a>
+            @endforeach
+        </div>
     </nav>
+
+    @if(session('apply_success'))
+    <div id="cr-success-banner" style="
+        display:flex;align-items:center;gap:12px;
+        background:linear-gradient(135deg,#ecfdf5 0%,#d1fae5 100%);
+        border:1px solid #6ee7b7;border-radius:12px;
+        padding:14px 20px;margin:16px 0 0;
+        font-size:14px;font-weight:600;color:#065f46;
+    ">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="flex-shrink:0;color:#059669"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        {{ session('apply_success') }}
+        <button onclick="document.getElementById('cr-success-banner').remove()" style="margin-left:auto;background:none;border:none;cursor:pointer;color:#059669;font-size:18px;line-height:1;" aria-label="Tutup">&times;</button>
+    </div>
+    @endif
 
     <div class="cr-layout">
         @include('career._filters')

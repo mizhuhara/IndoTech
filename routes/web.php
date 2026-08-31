@@ -13,6 +13,8 @@ Route::get('/', function () {
 Route::get('/industry', [IndustryController::class, 'index'])->name('industry');
 
 Route::get('/career', [CareerController::class, 'index'])->name('career.index');
+Route::get('/career/{id}/apply', [CareerController::class, 'apply'])->name('career.apply');
+Route::post('/career/{id}/apply', [CareerController::class, 'storeApplication'])->name('career.apply.store');
 
 Route::get('/events', [EventController::class, 'index'])->name('event.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('event.show');
