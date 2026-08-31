@@ -17,7 +17,7 @@
         </div>
 
         {{-- Category Pills Row --}}
-        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none">
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar [&::-webkit-scrollbar]:hidden" style="scrollbar-width: none; -ms-overflow-style: none;">
             @foreach($categories as $cat)
                 @php
                     $isActive = strtolower($activeCategory) === strtolower($cat);
@@ -226,23 +226,61 @@
                 @endif
 
                 {{-- Pagination Component --}}
+                @php
+                    $curr = $currentPage ?? 1;
+                    $maxP = $totalPages ?? 3;
+                    $queryParams = request()->query();
+                @endphp
                 <div class="flex items-center justify-center gap-1.5 pt-4">
-                    <button disabled class="p-2 rounded-lg border border-slate-200 text-slate-400 hover:bg-slate-100 disabled:opacity-50 text-xs">
-                        &lsaquo;
-                    </button>
-                    <button class="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold text-xs shadow-sm">
+                    {{-- Prev --}}
+                    @if($curr > 1)
+                        <a href="{{ route('event.index', array_merge($queryParams, ['page' => $curr - 1])) }}" 
+                           class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center text-xs font-semibold transition">
+                            &lsaquo;
+                        </a>
+                    @else
+                        <span class="w-8 h-8 rounded-lg border border-slate-200 text-slate-300 flex items-center justify-center text-xs opacity-50 cursor-not-allowed">
+                            &lsaquo;
+                        </span>
+                    @endif
+
+                    {{-- Page 1 --}}
+                    <a href="{{ route('event.index', array_merge($queryParams, ['page' => 1])) }}" 
+                       class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs transition {{ $curr === 1 ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-200 text-slate-600 hover:bg-slate-100' }}">
                         1
-                    </button>
-                    <button class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 font-semibold text-xs hover:bg-slate-100">
+                    </a>
+
+                    {{-- Page 2 --}}
+                    <a href="{{ route('event.index', array_merge($queryParams, ['page' => 2])) }}" 
+                       class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs transition {{ $curr === 2 ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-200 text-slate-600 hover:bg-slate-100' }}">
                         2
-                    </button>
-                    <button class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 font-semibold text-xs hover:bg-slate-100">
+                    </a>
+
+                    {{-- Page 3 --}}
+                    <a href="{{ route('event.index', array_merge($queryParams, ['page' => 3])) }}" 
+                       class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs transition {{ $curr === 3 ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-200 text-slate-600 hover:bg-slate-100' }}">
                         3
-                    </button>
-                    <span class="px-1 text-slate-400 text-xs">...</span>
-                    <button class="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 text-xs">
-                        &rsaquo;
-                    </button>
+                    </a>
+
+                    @if($maxP > 3)
+                        <span class="px-1 text-slate-400 text-xs">...</span>
+                        <a href="{{ route('event.index', array_merge($queryParams, ['page' => $maxP])) }}" 
+                           class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs transition {{ $curr === $maxP ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-200 text-slate-600 hover:bg-slate-100' }}">
+                            {{ $maxP }}
+                        </a>
+                    @endif
+
+                    {{-- Next --}}
+                    @if($curr < $maxP)
+                        <a href="{{ route('event.index', array_merge($queryParams, ['page' => $curr + 1])) }}" 
+                           class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center text-xs font-semibold transition">
+                            &rsaquo;
+                        </a>
+                    @else
+                        <span class="w-8 h-8 rounded-lg border border-slate-200 text-slate-300 flex items-center justify-center text-xs opacity-50 cursor-not-allowed">
+                            &rsaquo;
+                        </span>
+                    @endif
                 </div>
 
             </div>
