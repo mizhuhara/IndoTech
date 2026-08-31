@@ -35,11 +35,12 @@ Route::get('/event/{id}', function ($id) {
     return redirect()->route('event.show', $id);
 });
 
-<<<<<<< HEAD
 use App\Http\Controllers\AdminSchoolController;
 
 // Admin Dashboard & Management
 Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+
+// Admin School Management
 Route::get('/admin/schools', [AdminSchoolController::class, 'index'])->name('admin.schools.index');
 Route::get('/admin/schools/create', [AdminSchoolController::class, 'create'])->name('admin.schools.create');
 Route::post('/admin/schools', [AdminSchoolController::class, 'store'])->name('admin.schools.store');
@@ -47,9 +48,8 @@ Route::get('/admin/schools/{id}', [AdminSchoolController::class, 'show'])->name(
 Route::get('/admin/schools/{id}/edit', [AdminSchoolController::class, 'edit'])->name('admin.schools.edit');
 Route::put('/admin/schools/{id}', [AdminSchoolController::class, 'update'])->name('admin.schools.update');
 Route::delete('/admin/schools/{id}', [AdminSchoolController::class, 'destroy'])->name('admin.schools.destroy');
-=======
-// Admin Dashboard, User & Verification Routes
-Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+
+// Admin User & Verification Routes
 Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
 Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
 Route::get('/admin/user', function () {
@@ -61,7 +61,6 @@ Route::view('/admin/reports', 'admin.reports.index')->name('admin.reports.index'
 Route::get('/admin/reports/{id}', function ($id) {
     return view('admin.reports.show', compact('id'));
 })->name('admin.reports.show');
->>>>>>> af5c0bed12ac1db6747ee29dd1a88f3ea4335bf5
 
 // Auth Routes
 Route::view('/login', 'auth.login')->name('login');
