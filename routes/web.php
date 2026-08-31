@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminVerificationController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\EducationController;
@@ -33,8 +35,13 @@ Route::get('/event/{id}', function ($id) {
     return redirect()->route('event.show', $id);
 });
 
-// Admin Dashboard
+// Admin Dashboard, User & Verification Routes
 Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
+Route::get('/admin/user', function () {
+    return redirect()->route('admin.users.index');
+});
 
 // Auth Routes
 Route::view('/login', 'auth.login')->name('login');
