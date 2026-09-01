@@ -55,8 +55,8 @@
                     [
                         'label' => 'Jobs',
                         'icon' => 'jobs',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.jobs.*'),
+                        'href' => route('admin.jobs.index')
                     ],
                     [
                         'label' => 'Internships',

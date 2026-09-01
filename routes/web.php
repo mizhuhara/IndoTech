@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminJobController;
 use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
@@ -57,6 +58,15 @@ Route::get('/admin/univ/{id}', [AdminUnivController::class, 'show'])->name('admi
 Route::get('/admin/univ/{id}/edit', [AdminUnivController::class, 'edit'])->name('admin.univ.edit');
 Route::put('/admin/univ/{id}', [AdminUnivController::class, 'update'])->name('admin.univ.update');
 Route::delete('/admin/univ/{id}', [AdminUnivController::class, 'destroy'])->name('admin.univ.destroy');
+
+// Admin Job Management
+Route::get('/admin/jobs', [AdminJobController::class, 'index'])->name('admin.jobs.index');
+Route::get('/admin/jobs/create', [AdminJobController::class, 'create'])->name('admin.jobs.create');
+Route::post('/admin/jobs', [AdminJobController::class, 'store'])->name('admin.jobs.store');
+Route::get('/admin/jobs/{id}', [AdminJobController::class, 'show'])->name('admin.jobs.show');
+Route::get('/admin/jobs/{id}/edit', [AdminJobController::class, 'edit'])->name('admin.jobs.edit');
+Route::put('/admin/jobs/{id}', [AdminJobController::class, 'update'])->name('admin.jobs.update');
+Route::delete('/admin/jobs/{id}', [AdminJobController::class, 'destroy'])->name('admin.jobs.destroy');
 
 // Admin User & Verification Routes
 Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
