@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminVerificationController;
 use App\Http\Controllers\CampusController;
@@ -35,8 +36,6 @@ Route::get('/event/{id}', function ($id) {
     return redirect()->route('event.show', $id);
 });
 
-use App\Http\Controllers\AdminSchoolController;
-
 // Admin Dashboard & Management
 Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
 
@@ -61,6 +60,17 @@ Route::view('/admin/reports', 'admin.reports.index')->name('admin.reports.index'
 Route::get('/admin/reports/{id}', function ($id) {
     return view('admin.reports.show', compact('id'));
 })->name('admin.reports.show');
+
+// Admin Articles
+Route::view('/admin/articles', 'admin.articles.index')->name('admin.articles.index');
+Route::view('/admin/articles/create', 'admin.articles.create')->name('admin.articles.create');
+Route::get('/admin/articles/{id}/edit', function () {
+    return view('admin.articles.create');
+})->name('admin.articles.edit');
+Route::post('/admin/articles', function () {
+    // TODO: handle article store
+    return back()->with('success', 'Article berhasil disimpan (stub).');
+})->name('admin.articles.store');
 
 // Auth Routes
 Route::view('/login', 'auth.login')->name('login');
