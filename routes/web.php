@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\AdminInternshipController;
 use App\Http\Controllers\AdminJobController;
 use App\Http\Controllers\AdminEventController;
