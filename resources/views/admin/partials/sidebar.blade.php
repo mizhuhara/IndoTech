@@ -73,8 +73,8 @@
                     [
                         'label' => 'Articles',
                         'icon' => 'articles',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.articles.*'),
+                        'href' => route('admin.articles.index')
                     ],
                     [
                         'label' => 'Community',
