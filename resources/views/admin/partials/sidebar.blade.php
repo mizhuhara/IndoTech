@@ -61,8 +61,8 @@
                     [
                         'label' => 'Internships',
                         'icon' => 'internship',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.internships.*'),
+                        'href' => route('admin.internships.index')
                     ],
                     [
                         'label' => 'Events',
