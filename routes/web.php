@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Controllers\AdminInternshipController;
-use App\Http\Controllers\AdminJobController;
 use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminVerificationController;
+use App\Http\Controllers\AdminEventController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\EducationController;
@@ -84,6 +83,12 @@ Route::get('/admin/verification', [AdminVerificationController::class, 'index'])
 Route::get('/admin/user', function () {
     return redirect()->route('admin.users.index');
 });
+
+// Admin Event Verification Routes
+Route::get('/admin/events', [AdminEventController::class, 'index'])->name('admin.events.index');
+Route::get('/admin/events/{id}', [AdminEventController::class, 'show'])->name('admin.events.show');
+Route::post('/admin/events/{id}/approve', [AdminEventController::class, 'approve'])->name('admin.events.approve');
+Route::post('/admin/events/{id}/reject', [AdminEventController::class, 'reject'])->name('admin.events.reject');
 
 // Admin Reports
 Route::view('/admin/reports', 'admin.reports.index')->name('admin.reports.index');
