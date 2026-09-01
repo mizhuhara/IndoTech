@@ -6,6 +6,9 @@ use App\Http\Controllers\EducationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\KnowledgeController;
+use App\Http\Controllers\AdminSchoolController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminVerificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -34,13 +37,29 @@ Route::get('/event/{id}', function ($id) {
 });
 
 // Admin Dashboard
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::view('/', 'admin.dashboard')->name('dashboard');
-    $pages = ['users', 'schools', 'universities', 'companies', 'jobs', 'internships', 'events', 'articles', 'community', 'reports'];
-    foreach ($pages as $page) {
-        Route::get('/'.$page, fn () => abort(404))->name($page);
-    }
+Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+
+// Admin School Management
+Route::get('/admin/schools', [AdminSchoolController::class, 'index'])->name('admin.schools.index');
+Route::get('/admin/schools/create', [AdminSchoolController::class, 'create'])->name('admin.schools.create');
+Route::post('/admin/schools', [AdminSchoolController::class, 'store'])->name('admin.schools.store');
+Route::get('/admin/schools/{id}', [AdminSchoolController::class, 'show'])->name('admin.schools.show');
+Route::get('/admin/schools/{id}/edit', [AdminSchoolController::class, 'edit'])->name('admin.schools.edit');
+Route::put('/admin/schools/{id}', [AdminSchoolController::class, 'update'])->name('admin.schools.update');
+Route::delete('/admin/schools/{id}', [AdminSchoolController::class, 'destroy'])->name('admin.schools.destroy');
+
+// Admin User & Verification Routes
+Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
+Route::get('/admin/user', function () {
+    return redirect()->route('admin.users.index');
 });
+
+// Admin Reports
+Route::view('/admin/reports', 'admin.reports.index')->name('admin.reports.index');
+Route::get('/admin/reports/{id}', function ($id) {
+    return view('admin.reports.show', compact('id'));
+})->name('admin.reports.show');
 
 // Auth Routes
 Route::view('/login', 'auth.login')->name('login');
