@@ -34,7 +34,13 @@ Route::get('/event/{id}', function ($id) {
 });
 
 // Admin Dashboard
-Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::view('/', 'admin.dashboard')->name('dashboard');
+    $pages = ['users', 'schools', 'universities', 'companies', 'jobs', 'internships', 'events', 'articles', 'community', 'reports'];
+    foreach ($pages as $page) {
+        Route::get('/'.$page, fn () => abort(404))->name($page);
+    }
+});
 
 // Auth Routes
 Route::view('/login', 'auth.login')->name('login');

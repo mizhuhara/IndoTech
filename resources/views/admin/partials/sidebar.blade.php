@@ -22,17 +22,17 @@
     <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         @php
             $menu = [
-                ['label' => 'Dashboard', 'icon' => 'grid', 'active' => request()->routeIs('admin.dashboard'), 'href' => '#'],
-                ['label' => 'User and Verification', 'icon' => 'users', 'active' => false, 'href' => '#', 'arrow' => true],
-                ['label' => 'School', 'icon' => 'school', 'active' => false, 'href' => '#'],
-                ['label' => 'University', 'icon' => 'university', 'active' => false, 'href' => '#'],
-                ['label' => 'Company', 'icon' => 'company', 'active' => false, 'href' => '#'],
-                ['label' => 'Jobs', 'icon' => 'jobs', 'active' => false, 'href' => '#'],
-                ['label' => 'Internship', 'icon' => 'internship', 'active' => false, 'href' => '#'],
-                ['label' => 'Events', 'icon' => 'events', 'active' => false, 'href' => '#'],
-                ['label' => 'Articles', 'icon' => 'articles', 'active' => false, 'href' => '#'],
-                ['label' => 'Community', 'icon' => 'community', 'active' => false, 'href' => '#'],
-                ['label' => 'Reports', 'icon' => 'reports', 'active' => false, 'href' => '#'],
+                ['label' => 'Dashboard', 'icon' => 'grid', 'active' => request()->routeIs('admin.dashboard'), 'href' => route('admin.dashboard')],
+                ['label' => 'User and Verification', 'icon' => 'users', 'active' => request()->routeIs('admin.users'), 'href' => route('admin.users'), 'arrow' => true],
+                ['label' => 'School', 'icon' => 'school', 'active' => request()->routeIs('admin.schools'), 'href' => route('admin.schools')],
+                ['label' => 'University', 'icon' => 'university', 'active' => request()->routeIs('admin.universities'), 'href' => route('admin.universities')],
+                ['label' => 'Company', 'icon' => 'company', 'active' => request()->routeIs('admin.companies'), 'href' => route('admin.companies')],
+                ['label' => 'Jobs', 'icon' => 'jobs', 'active' => request()->routeIs('admin.jobs'), 'href' => route('admin.jobs')],
+                ['label' => 'Internship', 'icon' => 'internship', 'active' => request()->routeIs('admin.internships'), 'href' => route('admin.internships')],
+                ['label' => 'Events', 'icon' => 'events', 'active' => request()->routeIs('admin.events'), 'href' => route('admin.events')],
+                ['label' => 'Articles', 'icon' => 'articles', 'active' => request()->routeIs('admin.articles'), 'href' => route('admin.articles')],
+                ['label' => 'Community', 'icon' => 'community', 'active' => request()->routeIs('admin.community'), 'href' => route('admin.community')],
+                ['label' => 'Reports', 'icon' => 'reports', 'active' => request()->routeIs('admin.reports'), 'href' => route('admin.reports')],
             ];
         @endphp
 
