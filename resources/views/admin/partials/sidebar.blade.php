@@ -43,8 +43,8 @@
                     [
                         'label' => 'Universities',
                         'icon' => 'university',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.univ.*'),
+                        'href' => route('admin.univ.index')
                     ],
                     [
                         'label' => 'Company',
