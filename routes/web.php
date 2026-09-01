@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminSchoolController;
+use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminVerificationController;
 use App\Http\Controllers\CampusController;
@@ -47,6 +48,15 @@ Route::get('/admin/schools/{id}', [AdminSchoolController::class, 'show'])->name(
 Route::get('/admin/schools/{id}/edit', [AdminSchoolController::class, 'edit'])->name('admin.schools.edit');
 Route::put('/admin/schools/{id}', [AdminSchoolController::class, 'update'])->name('admin.schools.update');
 Route::delete('/admin/schools/{id}', [AdminSchoolController::class, 'destroy'])->name('admin.schools.destroy');
+
+// Admin University Management
+Route::get('/admin/univ', [AdminUnivController::class, 'index'])->name('admin.univ.index');
+Route::get('/admin/univ/create', [AdminUnivController::class, 'create'])->name('admin.univ.create');
+Route::post('/admin/univ', [AdminUnivController::class, 'store'])->name('admin.univ.store');
+Route::get('/admin/univ/{id}', [AdminUnivController::class, 'show'])->name('admin.univ.show');
+Route::get('/admin/univ/{id}/edit', [AdminUnivController::class, 'edit'])->name('admin.univ.edit');
+Route::put('/admin/univ/{id}', [AdminUnivController::class, 'update'])->name('admin.univ.update');
+Route::delete('/admin/univ/{id}', [AdminUnivController::class, 'destroy'])->name('admin.univ.destroy');
 
 // Admin User & Verification Routes
 Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
