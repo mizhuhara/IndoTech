@@ -30,7 +30,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-[#f8fafd] min-h-screen">
 
 @php
     $reports = [
@@ -50,28 +50,7 @@
 
     <div class="flex-1 flex flex-col min-w-0">
 
-        <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center gap-4">
-            <div class="text-[13px] text-slate-500">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600">Home</a>
-                <span class="mx-1.5">›</span>
-                <span class="text-slate-900 font-medium">Reports</span>
-            </div>
-
-            <div class="flex-1"></div>
-
-            <div class="hidden md:flex items-center gap-2 bg-slate-100 rounded-lg px-3 h-9 w-64">
-                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-slate-400"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/></svg>
-                <input id="reports-search" type="text" placeholder="Search reports..." class="bg-transparent outline-none text-[13px] text-slate-700 placeholder-slate-400 flex-1 min-w-0">
-            </div>
-
-            <div class="flex items-center gap-2.5 pl-3 border-l border-slate-200">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-[13px] font-bold">AD</div>
-                <div class="hidden sm:block">
-                    <div class="text-[13px] font-semibold text-slate-900 leading-none">Admin</div>
-                    <div class="text-[11px] text-slate-500 mt-0.5">Super Admin</div>
-                </div>
-            </div>
-        </header>
+        @include('admin.partials.header')
 
         <main class="flex-1 p-6 space-y-6">
 
