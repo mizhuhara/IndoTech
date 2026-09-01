@@ -65,10 +65,10 @@
                         'href' => '#'
                     ],
                     [
-                        'label' => 'Events',
+                        'label' => 'Event',
                         'icon' => 'events',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.events.*'),
+                        'href' => route('admin.events.index')
                     ],
                     [
                         'label' => 'Articles',
