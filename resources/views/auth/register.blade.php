@@ -41,19 +41,14 @@
                 <p class="mt-2 text-[15px] text-slate-600">Choose your primary role to customize your IndoTech experience.</p>
             </div>
 
-            <div id="role-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div id="role-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
                 @php
                     $roles = [
-                        ['key' => 'student', 'title' => 'Student', 'desc' => 'Explore education, find internships, and develop your IT skills.', 'icon' => 'graduation'],
-                        ['key' => 'teacher', 'title' => 'Teacher', 'desc' => 'Guide students and connect with the latest industry trends.', 'icon' => 'book'],
-                        ['key' => 'lecturer', 'title' => 'Lecturer', 'desc' => 'Connect academic research with tech industry needs.', 'icon' => 'badge'],
-                        ['key' => 'alumni', 'title' => 'Alumni', 'desc' => 'Stay connected, mentor students, and discover career opportunities.', 'icon' => 'award'],
-                        ['key' => 'it-professional', 'title' => 'IT Professional', 'desc' => 'Build networks, find jobs, and share your expertise.', 'icon' => 'monitor'],
-                        ['key' => 'school', 'title' => 'School', 'desc' => 'Showcase vocational programs and connect with industry.', 'icon' => 'school'],
-                        ['key' => 'university', 'title' => 'University', 'desc' => 'Manage campus programs and industry partnerships.', 'icon' => 'landmark'],
-                        ['key' => 'company', 'title' => 'Company', 'desc' => 'Recruit tech talent and promote your brand to the ecosystem.', 'icon' => 'office'],
-                        ['key' => 'hr', 'title' => 'HR/Recruiter', 'desc' => "Find, track, and recruit Indonesia's top IT talent.", 'icon' => 'id-card'],
+                        ['key' => 'user', 'title' => 'User', 'desc' => 'Individual — belajar, cari kerja, ikut event, jadi mentor.', 'icon' => 'user'],
+                        ['key' => 'school', 'title' => 'School', 'desc' => 'Institusi pendidikan — tampilkan program vokasi & koneksi industri.', 'icon' => 'school'],
+                        ['key' => 'university', 'title' => 'University', 'desc' => 'Kampus — kelola program & kemitraan industri.', 'icon' => 'landmark'],
+                        ['key' => 'company', 'title' => 'Company', 'desc' => 'Perusahaan — rekrut talenta IT & promot brand.', 'icon' => 'office'],
                     ];
                 @endphp
 
@@ -61,8 +56,8 @@
                     <button type="button" data-role="{{ $role['key'] }}"
                             class="role-card group text-left bg-white border border-slate-200 rounded-xl p-5 transition hover:border-blue-400 hover:shadow-md outline-none focus:ring-2 focus:ring-blue-500/30">
                         <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
-                            @if ($role['icon'] === 'graduation')
-                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m-6-8v3c0 1.66 2.69 3 6 3s6-1.34 6-3v-3"/></svg>
+                            @if ($role['icon'] === 'user')
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>
                             @elseif ($role['icon'] === 'book')
                                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.25C10.5 5 8.5 4.5 6 4.5H3v13h3c2.5 0 4.5.5 6 1.75m0-13c1.5-1.25 3.5-1.75 6-1.75h3v13h-3c-2.5 0-4.5.5-6 1.75m0-13v13"/></svg>
                             @elseif ($role['icon'] === 'badge')
@@ -110,7 +105,13 @@
                 <p class="mt-1.5 text-[14px] text-gray-500">Join us in bridging Indonesian Education and Global IT.</p>
             </div>
 
-            <form action="{{ url('/register') }}" method="POST" class="mt-8 space-y-5">
+            {{-- Institution verification notice --}}
+            <div id="inst-notice" class="hidden mt-5 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-[13px] text-amber-800 flex items-start gap-2.5">
+                <svg class="shrink-0 mt-0.5 text-amber-600" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+                <span>Akun institusi butuh verifikasi. Setelah daftar, super admin periksa dokumen lalu <b>approve</b> — baru akun bisa login.</span>
+            </div>
+
+            <form action="{{ url('/register') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-5">
                 @csrf
                 <input type="hidden" name="role" id="input-role" value="">
 
@@ -127,9 +128,52 @@
                     </div>
                 </div>
 
+                {{-- Institution fields (school/university/company only) --}}
+                <div id="inst-fields" class="hidden space-y-5">
+                    <div>
+                        <label for="org_contact" class="block text-[13.5px] font-semibold text-gray-900">Contact Person &nbsp;<span class="text-gray-400 font-normal">(nama penanggung jawab)</span></label>
+                        <div class="relative mt-2">
+                            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>
+                            <input id="org_contact" name="org_contact" type="text" placeholder="Nama contact person"
+                                   class="w-full h-[46px] pl-11 pr-4 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="org_phone" class="block text-[13.5px] font-semibold text-gray-900">Nomor Telepon / WhatsApp</label>
+                        <div class="relative mt-2">
+                            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
+                            <input id="org_phone" name="org_phone" type="text" placeholder="+62 ..."
+                                   class="w-full h-[46px] pl-11 pr-4 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="org_address" class="block text-[13.5px] font-semibold text-gray-900">Alamat Institusi</label>
+                        <div class="relative mt-2">
+                            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                            <textarea id="org_address" name="org_address" rows="2" placeholder="Alamat lengkap institusi"
+                                      class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"></textarea>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="org_doc" class="block text-[13.5px] font-semibold text-gray-900">
+                            Dokumen Verifikasi
+                            <span class="text-gray-400 font-normal">(akta / SIUP / NPWP / SK)</span>
+                        </label>
+                        <div class="mt-2 flex items-center gap-3 rounded-lg border border-dashed border-gray-300 px-4 py-4">
+                            <svg class="shrink-0 text-gray-400" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 0L7 9m5-5 5 5M4 20h16"/></svg>
+                            <span class="text-[13px] text-gray-500">Upload satu file (PDF/JPG, maks 5 MB). Dokumen diperiksa super admin sebelum akun aktif.</span>
+                            <input id="org_doc" name="org_doc" type="file" accept=".pdf,.jpg,.jpeg,.png"
+                                   class="block w-full text-[13px] text-gray-500 file:mr-3 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-[13px] file:font-semibold file:text-blue-600 hover:file:bg-blue-100">
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Full Name --}}
                 <div>
-                    <label for="name" class="block text-[13.5px] font-semibold text-gray-900">Full Name</label>
+                    <label id="label-name" for="name" class="block text-[13.5px] font-semibold text-gray-900">Full Name</label>
                     <div class="relative mt-2">
                         <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>
                         <input id="name" name="name" type="text" required placeholder="Enter your full name"
@@ -198,6 +242,19 @@
         (function () {
             var selected = null;
 
+            var INST = ['school', 'university', 'company'];
+            function applyRole(role) {
+                var isInst = INST.indexOf(role) !== -1;
+                document.getElementById('inst-fields').classList.toggle('hidden', !isInst);
+                document.getElementById('inst-notice').classList.toggle('hidden', !isInst);
+                var nameEl = document.getElementById('name');
+                document.getElementById('label-name').textContent = isInst ? 'Nama Institusi / Perusahaan' : 'Full Name';
+                nameEl.placeholder = isInst ? 'Nama institusi / perusahaan' : 'Enter your full name';
+                ['org_contact', 'org_phone', 'org_address', 'org_doc'].forEach(function (id) {
+                    document.getElementById(id).required = isInst;
+                });
+            }
+
             // Step 1: select role card
             document.querySelectorAll('.role-card').forEach(function (card) {
                 card.addEventListener('click', function () {
@@ -216,6 +273,7 @@
             // Continue -> step 2
             document.getElementById('btn-continue').addEventListener('click', function () {
                 var role = selected;
+                applyRole(role);
                 document.getElementById('input-role').value = role;
                 document.querySelectorAll('.chip').forEach(function (chip) {
                     chip.classList.toggle('bg-blue-50', chip.dataset.rolechip === role);
@@ -236,6 +294,7 @@
             document.querySelectorAll('.chip').forEach(function (chip) {
                 chip.addEventListener('click', function () {
                     selected = chip.dataset.rolechip;
+                    applyRole(selected);
                     document.getElementById('input-role').value = selected;
                     document.querySelectorAll('.chip').forEach(function (c) {
                         var on = c.dataset.rolechip === selected;
@@ -268,7 +327,7 @@
                 btn.classList.toggle('disabled:opacity-50', !enabled);
             }
             agree.addEventListener('change', updateBtn);
-            ['name', 'email', 'password', 'password_confirmation'].forEach(function (id) {
+            ['name', 'email', 'password', 'password_confirmation', 'org_contact', 'org_phone', 'org_address', 'org_doc'].forEach(function (id) {
                 document.getElementById(id).addEventListener('input', updateBtn);
             });
         })();
