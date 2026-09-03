@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminCompanyController;
 use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
@@ -57,6 +58,15 @@ Route::get('/admin/univ/{id}', [AdminUnivController::class, 'show'])->name('admi
 Route::get('/admin/univ/{id}/edit', [AdminUnivController::class, 'edit'])->name('admin.univ.edit');
 Route::put('/admin/univ/{id}', [AdminUnivController::class, 'update'])->name('admin.univ.update');
 Route::delete('/admin/univ/{id}', [AdminUnivController::class, 'destroy'])->name('admin.univ.destroy');
+
+// Admin Company Management
+Route::get('/admin/company', [AdminCompanyController::class, 'index'])->name('admin.company.index');
+Route::get('/admin/company/create', [AdminCompanyController::class, 'create'])->name('admin.company.create');
+Route::post('/admin/company', [AdminCompanyController::class, 'store'])->name('admin.company.store');
+Route::get('/admin/company/{id}', [AdminCompanyController::class, 'show'])->name('admin.company.show');
+Route::get('/admin/company/{id}/edit', [AdminCompanyController::class, 'edit'])->name('admin.company.edit');
+Route::put('/admin/company/{id}', [AdminCompanyController::class, 'update'])->name('admin.company.update');
+Route::delete('/admin/company/{id}', [AdminCompanyController::class, 'destroy'])->name('admin.company.destroy');
 
 // Admin User & Verification Routes
 Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
