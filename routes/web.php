@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminVerificationController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CareerController;
 use App\Http\Controllers\EducationController;
@@ -130,17 +131,12 @@ Route::post('/admin/articles', function () {
 })->name('admin.articles.store');
 
 // Auth Routes
-Route::view('/login', 'auth.login')->name('login');
-Route::post('/login', function () {
-    // TODO: handle login — stub, belum ada auth logic
-    return back()->withErrors(['email' => 'Login belum tersedia.']);
-})->name('login.submit');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::view('/register', 'auth.register')->name('register');
-Route::post('/register', function () {
-    // TODO: handle register — stub, belum ada auth logic
-    return back()->withErrors(['email' => 'Register belum tersedia.']);
-})->name('register.submit');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 
 // Knowledge Hub Routes
 Route::get('/knowledge-hub', [KnowledgeController::class, 'index'])->name('knowledge.index');
