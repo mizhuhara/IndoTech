@@ -16,22 +16,99 @@
             </p>
         </div>
 
-        {{-- Category Pills Row --}}
-        <div class="flex items-center gap-2.5 overflow-x-auto pb-4 mb-8 no-scrollbar [&::-webkit-scrollbar]:hidden" style="scrollbar-width: none; -ms-overflow-style: none;">
-            @foreach($categories as $cat)
-                @php
-                    $isActive = strtolower($activeCategory) === strtolower($cat);
-                    // Special link for AI pill to showcase AI Recommendations page directly or filter
-                    $linkUrl = (strtolower($cat) === 'ai') 
-                        ? route('knowledge.ai') 
-                        : route('knowledge.index', ['category' => strtolower($cat) === 'all' ? 'All' : $cat]);
-                @endphp
-                <a href="{{ $linkUrl }}" 
-                   class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-150 {{ $isActive ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-200/70 hover:bg-slate-200 text-slate-600' }}">
-                    {{ $cat }}
-                </a>
-            @endforeach
+        {{-- Category Pills Row with hidden scrollbar and scroll controls --}}
+        <div class="relative mb-8 group">
+            {{-- Left Scroll Button --}}
+            <button id="category-scroll-left" type="button" aria-label="Scroll Left"
+                    class="absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/95 shadow-md border border-slate-200 text-slate-600 hover:text-blue-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm hidden sm:flex">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+
+            {{-- Category Pills Container (Hidden scrollbar) --}}
+            <div id="category-scroll-container" 
+                 class="flex items-center gap-2.5 overflow-x-auto py-1 scroll-smooth select-none cursor-grab active:cursor-grabbing"
+                 style="scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch;">
+                @foreach($categories as $cat)
+                    @php
+                        $isActive = strtolower($activeCategory) === strtolower($cat);
+                        // Special link for AI pill to showcase AI Recommendations page directly or filter
+                        $linkUrl = (strtolower($cat) === 'ai') 
+                            ? route('knowledge.ai') 
+                            : route('knowledge.index', ['category' => strtolower($cat) === 'all' ? 'All' : $cat]);
+                    @endphp
+                    <a href="{{ $linkUrl }}" 
+                       class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-150 {{ $isActive ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-200/70 hover:bg-slate-200 text-slate-600' }}">
+                        {{ $cat }}
+                    </a>
+                @endforeach
+            </div>
+
+            {{-- Right Scroll Button --}}
+            <button id="category-scroll-right" type="button" aria-label="Scroll Right"
+                    class="absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/95 shadow-md border border-slate-200 text-slate-600 hover:text-blue-600 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 backdrop-blur-sm hidden sm:flex">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </button>
         </div>
+
+        <style>
+            #category-scroll-container::-webkit-scrollbar {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+        </style>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const container = document.getElementById('category-scroll-container');
+                const btnLeft = document.getElementById('category-scroll-left');
+                const btnRight = document.getElementById('category-scroll-right');
+
+                if (container) {
+                    if (btnLeft) {
+                        btnLeft.addEventListener('click', () => {
+                            container.scrollBy({ left: -220, behavior: 'smooth' });
+                        });
+                    }
+                    if (btnRight) {
+                        btnRight.addEventListener('click', () => {
+                            container.scrollBy({ left: 220, behavior: 'smooth' });
+                        });
+                    }
+
+                    // Mouse wheel horizontal scroll support
+                    container.addEventListener('wheel', (e) => {
+                        if (e.deltaY !== 0) {
+                            e.preventDefault();
+                            container.scrollLeft += e.deltaY;
+                        }
+                    }, { passive: false });
+
+                    // Drag to scroll functionality
+                    let isDown = false;
+                    let startX, scrollLeft;
+
+                    container.addEventListener('mousedown', (e) => {
+                        isDown = true;
+                        startX = e.pageX - container.offsetLeft;
+                        scrollLeft = container.scrollLeft;
+                    });
+                    container.addEventListener('mouseleave', () => { isDown = false; });
+                    container.addEventListener('mouseup', () => { isDown = false; });
+                    container.addEventListener('mousemove', (e) => {
+                        if (!isDown) return;
+                        e.preventDefault();
+                        const x = e.pageX - container.offsetLeft;
+                        const walk = (x - startX) * 1.5;
+                        container.scrollLeft = scrollLeft - walk;
+                    });
+                }
+            });
+        </script>
 
         {{-- Banner for AI Tools Directory if AI filter is active --}}
         <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 rounded-2xl p-6 mb-8 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg shadow-blue-500/10">
@@ -74,7 +151,7 @@
                             <div class="p-6 space-y-3">
                                 {{-- Title --}}
                                 <h2 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-blue-600 transition">
-                                    <a href="{{ route('knowledge.ai.detail', $article['ai_tool_id'] ?? $article['id']) }}">
+                                    <a href="{{ route('knowledge.show', $article['id']) }}">
                                         {{ $article['title'] }}
                                     </a>
                                 </h2>

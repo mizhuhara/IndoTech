@@ -23,13 +23,13 @@
         </h1>
 
         {{-- Category Pills --}}
-        <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 mb-8 no-scrollbar [&::-webkit-scrollbar]:hidden w-full sm:w-auto" style="scrollbar-width: none; -ms-overflow-style: none;">
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 mb-8 w-full sm:w-auto scroll-smooth" style="scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch;">
             @foreach($categories as $cat)
                 @php
                     $isActive = strtolower($activeCategory) === strtolower($cat);
                 @endphp
                 <a href="{{ route('knowledge.ai', ['category' => $cat]) }}" 
-                   class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all duration-150 {{ $isActive ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-200/70 hover:bg-slate-200 text-slate-600' }}">
+                   class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all duration-150 {{ $isActive ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-200/70 hover:bg-slate-200 text-slate-600' }}">
                     {{ $cat }}
                 </a>
             @endforeach
