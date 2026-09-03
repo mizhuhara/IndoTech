@@ -102,6 +102,17 @@
                 </p>
             </div>
 
+            @if(session('success'))
+                <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold px-4 py-3 rounded-lg">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="bg-red-50 border border-red-200 text-red-800 text-sm font-semibold px-4 py-3 rounded-lg">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             {{-- Main Table Card Container (Matching Verification Design Image) --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
 
@@ -177,15 +188,15 @@
                                         <input type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
                                     </td>
 
-                                    {{-- Entity Name & Icon & REQ ID --}}
+                                    {{-- Entity Name & Icon --}}
                                     <td class="py-4 px-4">
                                         <div class="flex items-center gap-3">
                                             <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
-                                                @if($req['icon_type'] === 'school')
+                                                @if($req->role === 'school')
                                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147L12 14.6l7.74-4.453M12 4.5L2.25 10.125 12 15.75l9.75-5.625L12 4.5z" />
                                                     </svg>
-                                                @elseif($req['icon_type'] === 'university')
+                                                @elseif($req->role === 'university')
                                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5M4.5 21V10.5" />
                                                     </svg>
@@ -197,56 +208,61 @@
                                             </div>
                                             <div>
                                                 <h4 class="font-extrabold text-slate-900 text-xs sm:text-sm">
-                                                    {{ $req['name'] }}
+                                                    {{ $req->name }}
                                                 </h4>
                                                 <p class="text-[11px] text-slate-400 font-semibold mt-0.5 uppercase tracking-wider">
-                                                    {{ $req['req_id'] }}
+                                                    #{{ $req->id }} &middot; {{ $req->email }}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
 
                                     {{-- Type --}}
-                                    <td class="py-4 px-4 font-semibold text-slate-600">
-                                        {{ $req['type'] }}
+                                    <td class="py-4 px-4 font-semibold text-slate-600 capitalize">
+                                        {{ $req->role }}
                                     </td>
 
                                     {{-- Registration Date --}}
                                     <td class="py-4 px-4">
-                                        <div class="font-semibold text-slate-800">{{ $req['date'] }}</div>
-                                        <div class="text-[11px] text-slate-400 font-medium mt-0.5">{{ $req['time'] }}</div>
+                                        <div class="font-semibold text-slate-800">{{ $req->created_at->format('M d, Y') }}</div>
+                                        <div class="text-[11px] text-slate-400 font-medium mt-0.5">{{ $req->created_at->format('h:i A') }}</div>
                                     </td>
 
                                     {{-- Status --}}
                                     <td class="py-4 px-4">
                                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700">
                                             <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
-                                            <span>{{ $req['status'] }}</span>
+                                            <span class="capitalize">{{ $req->status }}</span>
                                         </span>
                                     </td>
 
-                                    {{-- Action Buttons (Reject Circle Slash & Verify Blue Button) --}}
+                                    {{-- Action Buttons --}}
                                     <td class="py-4 px-4 text-right">
                                         <div class="flex items-center justify-end gap-3">
-                                            {{-- Reject Icon Button --}}
-                                            <button type="button" 
-                                                    onclick="if(confirm('Reject request from {{ $req['name'] }}?')) alert('Rejected.');" 
-                                                    class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition" 
-                                                    title="Reject Request">
-                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                                                </svg>
-                                            </button>
+                                            {{-- Reject --}}
+                                            <form action="{{ route('admin.verification.reject', $req->id) }}" method="POST"
+                                                  onsubmit="return confirm('Tolak pendaftaran {{ $req->name }}?')">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 transition"
+                                                        title="Reject Request">
+                                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                                    </svg>
+                                                </button>
+                                            </form>
 
-                                            {{-- Verify Button --}}
-                                            <button type="button" 
-                                                    onclick="alert('Entity {{ $req['name'] }} has been verified!')" 
-                                                    class="bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg shadow-sm inline-flex items-center gap-1.5 transition">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
-                                                <span>Verify</span>
-                                            </button>
+                                            {{-- Verify --}}
+                                            <form action="{{ route('admin.verification.approve', $req->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="bg-blue-900 hover:bg-blue-950 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg shadow-sm inline-flex items-center gap-1.5 transition">
+                                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span>Verify</span>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -261,30 +277,15 @@
                     </table>
                 </div>
 
-                {{-- Table Footer (Matching Design Image) --}}
+                {{-- Table Footer --}}
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 text-xs font-semibold text-slate-400">
                     <div>
-                        Showing 1-3 of {{ $totalPendingCount }} pending requests
+                        Showing {{ $requests->firstItem() ?? 0 }}-{{ $requests->lastItem() ?? 0 }} of {{ $requests->total() }} pending requests
                     </div>
 
-                    {{-- Round Circle Pagination --}}
+                    {{-- Pagination --}}
                     <div class="flex items-center gap-1.5">
-                        <button disabled class="w-8 h-8 rounded-full border border-slate-200 text-slate-300 flex items-center justify-center opacity-50 text-xs">
-                            &lsaquo;
-                        </button>
-                        <button class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs shadow-sm flex items-center justify-center">
-                            1
-                        </button>
-                        <a href="?page=2" class="w-8 h-8 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center font-bold text-xs transition">
-                            2
-                        </a>
-                        <a href="?page=3" class="w-8 h-8 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center font-bold text-xs transition">
-                            3
-                        </a>
-                        <span class="px-1 text-slate-400">...</span>
-                        <a href="?page=2" class="w-8 h-8 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center text-xs transition">
-                            &rsaquo;
-                        </a>
+                        {{ $requests->links() }}
                     </div>
                 </div>
 
