@@ -79,8 +79,8 @@
                     [
                         'label' => 'Community',
                         'icon' => 'community',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.community.*'),
+                        'href' => route('admin.community.index')
                     ],
                     [
                         'label' => 'Reports',

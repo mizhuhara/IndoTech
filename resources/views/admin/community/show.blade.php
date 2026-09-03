@@ -1,13 +1,13 @@
 @extends('admin.layouts.app')
 
-@section('title', ($company['name'] ?? 'Company Details') . ' — IndoTech')
+@section('title', ($community['name'] ?? 'Community Details') . ' — IndoTech')
 
 @section('content')
 <div class="space-y-6 max-w-7xl mx-auto">
     
     {{-- Top Back Link & Breadcrumb --}}
     <div>
-        <a href="{{ route('admin.company.index') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 mb-2 transition">
+        <a href="{{ route('admin.community.index') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 mb-2 transition">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
@@ -15,16 +15,16 @@
         </a>
 
         <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-            <a href="{{ route('admin.company.index') }}" class="hover:text-blue-600 transition">Companies</a>
+            <a href="{{ route('admin.community.index') }}" class="hover:text-blue-600 transition">Community</a>
             <span class="text-slate-400">›</span>
-            <span class="text-slate-900 font-semibold">{{ $company['name'] ?? 'Detail' }}</span>
+            <span class="text-slate-900 font-semibold">{{ $community['name'] ?? 'Detail' }}</span>
         </div>
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2">
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">{{ $company['name'] ?? 'Company Details' }}</h1>
+            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">{{ $community['name'] ?? 'Community Details' }}</h1>
             
             <div class="flex items-center gap-3">
-                <a href="{{ route('admin.company.edit', $company['id']) }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-[13.5px] font-semibold transition">
+                <a href="{{ route('admin.community.edit', $community['id']) }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-[13.5px] font-semibold transition">
                     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -32,7 +32,7 @@
                     Edit
                 </a>
                 
-                <form method="POST" action="{{ route('admin.company.destroy', $company['id']) }}" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus perusahaan ini?');">
+                <form method="POST" action="{{ route('admin.community.destroy', $community['id']) }}" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus komunitas ini?');">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 text-[13.5px] font-semibold transition">
@@ -67,38 +67,28 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-5">
                     <div>
-                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Company Code</div>
-                        <div class="text-[15px] font-bold text-slate-900">{{ $company['npsn'] ?? '-' }}</div>
-                    </div>
-                    
-                    <div>
-                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Company Type</div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Category</div>
                         <div class="text-[15px] font-bold text-slate-900">
-                            @if(($company['type'] ?? '') === 'BUMN')
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-bold bg-red-50 text-red-700">BUMN</span>
-                            @else
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-bold bg-green-50 text-green-700">{{ $company['type'] ?? 'Swasta' }}</span>
-                            @endif
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-bold bg-blue-50 text-[#0b57d0]">
+                                {{ $community['category'] ?? '-' }}
+                            </span>
                         </div>
                     </div>
                     
                     <div>
-                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Industry</div>
-                        <div class="text-[15px] font-bold text-slate-900">{{ $company['industry'] ?? '-' }}</div>
-                    </div>
-                    
-                    <div>
-                        <div class="text-[13px] font-semibold text-slate-500 mb-1">City / Province</div>
-                        <div class="text-[15px] font-bold text-slate-900">{{ $company['city'] ?? '-' }}, {{ $company['province'] ?? '-' }}</div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Total Members</div>
+                        <div class="text-[15px] font-bold text-slate-900">
+                            {{ number_format($community['members'] ?? 0, 0, ',', '.') }} Members
+                        </div>
                     </div>
                     
                     <div class="sm:col-span-2">
                         <div class="text-[13px] font-semibold text-slate-500 mb-1">Status</div>
                         <div>
-                            @if(($company['status'] ?? 'active') === 'active')
+                            @if(($community['status'] ?? 'active') === 'active')
                                 <span class="inline-flex items-center gap-1.5 text-[14px] font-bold text-slate-800">
                                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                                    Active Partner
+                                    Active Community
                                 </span>
                             @else
                                 <span class="inline-flex items-center gap-1.5 text-[14px] font-bold text-slate-800">
@@ -111,17 +101,17 @@
                 </div>
             </div>
 
-            {{-- Card 2: Company Description --}}
+            {{-- Card 2: Community Description --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
-                    <h2 class="text-[17px] font-bold text-slate-900">Company Description</h2>
+                    <h2 class="text-[17px] font-bold text-slate-900">Description</h2>
                 </div>
                 
                 <div class="text-[14px] text-slate-700 leading-relaxed bg-[#f0f4f9]/50 rounded-xl p-5">
-                    {{ $company['description'] ?? 'Belum ada deskripsi.' }}
+                    {{ $community['description'] ?? 'Belum ada deskripsi.' }}
                 </div>
             </div>
 
@@ -133,7 +123,7 @@
                         <circle cx="8.5" cy="8.5" r="1.5"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
                     </svg>
-                    <h2 class="text-[17px] font-bold text-slate-900">Company Gallery</h2>
+                    <h2 class="text-[17px] font-bold text-slate-900">Community Gallery</h2>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -155,14 +145,14 @@
 
             {{-- Card 1: Logo Preview --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col items-center text-center">
-                <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Company Logo</h2>
+                <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Community Logo</h2>
                 
                 <div class="w-full aspect-[4/3] rounded-2xl bg-[#f0f4f9] border border-slate-200/70 flex items-center justify-center p-6 mb-4 relative overflow-hidden">
-                    <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center shadow-sm border border-white text-[#0b57d0] font-extrabold text-2xl overflow-hidden">
-                        @if(!empty($company['logo_url']))
-                            <img src="{{ $company['logo_url'] }}" alt="Logo" class="w-full h-full object-cover">
+                    <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center shadow-sm border border-white text-[#0b57d0] font-extrabold text-3xl overflow-hidden">
+                        @if(!empty($community['logo_url']))
+                            <img src="{{ $community['logo_url'] }}" alt="Logo" class="w-full h-full object-cover">
                         @else
-                            {{ $company['logo_text'] ?? 'CMP' }}
+                            {{ substr($community['name'] ?? 'C', 0, 1) }}
                         @endif
                     </div>
                 </div>
@@ -181,7 +171,7 @@
                         </div>
                         <div>
                             <div class="text-[13px] font-semibold text-slate-500 mb-0.5">Email</div>
-                            <div class="text-[14px] font-bold text-slate-900">{{ $company['email'] ?? '-' }}</div>
+                            <div class="text-[14px] font-bold text-slate-900">{{ $community['email'] ?? '-' }}</div>
                         </div>
                     </div>
                     
@@ -193,40 +183,27 @@
                         </div>
                         <div>
                             <div class="text-[13px] font-semibold text-slate-500 mb-0.5">Website</div>
-                            @if(!empty($company['website']))
-                                <a href="{{ $company['website'] }}" target="_blank" class="text-[14px] font-bold text-blue-600 hover:underline">{{ $company['website'] }}</a>
+                            @if(!empty($community['website']))
+                                <a href="{{ $community['website'] }}" target="_blank" class="text-[14px] font-bold text-blue-600 hover:underline">{{ $community['website'] }}</a>
                             @else
                                 <div class="text-[14px] font-bold text-slate-900">-</div>
                             @endif
                         </div>
                     </div>
-                    
-                    <div class="flex items-start gap-3">
-                        <div class="mt-0.5 text-slate-400">
-                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.596-5.48-4.18-7.076-7.076l1.293-.97c.362-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <div class="text-[13px] font-semibold text-slate-500 mb-0.5">Phone</div>
-                            <div class="text-[14px] font-bold text-slate-900">{{ $company['phone'] ?? '-' }}</div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            {{-- Card 3: Address Details --}}
+            {{-- Card 3: Meta Information --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
-                <h2 class="text-[17px] font-bold text-slate-900 mb-4">Address</h2>
-                <div class="flex items-start gap-3">
-                    <div class="mt-0.5 text-slate-400">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
-                        </svg>
+                <h2 class="text-[17px] font-bold text-slate-900 mb-4">Metadata</h2>
+                <div class="space-y-4">
+                    <div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-0.5">Registered Date</div>
+                        <div class="text-[14px] font-bold text-slate-800">{{ $community['created_at'] ?? '-' }}</div>
                     </div>
-                    <div class="text-[14px] text-slate-800 leading-relaxed font-medium">
-                        {{ $company['address'] ?? '-' }}
+                    <div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-0.5">Last Updated</div>
+                        <div class="text-[14px] font-bold text-slate-800">{{ $community['updated_at'] ?? '-' }}</div>
                     </div>
                 </div>
             </div>

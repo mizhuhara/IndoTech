@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminCommunityController;
 use App\Http\Controllers\AdminCompanyController;
 use App\Http\Controllers\AdminInternshipController;
 use App\Http\Controllers\AdminJobController;
@@ -70,6 +71,15 @@ Route::get('/admin/company/{id}', [AdminCompanyController::class, 'show'])->name
 Route::get('/admin/company/{id}/edit', [AdminCompanyController::class, 'edit'])->name('admin.company.edit');
 Route::put('/admin/company/{id}', [AdminCompanyController::class, 'update'])->name('admin.company.update');
 Route::delete('/admin/company/{id}', [AdminCompanyController::class, 'destroy'])->name('admin.company.destroy');
+
+// Admin Community Management
+Route::get('/admin/community', [AdminCommunityController::class, 'index'])->name('admin.community.index');
+Route::get('/admin/community/create', [AdminCommunityController::class, 'create'])->name('admin.community.create');
+Route::post('/admin/community', [AdminCommunityController::class, 'store'])->name('admin.community.store');
+Route::get('/admin/community/{id}', [AdminCommunityController::class, 'show'])->name('admin.community.show');
+Route::get('/admin/community/{id}/edit', [AdminCommunityController::class, 'edit'])->name('admin.community.edit');
+Route::put('/admin/community/{id}', [AdminCommunityController::class, 'update'])->name('admin.community.update');
+Route::delete('/admin/community/{id}', [AdminCommunityController::class, 'destroy'])->name('admin.community.destroy');
 
 // Admin Jobs Management
 Route::get('/admin/jobs', [AdminJobController::class, 'index'])->name('admin.jobs.index');
