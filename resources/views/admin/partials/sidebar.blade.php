@@ -55,20 +55,20 @@
                     [
                         'label' => 'Jobs',
                         'icon' => 'jobs',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.jobs.*'),
+                        'href' => route('admin.jobs.index')
                     ],
                     [
                         'label' => 'Internships',
                         'icon' => 'internship',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.internships.*'),
+                        'href' => route('admin.internships.index')
                     ],
                     [
-                        'label' => 'Events',
+                        'label' => 'Event',
                         'icon' => 'events',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.events.*'),
+                        'href' => route('admin.events.index')
                     ],
                     [
                         'label' => 'Articles',
