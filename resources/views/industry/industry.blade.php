@@ -85,51 +85,57 @@
                 <div>
                     <div class="flex items-start gap-3.5 mb-4">
                         {{-- Logo Box --}}
-                        @if($company['badge_class'] == 'software')
-                            <div class="w-12 h-12 rounded-lg border border-blue-100 bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                        @elseif($company['badge_class'] == 'creative')
-                            <div class="w-12 h-12 rounded-lg border border-emerald-100 bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        @if(!empty($company['logo_image']))
+                            <div class="w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-slate-200 shadow-xs p-0.5 bg-white">
+                                <img src="{{ $company['logo_image'] }}" alt="{{ $company['name'] }}" class="w-full h-full object-cover rounded-lg">
+                            </div>
                         @else
-                            <div class="w-12 h-12 rounded-lg border border-rose-100 bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
-                        @endif
-                            @if($company['icon_type'] == 'code' || $company['icon_type'] == 'cpu' || $company['icon_type'] == 'cloud' || $company['icon_type'] == 'terminal')
-                                {{-- Code / Software Icon --}}
-                                <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="16 18 22 12 16 6"></polyline>
-                                    <polyline points="8 6 2 12 8 18"></polyline>
-                                </svg>
-                            @elseif($company['icon_type'] == 'palette' || $company['icon_type'] == 'magic' || $company['icon_type'] == 'layers' || $company['icon_type'] == 'camera')
-                                {{-- Creative / Palette Icon --}}
-                                <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                </svg>
-                            @elseif($company['icon_type'] == 'building')
-                                {{-- Building / Office Icon --}}
-                                <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
-                                    <line x1="9" y1="6" x2="9" y2="6.01"></line>
-                                    <line x1="15" y1="6" x2="15" y2="6.01"></line>
-                                </svg>
-                            @elseif($company['icon_type'] == 'credit-card')
-                                {{-- Credit Card / Fintech Icon --}}
-                                <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                                    <line x1="1" y1="10" x2="23" y2="10"></line>
-                                </svg>
-                            @elseif($company['icon_type'] == 'sparkles')
-                                {{-- Sparkles AI Icon --}}
-                                <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path>
-                                </svg>
+                            @if($company['badge_class'] == 'software')
+                                <div class="w-12 h-12 rounded-lg border border-blue-100 bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                            @elseif($company['badge_class'] == 'creative')
+                                <div class="w-12 h-12 rounded-lg border border-emerald-100 bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
                             @else
-                                {{-- Rocket / Startup Icon --}}
-                                <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71.79-1.81.79-1.81l-1.98-1.98s-1.1.08-1.81.79z"></path>
-                                    <path d="M15 9l-6 6"></path>
-                                    <path d="M16.5 4.5c1.5-1.26 5-2 5-2s-.5 3.74-2 5c-.71.71-1.81.79-1.81.79l-1.98-1.98s.08-1.1.79-1.81z"></path>
-                                </svg>
+                                <div class="w-12 h-12 rounded-lg border border-rose-100 bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
                             @endif
-                        </div>
+                                @if($company['icon_type'] == 'code' || $company['icon_type'] == 'cpu' || $company['icon_type'] == 'cloud' || $company['icon_type'] == 'terminal')
+                                    {{-- Code / Software Icon --}}
+                                    <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="16 18 22 12 16 6"></polyline>
+                                        <polyline points="8 6 2 12 8 18"></polyline>
+                                    </svg>
+                                @elseif($company['icon_type'] == 'palette' || $company['icon_type'] == 'magic' || $company['icon_type'] == 'layers' || $company['icon_type'] == 'camera')
+                                    {{-- Creative / Palette Icon --}}
+                                    <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                    </svg>
+                                @elseif($company['icon_type'] == 'building')
+                                    {{-- Building / Office Icon --}}
+                                    <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                                        <line x1="9" y1="6" x2="9" y2="6.01"></line>
+                                        <line x1="15" y1="6" x2="15" y2="6.01"></line>
+                                    </svg>
+                                @elseif($company['icon_type'] == 'credit-card')
+                                    {{-- Credit Card / Fintech Icon --}}
+                                    <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                                    </svg>
+                                @elseif($company['icon_type'] == 'sparkles')
+                                    {{-- Sparkles AI Icon --}}
+                                    <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path>
+                                    </svg>
+                                @else
+                                    {{-- Rocket / Startup Icon --}}
+                                    <svg class="w-6 h-6 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71.79-1.81.79-1.81l-1.98-1.98s-1.1.08-1.81.79z"></path>
+                                        <path d="M15 9l-6 6"></path>
+                                        <path d="M16.5 4.5c1.5-1.26 5-2 5-2s-.5 3.74-2 5c-.71.71-1.81.79-1.81.79l-1.98-1.98s.08-1.1.79-1.81z"></path>
+                                    </svg>
+                                @endif
+                            </div>
+                        @endif
 
                         {{-- Company Title & Badge --}}
                         <div class="min-w-0 flex-1">
@@ -196,68 +202,150 @@
     </div>
 </div>
 
-{{-- Detail Modal --}}
-<div id="companyModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200" onclick="if(event.target === this) closeCompanyModal()">
-    <div class="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-7 relative translate-y-3 transition-transform duration-200">
-        <button onclick="closeCompanyModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 flex items-center justify-center transition cursor-pointer">
-            <svg class="w-4.5 h-4.5 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-
-        <div class="flex items-center gap-4 mb-5">
-            <div id="modalLogoBox" class="w-14 h-14 rounded-xl border border-slate-200 flex items-center justify-center shrink-0">
-                {{-- Dynamic SVG Icon --}}
-            </div>
-            <div>
-                <h2 id="modalCompanyName" class="text-xl font-extrabold text-slate-900 mb-1"></h2>
-                <div class="flex items-center gap-2">
-                    <span id="modalBadge" class="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full"></span>
-                    <span class="text-xs text-slate-500 flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5 stroke-2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
+{{-- Ultra Premium Detail Modal --}}
+<div id="companyModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 opacity-0 pointer-events-none transition-all duration-300 ease-out" onclick="if(event.target === this) closeCompanyModal()">
+    <div id="modalDialog" class="bg-white rounded-3xl w-full max-w-xl max-h-[92vh] overflow-hidden shadow-2xl relative scale-95 translate-y-4 opacity-0 transition-all duration-300 ease-out flex flex-col">
+        
+        {{-- Scrollable Container for Entire Modal Content (Hidden scrollbar) --}}
+        <div id="modalScrollableContent" class="overflow-y-auto flex-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" style="scrollbar-width: none; -ms-overflow-style: none;">
+            
+            {{-- Cover Banner Header with Image & Close Button --}}
+            <div id="modalCoverBanner" class="relative h-36 sm:h-44 w-full bg-slate-900 overflow-hidden shrink-0">
+                {{-- Cover Background Image --}}
+                <img id="modalCoverImage" src="" alt="Cover" class="w-full h-full object-cover transition-opacity duration-300">
+                <div id="modalCoverOverlay" class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-slate-900/30"></div>
+                
+                {{-- Rating & Verified Badge Top Left --}}
+                <div class="absolute top-4 left-4 z-10 flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 bg-slate-950/60 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full border border-white/10 shadow-sm">
+                        <svg class="w-3.5 h-3.5 text-amber-400 fill-amber-400" viewBox="0 0 24 24">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                         </svg>
-                        <span id="modalLocText"></span>
+                        <span id="modalRatingText">4.9</span>
+                    </span>
+                    <span class="inline-flex items-center gap-1 bg-emerald-600/80 backdrop-blur-md text-white text-xs font-semibold px-2.5 py-1 rounded-full border border-emerald-400/30 shadow-sm">
+                        <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                        <span>Terverifikasi</span>
                     </span>
                 </div>
+
+                {{-- Close Button Top Right --}}
+                <button onclick="closeCompanyModal()" aria-label="Tutup" class="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-slate-950/60 hover:bg-slate-950/90 text-white backdrop-blur-md border border-white/10 flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer">
+                    <svg class="w-5 h-5 stroke-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </div>
+
+            {{-- Modal Content Body --}}
+            <div class="px-6 sm:px-8 pb-6">
+                
+                {{-- Floating Company Profile Logo Image --}}
+                <div class="relative z-20 -mt-12 sm:-mt-14 mb-4 flex items-end justify-between">
+                    <div id="modalLogoBox" class="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-white p-2 shadow-xl ring-4 ring-white border border-slate-200 shrink-0 flex items-center justify-center">
+                        {{-- Logo image or SVG --}}
+                    </div>
+                </div>
+
+                {{-- Company Title & Category Badges --}}
+                <div class="mb-5">
+                    <h2 id="modalCompanyName" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-2"></h2>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span id="modalBadge" class="inline-block text-xs font-bold px-3 py-1 rounded-full"></span>
+                        <span class="text-xs text-slate-600 font-semibold flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span id="modalLocText"></span>
+                        </span>
+                    </div>
+                </div>
+
+                {{-- About Section --}}
+                <div class="mb-6">
+                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
+                        <span>Tentang Perusahaan</span>
+                    </div>
+                    <p id="modalDescription" class="text-sm leading-relaxed text-slate-600 bg-slate-50/80 border border-slate-200/60 p-4 rounded-2xl"></p>
+                </div>
+
+                {{-- Key Metrics Cards (Grid of 3) --}}
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <div class="bg-blue-50/60 border border-blue-100 p-3.5 rounded-2xl text-center">
+                        <span class="text-[11px] font-bold text-blue-600 uppercase tracking-wider block mb-0.5">Karyawan</span>
+                        <strong id="modalEmployees" class="text-xs sm:text-sm font-extrabold text-slate-900"></strong>
+                    </div>
+                    <div class="bg-indigo-50/60 border border-indigo-100 p-3.5 rounded-2xl text-center">
+                        <span class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider block mb-0.5">Berdiri</span>
+                        <strong id="modalFounded" class="text-xs sm:text-sm font-extrabold text-slate-900"></strong>
+                    </div>
+                    <div class="bg-emerald-50/60 border border-emerald-100 p-3.5 rounded-2xl text-center">
+                        <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider block mb-0.5">Portofolio</span>
+                        <strong id="modalProjects" class="text-xs sm:text-sm font-extrabold text-slate-900"></strong>
+                    </div>
+                </div>
+
+                {{-- Keunggulan & Spesialisasi (Specialties) --}}
+                <div class="mb-6">
+                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+                        <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Layanan Utama & Keunggulan</span>
+                    </div>
+                    <ul id="modalSpecialties" class="space-y-2">
+                        {{-- Dynamic list --}}
+                    </ul>
+                </div>
+
+                {{-- Tech Stack --}}
+                <div class="mb-2">
+                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                        </svg>
+                        <span>Teknologi & Tech Stack</span>
+                    </div>
+                    <div id="modalTechStack" class="flex flex-wrap gap-2">
+                        {{-- Dynamic pills --}}
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="mb-5">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tentang Perusahaan</h4>
-            <p id="modalDescription" class="text-sm leading-relaxed text-slate-700"></p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mb-5 bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-            <div>
-                <span class="text-xs text-slate-500 block mb-0.5">Jumlah Karyawan</span>
-                <strong id="modalEmployees" class="text-sm text-slate-900"></strong>
-            </div>
-            <div>
-                <span class="text-xs text-slate-500 block mb-0.5">Tahun Berdiri</span>
-                <strong id="modalFounded" class="text-sm text-slate-900"></strong>
-            </div>
-        </div>
-
-        <div class="mb-6">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Teknologi & Stack</h4>
-            <div id="modalTechStack" class="flex flex-wrap gap-1.5">
-                {{-- Dynamic pills --}}
-            </div>
-        </div>
-
-        <div class="flex gap-3 pt-5 border-t border-slate-200">
-            <a id="modalWebsiteLink" href="#" target="_blank" class="flex-1 py-2.5 px-4 text-center text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition shadow-xs">
-                Kunjungi Website
+        {{-- Sticky Action Toolbar Footer --}}
+        <div class="p-4 sm:px-8 sm:py-5 bg-slate-50 border-t border-slate-100 flex gap-3 shrink-0">
+            <a id="modalWebsiteLink" href="#" target="_blank" class="flex-1 py-3 px-4 text-center text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 active:scale-[0.98] rounded-xl transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2">
+                <span>Kunjungi Website</span>
+                <svg class="w-4 h-4 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H18m0 0v4.5m0-4.5L8.25 15.75" />
+                </svg>
             </a>
-            <a id="modalEmailLink" href="#" class="flex-1 py-2.5 px-4 text-center text-sm font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition">
-                Hubungi Email
+            <a id="modalEmailLink" href="#" class="flex-1 py-3 px-4 text-center text-xs sm:text-sm font-bold text-slate-700 bg-white hover:bg-slate-100 active:scale-[0.98] border border-slate-200 rounded-xl transition flex items-center justify-center gap-2 shadow-xs">
+                <svg class="w-4 h-4 text-slate-500 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                <span>Hubungi Email</span>
             </a>
         </div>
     </div>
 </div>
+
+<style>
+    #modalDialog .overflow-y-auto::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+</style>
 
 <script>
     let currentPage = 1;
@@ -369,6 +457,15 @@
             company = JSON.parse(target.getAttribute('data-company'));
         }
 
+        // Lock background body scrolling so mouse scroll strictly focuses on modal popup
+        document.body.style.overflow = 'hidden';
+
+        // Reset modal scroll container to top
+        const scrollableContent = document.getElementById("modalScrollableContent");
+        if (scrollableContent) {
+            scrollableContent.scrollTop = 0;
+        }
+
         document.getElementById("modalCompanyName").innerText = company.name;
         document.getElementById("modalLocText").innerText = company.location + ", Bali";
 
@@ -376,25 +473,67 @@
         modalBadge.innerText = company.category;
         
         if (company.badge_class === 'software') {
-            modalBadge.className = "inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700";
+            modalBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-700 border border-blue-200/60";
         } else if (company.badge_class === 'creative') {
-            modalBadge.className = "inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700";
+            modalBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200/60";
         } else {
-            modalBadge.className = "inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-600";
+            modalBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-rose-100 text-rose-700 border border-rose-200/60";
         }
+
+        // Cover image
+        const coverImg = document.getElementById("modalCoverImage");
+        coverImg.src = company.cover_image || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&h=400&fit=crop";
 
         document.getElementById("modalDescription").innerText = company.full_description || company.description;
         document.getElementById("modalEmployees").innerText = company.employees || "20-50 Karyawan";
         document.getElementById("modalFounded").innerText = company.founded || "2020";
+        document.getElementById("modalRatingText").innerText = company.rating || "4.9";
+        document.getElementById("modalProjects").innerText = company.projects_completed || "100+ Proyek";
 
-        // Stack
+        // Logo Box (Photo Image or SVG Fallback)
+        const logoBox = document.getElementById("modalLogoBox");
+        if (company.logo_image) {
+            logoBox.className = "w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-white p-1 shadow-xl ring-4 ring-white border border-slate-200 shrink-0 overflow-hidden";
+            logoBox.innerHTML = `<img src="${company.logo_image}" alt="${company.name}" class="w-full h-full object-cover rounded-xl">`;
+        } else {
+            if (company.badge_class === 'software') {
+                logoBox.className = "w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0 p-2 shadow-xl ring-4 ring-white";
+            } else if (company.badge_class === 'creative') {
+                logoBox.className = "w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 p-2 shadow-xl ring-4 ring-white";
+            } else {
+                logoBox.className = "w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center shrink-0 p-2 shadow-xl ring-4 ring-white";
+            }
+            logoBox.innerHTML = getIconSvg(company.icon_type);
+        }
+
+        // Specialties list
+        const specialtiesContainer = document.getElementById("modalSpecialties");
+        specialtiesContainer.innerHTML = "";
+        const specs = company.specialties || [
+            "Pengembangan Sistem Terdistribusi & Microservices",
+            "Desain UI/UX & Pengalaman Pengguna Berstandar Global",
+            "Integrasi Keamanan Informasi & Cloud Solutions"
+        ];
+        specs.forEach(spec => {
+            const li = document.createElement("li");
+            li.className = "flex items-start gap-2.5 text-xs text-slate-700 font-medium bg-slate-50 p-2.5 rounded-xl border border-slate-200/50";
+            li.innerHTML = `
+                <svg class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>${spec}</span>
+            `;
+            specialtiesContainer.appendChild(li);
+        });
+
+        // Tech Stack
         const stackContainer = document.getElementById("modalTechStack");
         stackContainer.innerHTML = "";
         if (company.tech_stack) {
             company.tech_stack.forEach(tech => {
                 const pill = document.createElement("span");
-                pill.className = "text-xs font-semibold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200/60";
-                pill.innerText = tech;
+                pill.className = "text-xs font-bold bg-white text-slate-700 px-3 py-1 rounded-xl border border-slate-200 shadow-xs flex items-center gap-1.5";
+                pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>${tech}`;
                 stackContainer.appendChild(pill);
             });
         }
@@ -403,39 +542,51 @@
         document.getElementById("modalWebsiteLink").href = company.website || "#";
         document.getElementById("modalEmailLink").href = "mailto:" + (company.email || "info@example.com");
 
-        // Logo SVG Box
-        const logoBox = document.getElementById("modalLogoBox");
-        if (company.badge_class === 'software') {
-            logoBox.className = "w-14 h-14 rounded-xl border border-blue-100 bg-blue-50 text-blue-600 flex items-center justify-center shrink-0";
-        } else if (company.badge_class === 'creative') {
-            logoBox.className = "w-14 h-14 rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0";
-        } else {
-            logoBox.className = "w-14 h-14 rounded-xl border border-rose-100 bg-rose-50 text-rose-600 flex items-center justify-center shrink-0";
-        }
-        logoBox.innerHTML = getIconSvg(company.icon_type);
-
         const modal = document.getElementById("companyModal");
+        const modalDialog = document.getElementById("modalDialog");
+        
         modal.classList.remove("opacity-0", "pointer-events-none");
+        setTimeout(() => {
+            modalDialog.classList.remove("scale-95", "translate-y-4", "opacity-0");
+            modalDialog.classList.add("scale-100", "translate-y-0", "opacity-100");
+        }, 10);
     }
 
     function closeCompanyModal() {
         const modal = document.getElementById("companyModal");
-        modal.classList.add("opacity-0", "pointer-events-none");
+        const modalDialog = document.getElementById("modalDialog");
+        
+        // Restore background body scrolling
+        document.body.style.overflow = '';
+
+        modalDialog.classList.remove("scale-100", "translate-y-0", "opacity-100");
+        modalDialog.classList.add("scale-95", "translate-y-4", "opacity-0");
+        
+        setTimeout(() => {
+            modal.classList.add("opacity-0", "pointer-events-none");
+        }, 200);
     }
+
+    // Close modal on Escape key press
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            closeCompanyModal();
+        }
+    });
 
     function getIconSvg(type) {
         if (type === 'code' || type === 'cpu' || type === 'cloud' || type === 'terminal') {
-            return `<svg class="w-7 h-7 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
+            return `<svg class="w-8 h-8 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
         } else if (type === 'palette' || type === 'magic' || type === 'layers' || type === 'camera') {
-            return `<svg class="w-7 h-7 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`;
+            return `<svg class="w-8 h-8 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`;
         } else if (type === 'building') {
-            return `<svg class="w-7 h-7 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="6" x2="9" y2="6.01"></line><line x1="15" y1="6" x2="15" y2="6.01"></line></svg>`;
+            return `<svg class="w-8 h-8 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="9" y1="6" x2="9" y2="6.01"></line><line x1="15" y1="6" x2="15" y2="6.01"></line></svg>`;
         } else if (type === 'credit-card') {
-            return `<svg class="w-7 h-7 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>`;
+            return `<svg class="w-8 h-8 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>`;
         } else if (type === 'sparkles') {
-            return `<svg class="w-7 h-7 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>`;
+            return `<svg class="w-8 h-8 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"></path></svg>`;
         } else {
-            return `<svg class="w-7 h-7 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71.79-1.81.79-1.81l-1.98-1.98s-1.1.08-1.81.79z"></path><path d="M15 9l-6 6"></path><path d="M16.5 4.5c1.5-1.26 5-2 5-2s-.5 3.74-2 5c-.71.71-1.81.79-1.81.79l-1.98-1.98s.08-1.1.79-1.81z"></path></svg>`;
+            return `<svg class="w-8 h-8 stroke-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.71.79-1.81.79-1.81l-1.98-1.98s-1.1.08-1.81.79z"></path><path d="M15 9l-6 6"></path><path d="M16.5 4.5c1.5-1.26 5-2 5-2s-.5 3.74-2 5c-.71.71-1.81.79-1.81.79l-1.98-1.98s.08-1.1.79-1.81z"></path></svg>`;
         }
     }
 </script>
