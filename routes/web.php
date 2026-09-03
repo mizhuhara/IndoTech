@@ -106,6 +106,8 @@ Route::delete('/admin/internships/{id}', [AdminInternshipController::class, 'des
 // Admin User & Verification Routes
 Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
 Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
+Route::post('/admin/verification/{user}/approve', [AdminVerificationController::class, 'approve'])->name('admin.verification.approve');
+Route::post('/admin/verification/{user}/reject', [AdminVerificationController::class, 'reject'])->name('admin.verification.reject');
 Route::get('/admin/user', function () {
     return redirect()->route('admin.users.index');
 });
