@@ -159,5 +159,5 @@ Route::get('/knowladge/ai/{id}', function ($id) {
     return redirect()->route('knowledge.ai.detail', $id);
 });
 Route::get('/knowladge/article/{id}', function ($id) {
-    return redirect()->route('knowledge.ai.detail', $id);
+    return redirect()->route('knowledge.show', $id);
 });

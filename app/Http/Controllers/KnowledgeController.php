@@ -12,9 +12,10 @@ class KnowledgeController extends Controller
 
         // Category filter
         $category = $request->query('category', 'All');
-        if (strtolower($category) !== 'all') {
+        if (strtolower($category) !== 'all' && strtolower($category) !== 'articles') {
             $articles = $articles->filter(function ($article) use ($category) {
-                return strtolower($article['category']) === strtolower($category);
+                return strtolower($article['category']) === strtolower($category)
+                    || strtolower($article['category_tag'] ?? '') === strtolower($category);
             });
         }
 
@@ -30,7 +31,7 @@ class KnowledgeController extends Controller
         }
 
         $categories = [
-            'All', 'Technology', 'Programming', 'Web Development',
+            'All', 'Articles', 'Technology', 'Programming', 'Web Development',
             'Mobile Development', 'AI', 'Cybersecurity', 'Networking',
             'Cloud', 'Database', 'UI/UX', 'Career', 'Education',
         ];
@@ -39,9 +40,9 @@ class KnowledgeController extends Controller
         $perPage = 3;
         $totalItems = $articles->count();
         $totalPages = max(1, (int) ceil($totalItems / $perPage));
-        // If "All" category, match the 12 pages in the design
-        if (strtolower($category) === 'all' && ! $request->filled('q')) {
-            $totalPages = 12;
+        // If "All" or "Articles" category, match the 12 pages in the design
+        if ((strtolower($category) === 'all' || strtolower($category) === 'articles') && ! $request->filled('q')) {
+            $totalPages = max(4, (int) ceil($totalItems / $perPage));
         }
 
         $currentPage = max(1, min((int) $request->query('page', 1), $totalPages));
@@ -120,8 +121,36 @@ class KnowledgeController extends Controller
 
     public function show($id)
     {
-        // Redirect legacy article show to AI detail page
-        return redirect()->route('knowledge.ai.detail', $id);
+        $articles = collect($this->getArticles());
+        $article = $articles->firstWhere('id', (int) $id);
+
+        if (! $article) {
+            $article = $articles->firstWhere('id', 1);
+        }
+
+        // Add rich structured content if not present
+        if (! isset($article['content'])) {
+            $article['content'] = [
+                'intro' => ($article['excerpt'] ?? '') . ' Dalam era pesatnya transformasi teknologi global, pemahaman lintas disiplin ilmu menjadi pondasi utama dalam menghadapi kompetisi dan efisiensi di industri digital modern.',
+                'section1_title' => 'Perkembangan & Inovasi Lintas Bidang Ilmu',
+                'section1_body' => 'Kemajuan ilmu pengetahuan saat ini tidak lagi terisolasi pada satu bidang saja. Sinergi antara kecerdasan buatan, sains data, kesehatan, pertanian presisi, dan arsitektur perangkat lunak terbukti membuka peluang baru dalam memecahkan masalah kompleks skala nasional maupun global.',
+                'bullets' => [
+                    'Penerapan analitik data berbasis bukti untuk pengambilan keputusan strategis.',
+                    'Peningkatan daya saing talenta muda melalui penguasaan teknologi terkini.',
+                    'Integrasi standar keamanan, efisiensi sistem, dan keberlanjutan solusi digital.',
+                ],
+                'callout' => 'Wawasan yang komprehensif dan terbarukan di semua kalangan ilmu adalah kunci sukses dalam membangun inovasi yang berdampak nyata.',
+                'section2_title' => 'Prospek & Implementasi Industri',
+                'section2_body' => 'Guna menyongsong ekosistem teknologi yang kian inklusif, Knowledge Hub menyajikan informasi terkurasi yang relevan bagi mahasiswa, akademisi, hingga praktisi di berbagai bidang keahlian.',
+            ];
+        }
+
+        $relatedArticles = $articles->where('id', '!=', $article['id'])->take(3)->values()->all();
+
+        return view('knowladge.show', [
+            'article' => $article,
+            'relatedArticles' => $relatedArticles,
+        ]);
     }
 
     private function getArticles(): array
@@ -136,9 +165,11 @@ class KnowledgeController extends Controller
                 'image' => 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop',
                 'author_name' => 'Tim IndoTech AI',
                 'author_avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
+                'author_role' => 'AI Research Lead',
                 'date' => 'Oct 24, 2024',
                 'read_time' => '5 min read',
                 'ai_tool_id' => 1,
+                'tags' => ['ArtificialIntelligence', 'Programming', 'GitHubCopilot', 'DeveloperTools'],
             ],
             [
                 'id' => 2,
@@ -149,9 +180,11 @@ class KnowledgeController extends Controller
                 'image' => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop',
                 'author_name' => 'Budi Santoso',
                 'author_avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
+                'author_role' => 'Senior Software Architect',
                 'date' => 'Oct 12, 2024',
                 'read_time' => '8 min read',
                 'ai_tool_id' => 2,
+                'tags' => ['CursorIDE', 'SoftwareEngineering', 'Refactoring', 'CodeEditor'],
             ],
             [
                 'id' => 3,
@@ -162,9 +195,11 @@ class KnowledgeController extends Controller
                 'image' => 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=500&fit=crop',
                 'author_name' => 'Siti Rahma',
                 'author_avatar' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop',
+                'author_role' => 'Medical Informatics Specialist',
                 'date' => 'Oct 10, 2024',
                 'read_time' => '6 min read',
                 'ai_tool_id' => 3,
+                'tags' => ['HealthTech', 'IBMwatson', 'MedicalAI', 'DataAnalytics'],
             ],
             [
                 'id' => 4,
@@ -175,9 +210,11 @@ class KnowledgeController extends Controller
                 'image' => 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=800&h=500&fit=crop',
                 'author_name' => 'Arif Wijaya',
                 'author_avatar' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop',
+                'author_role' => 'Radiology Tech Researcher',
                 'date' => 'Oct 08, 2024',
                 'read_time' => '6 min read',
                 'ai_tool_id' => 4,
+                'tags' => ['Radiology', 'DeepLearning', 'Healthcare', 'MedicalImaging'],
             ],
             [
                 'id' => 5,
@@ -188,9 +225,11 @@ class KnowledgeController extends Controller
                 'image' => 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&h=500&fit=crop',
                 'author_name' => 'Hendra Wijaya',
                 'author_avatar' => 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop',
+                'author_role' => 'AgriTech Innovation Lead',
                 'date' => 'Oct 18, 2024',
                 'read_time' => '5 min read',
                 'ai_tool_id' => 5,
+                'tags' => ['AgriTech', 'ComputerVision', 'SmartFarming', 'Sustainability'],
             ],
             [
                 'id' => 6,
@@ -201,9 +240,41 @@ class KnowledgeController extends Controller
                 'image' => 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&h=500&fit=crop',
                 'author_name' => 'Dr. Budi Santoso',
                 'author_avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
+                'author_role' => 'Agronomist & Data Scientist',
                 'date' => 'Oct 15, 2024',
                 'read_time' => '7 min read',
                 'ai_tool_id' => 6,
+                'tags' => ['PrecisionAgriculture', 'DroneAnalytics', 'CropScience', 'AgriAI'],
+            ],
+            [
+                'id' => 7,
+                'title' => 'Strategi Keamanan Siber (Cybersecurity) bagi Organisasi Modern',
+                'category' => 'Cybersecurity',
+                'category_tag' => 'Keamanan Siber',
+                'excerpt' => 'Menghadapi era serangan ransomware dan zero-day exploit dengan pendekatan arsitektur Zero Trust dan mitigasi proaktif.',
+                'image' => 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=500&fit=crop',
+                'author_name' => 'Rian Pratama',
+                'author_avatar' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop',
+                'author_role' => 'Cyber Security Consultant',
+                'date' => 'Nov 02, 2024',
+                'read_time' => '6 min read',
+                'ai_tool_id' => null,
+                'tags' => ['Cybersecurity', 'ZeroTrust', 'InfoSec', 'DataProtection'],
+            ],
+            [
+                'id' => 8,
+                'title' => 'Trend Arsitektur Microservices & Cloud Native di Indonesia',
+                'category' => 'Cloud',
+                'category_tag' => 'Teknologi Informasi',
+                'excerpt' => 'Bagaimana kontainerisasi dengan Docker & Kubernetes membantu perusahaan rintisan mengelola skala aplikasi berkinerja tinggi.',
+                'image' => 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=500&fit=crop',
+                'author_name' => 'Maya Indah',
+                'author_avatar' => 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop',
+                'author_role' => 'Cloud Solutions Architect',
+                'date' => 'Nov 05, 2024',
+                'read_time' => '7 min read',
+                'ai_tool_id' => null,
+                'tags' => ['CloudNative', 'Kubernetes', 'Microservices', 'DevOps'],
             ],
         ];
     }
