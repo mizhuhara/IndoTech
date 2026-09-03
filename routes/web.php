@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminCompanyController;
 use App\Http\Controllers\AdminInternshipController;
 use App\Http\Controllers\AdminJobController;
+use App\Http\Controllers\AdminEventController;
 use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
