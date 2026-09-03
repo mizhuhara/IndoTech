@@ -49,8 +49,8 @@
                     [
                         'label' => 'Company',
                         'icon' => 'company',
-                        'active' => false,
-                        'href' => '#'
+                        'active' => request()->routeIs('admin.company.*'),
+                        'href' => route('admin.company.index')
                     ],
                     [
                         'label' => 'Jobs',
