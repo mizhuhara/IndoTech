@@ -43,7 +43,10 @@ Route::get('/event/{id}', function ($id) {
     return redirect()->route('event.show', $id);
 });
 
-// Admin Dashboard & Management
+// Admin routes — semua butuh login + role admin
+Route::middleware('admin')->group(function () {
+
+// Admin Dashboard
 Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
 
 // Admin School Management
@@ -129,6 +132,8 @@ Route::post('/admin/articles', function () {
     // TODO: handle article store
     return back()->with('success', 'Article berhasil disimpan (stub).');
 })->name('admin.articles.store');
+
+}); // end admin group
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
