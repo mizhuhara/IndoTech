@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        \App\Models\User::updateOrCreate(
+            ['email' => 'test@example.com'],
+            ['name' => 'Test User', 'password' => \Illuminate\Support\Facades\Hash::make('password')]
+        );
 
         // Super admin bersama (proyek tim). Password dari .env, fallback default.
         \App\Models\User::updateOrCreate(
