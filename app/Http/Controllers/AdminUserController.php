@@ -2,118 +2,148 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class AdminUserController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Display a listing of system users with search & filter support.
+     */
+    public function index(Request $request): View
     {
-        $users = collect($this->getUsers());
+        $query = User::query();
 
-        // Search query
+        // Search filter (Name, Email, Role)
         if ($request->filled('q')) {
-            $q = strtolower($request->query('q'));
-            $users = $users->filter(function ($user) use ($q) {
-                return str_contains(strtolower($user['name']), $q)
-                    || str_contains(strtolower($user['email']), $q)
-                    || str_contains(strtolower($user['role']), $q);
+            $q = trim($request->query('q'));
+            $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('email', 'like', "%{$q}%")
+                    ->orWhere('role', 'like', "%{$q}%");
             });
         }
 
         // Status filter
         if ($request->filled('status') && strtolower($request->query('status')) !== 'all') {
             $status = strtolower($request->query('status'));
-            $users = $users->filter(function ($user) use ($status) {
-                return strtolower($user['status']) === $status;
-            });
+            $query->where('status', $status);
         }
 
         // Role filter
         if ($request->filled('role') && strtolower($request->query('role')) !== 'all') {
             $role = strtolower($request->query('role'));
-            $users = $users->filter(function ($user) use ($role) {
-                return str_contains(strtolower($user['role']), $role);
-            });
+            $query->where('role', 'like', "%{$role}%");
         }
 
-        $perPage = 3;
-        $totalItems = 24592;
-        $totalPages = 12;
-        $currentPage = max(1, (int) $request->query('page', 1));
+        $query->orderByDesc('id');
 
-        $paginatedUsers = $users->take($perPage)->values()->all();
+        $users = $query->paginate(8)->withQueryString();
+
+        $totalUsersCount = User::count();
+        $activeUsersCount = User::whereIn('status', ['active', 'Active'])->count();
+        $pendingUsersCount = User::whereIn('status', ['pending', 'Pending'])->count();
 
         return view('admin.users.index', [
-            'users' => $paginatedUsers,
-            'totalUsersCount' => number_format($totalItems),
-            'currentPage' => $currentPage,
-            'totalPages' => $totalPages,
+            'users' => $users,
+            'totalUsersCount' => $totalUsersCount,
+            'activeUsersCount' => $activeUsersCount,
+            'pendingUsersCount' => $pendingUsersCount,
             'activeRole' => $request->query('role', 'all'),
             'activeStatus' => $request->query('status', 'all'),
             'searchQuery' => $request->query('q', ''),
         ]);
     }
 
-    private function getUsers(): array
+    /**
+     * Store a newly created user in storage.
+     */
+    public function store(Request $request): RedirectResponse
     {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Siti Nurhaliza',
-                'joined' => '12 Okt 2023',
-                'email' => 'siti.n@sekolah.edu',
-                'role' => 'School Admin',
-                'status' => 'Active',
-                'status_color' => 'bg-emerald-100 text-emerald-700',
-                'avatar_type' => 'image',
-                'avatar' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Budi Utama',
-                'joined' => '10 Okt 2023',
-                'email' => 'budi@universitas.ac.id',
-                'role' => 'University Representative',
-                'status' => 'Pending',
-                'status_color' => 'bg-amber-100 text-amber-700',
-                'avatar_type' => 'initials',
-                'initials' => 'BU',
-                'avatar' => null,
-            ],
-            [
-                'id' => 3,
-                'name' => 'Agus Pratama',
-                'joined' => '05 Okt 2023',
-                'email' => 'agus.p@perusahaan.co.id',
-                'role' => 'Company HR',
-                'status' => 'Inactive',
-                'status_color' => 'bg-red-100 text-red-700',
-                'avatar_type' => 'image',
-                'avatar' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
-            ],
-            [
-                'id' => 4,
-                'name' => 'Dewi Anggraini',
-                'joined' => '01 Okt 2023',
-                'email' => 'dewi.a@smk1jkt.sch.id',
-                'role' => 'School Admin',
-                'status' => 'Active',
-                'status_color' => 'bg-emerald-100 text-emerald-700',
-                'avatar_type' => 'image',
-                'avatar' => 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop',
-            ],
-            [
-                'id' => 5,
-                'name' => 'Rizky Kurnia',
-                'joined' => '28 Sep 2023',
-                'email' => 'rizky.k@techcorp.co.id',
-                'role' => 'Company HR',
-                'status' => 'Active',
-                'status_color' => 'bg-emerald-100 text-emerald-700',
-                'avatar_type' => 'initials',
-                'initials' => 'RK',
-                'avatar' => null,
-            ],
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:6'],
+            'role' => ['required', 'string', 'max:50'],
+            'status' => ['required', 'string', 'max:20'],
+        ], [
+            'email.unique' => 'Email ini sudah terdaftar di sistem.',
+            'password.min' => 'Password minimal harus 6 karakter.',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => strtolower($validated['role']),
+            'status' => strtolower($validated['status']),
+        ]);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "User \"{$user->name}\" berhasil ditambahkan.");
+    }
+
+    /**
+     * Update the specified user in storage.
+     */
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'password' => ['nullable', 'string', 'min:6'],
+            'role' => ['required', 'string', 'max:50'],
+            'status' => ['required', 'string', 'max:20'],
+        ], [
+            'email.unique' => 'Email ini sudah digunakan oleh user lain.',
+            'password.min' => 'Password minimal harus 6 karakter.',
+        ]);
+
+        $payload = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => strtolower($validated['role']),
+            'status' => strtolower($validated['status']),
         ];
+
+        if (! empty($validated['password'])) {
+            $payload['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($payload);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "Data user \"{$user->name}\" berhasil diperbarui.");
+    }
+
+    /**
+     * Remove the specified user from storage.
+     */
+    public function destroy(int $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+
+        // Prevent self deletion
+        if (auth()->check() && auth()->id() === $user->id) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+        }
+
+        // Prevent deleting main super admin
+        if ($user->email === User::ADMIN_EMAIL) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Akun Super Admin utama tidak dapat dihapus.');
+        }
+
+        $name = $user->name;
+        $user->delete();
+
+        return redirect()->route('admin.users.index')
+            ->with('success', "User \"{$name}\" berhasil dihapus.");
     }
 }
