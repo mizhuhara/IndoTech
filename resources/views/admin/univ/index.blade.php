@@ -41,6 +41,16 @@
         </div>
     </div>
 
+    @if (session('success'))
+        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span>{{ session('success') }}</span>
+            </div>
+            <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 font-bold">&times;</button>
+        </div>
+    @endif
+
     {{-- Filter Modal / Drawer (Collapsible) --}}
     <div id="filterModal" class="hidden bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm transition">
         <form method="GET" action="{{ route('admin.univ.index') }}" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -220,10 +230,13 @@
                                     </a>
 
                                     {{-- Delete Button with Form --}}
-                                    <form method="POST" action="{{ route('admin.univ.destroy', $univ['id']) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus universitas {{ $univ['name'] }}?');" class="inline">
+                                    <form id="delete-form-{{ $univ['id'] }}" method="POST" action="{{ route('admin.univ.destroy', $univ['id']) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition" title="Hapus Universitas">
+                                        <button type="button" 
+                                                onclick="confirmDelete('{{ $univ['id'] }}', '{{ $univ['name'] }}')"
+                                                class="p-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition" 
+                                                title="Hapus Universitas">
                                             <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <polyline points="3 6 5 6 21 6"/>
                                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -298,4 +311,32 @@
     </div>
 
 </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete(id, name) {
+        Swal.fire({
+            title: 'Hapus Universitas?',
+            text: `Anda akan menghapus "${name}". Tindakan ini tidak dapat dibatalkan!`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true,
+            customClass: {
+                popup: 'rounded-2xl',
+                confirmButton: 'rounded-xl px-5 py-2.5 text-sm font-semibold',
+                cancelButton: 'rounded-xl px-5 py-2.5 text-sm font-semibold'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(`delete-form-${id}`).submit();
+            }
+        });
+    }
+</script>
+@endpush
 @endsection

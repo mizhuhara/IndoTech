@@ -3,7 +3,7 @@
 @section('title', 'Tambah Universitas Baru — IndoTech')
 
 @section('content')
-<form method="POST" action="{{ route('admin.univ.store') }}" class="space-y-6 max-w-7xl mx-auto">
+<form method="POST" action="{{ route('admin.univ.store') }}" enctype="multipart/form-data" class="space-y-6 max-w-7xl mx-auto">
     @csrf
 
     {{-- Top Back Link & Breadcrumb --}}
