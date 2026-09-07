@@ -3,7 +3,12 @@
 @section('title', 'SMK IT Management — IndoTech')
 
 @section('content')
-<div class="space-y-6">
+    @if (session('status'))
+        <div class="mb-4 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800">
+            {{ session('status') }}
+        </div>
+    @endif
+    <div class="space-y-6">
 
     {{-- Top Bar: Breadcrumb, Title & Action Buttons --}}
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -68,19 +73,19 @@
         {{-- Card 1: SCHOOLS --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">SCHOOLS</div>
-            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">520</div>
+            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $totalSchools }}</div>
         </div>
 
         {{-- Card 2: ACTIVE PARTNERS --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">ACTIVE PARTNERS</div>
-            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">480</div>
+            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $activePartners }}</div>
         </div>
 
         {{-- Card 3: NEW SUBMISSIONS --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">NEW SUBMISSIONS</div>
-            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">40</div>
+            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $newSubmissions }}</div>
         </div>
     </div>
 
@@ -168,8 +173,15 @@
                             {{-- Type Badge --}}
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#eef4ff] text-[#0b57d0]">
-                                    {{ $school['type'] ?? 'SMK (IT)' }}
+                                    {{ $school['institution_type'] ?? 'SMK (IT)' }}
                                 </span>
+                                @if (!empty($school['tags']))
+                                    <div class="mt-1 flex flex-wrap gap-1">
+                                        @foreach ($school['tags'] as $tag)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-800">{{ $tag }}</span>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </td>
 
                             {{-- Location --}}
