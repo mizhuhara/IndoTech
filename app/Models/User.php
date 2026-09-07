@@ -14,6 +14,8 @@ use Illuminate\Notifications\Notifiable;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+    const ADMIN_EMAIL = 'admin@indotech.id';
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
