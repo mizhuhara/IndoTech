@@ -111,6 +111,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
     Route::post('/admin/verification/{user}/approve', [AdminVerificationController::class, 'approve'])->name('admin.verification.approve');
     Route::post('/admin/verification/{user}/reject', [AdminVerificationController::class, 'reject'])->name('admin.verification.reject');
+    Route::delete('/admin/verification/{user}', [AdminVerificationController::class, 'destroy'])->name('admin.verification.destroy');
     Route::get('/admin/user', function () {
         return redirect()->route('admin.users.index');
     });
