@@ -41,16 +41,6 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div class="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span>{{ session('success') }}</span>
-            </div>
-            <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 font-bold">&times;</button>
-        </div>
-    @endif
-
     {{-- Filter Modal / Drawer (Collapsible) --}}
     <div id="filterModal" class="hidden bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm transition">
         <form method="GET" action="{{ route('admin.univ.index') }}" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -234,7 +224,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="button" 
-                                                onclick="confirmDelete('{{ $univ['id'] }}', '{{ $univ['name'] }}')"
+                                                onclick="openDeleteModal('{{ $univ['id'] }}', '{{ addslashes($univ['name']) }}', '{{ $univ['npsn'] ?? '' }}', '{{ addslashes($univ['city'] ?? '') }}')"
                                                 class="p-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition" 
                                                 title="Hapus Universitas">
                                             <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -312,31 +302,110 @@
 
 </div>
 
+{{-- Custom Delete Confirmation Modal (Matches System Design) --}}
+<div id="deleteModal" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 transition-opacity">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-[420px] w-full shadow-2xl text-center relative transform transition-all duration-200 scale-100 animate-in fade-in zoom-in-95" onclick="event.stopPropagation()">
+        
+        {{-- Warning Icon Badge --}}
+        <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4 border border-red-100/50">
+            <svg class="w-7 h-7 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+        </div>
+
+        {{-- Modal Title --}}
+        <h3 class="text-lg font-bold text-slate-900 mb-2">
+            Konfirmasi Hapus Universitas
+        </h3>
+
+        {{-- Modal Subtext --}}
+        <p class="text-[13.5px] text-slate-500 mb-4 leading-relaxed">
+            Apakah Anda yakin ingin menghapus universitas <strong class="text-slate-800 font-bold" id="deleteUnivName"></strong>
+            <span id="deleteUnivExtra" class="block text-slate-500 text-[13px] mt-0.5"></span>
+        </p>
+
+        {{-- Warning Message Card --}}
+        <div class="bg-red-50/80 border border-red-100 rounded-xl py-2.5 px-4 mb-6">
+            <p class="text-[12px] text-red-500 font-medium leading-relaxed">
+                Peringatan: Tindakan ini permanen dan data universitas tidak dapat dikembalikan.
+            </p>
+        </div>
+
+        {{-- Action Buttons --}}
+        <div class="flex items-center gap-3">
+            <button type="button" 
+                    onclick="closeDeleteModal()" 
+                    class="w-1/2 py-2.5 px-4 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition shadow-2xs cursor-pointer">
+                Batal
+            </button>
+            <button type="button" 
+                    id="confirmDeleteSubmitBtn" 
+                    onclick="executeDelete()" 
+                    class="w-1/2 py-2.5 px-4 rounded-xl bg-[#d92d20] hover:bg-red-700 active:bg-red-800 text-white font-semibold text-sm transition shadow-xs cursor-pointer">
+                Ya, Hapus
+            </button>
+        </div>
+
+    </div>
+</div>
+
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function confirmDelete(id, name) {
-        Swal.fire({
-            title: 'Hapus Universitas?',
-            text: `Anda akan menghapus "${name}". Tindakan ini tidak dapat dibatalkan!`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal',
-            reverseButtons: true,
-            customClass: {
-                popup: 'rounded-2xl',
-                confirmButton: 'rounded-xl px-5 py-2.5 text-sm font-semibold',
-                cancelButton: 'rounded-xl px-5 py-2.5 text-sm font-semibold'
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById(`delete-form-${id}`).submit();
-            }
-        });
+    let activeDeleteId = null;
+
+    function openDeleteModal(id, name, npsn, city) {
+        activeDeleteId = id;
+        document.getElementById('deleteUnivName').innerText = name;
+        
+        let extraText = '';
+        if (npsn && city) {
+            extraText = `(${npsn} - ${city})`;
+        } else if (npsn) {
+            extraText = `(${npsn})`;
+        } else if (city) {
+            extraText = `(${city})`;
+        }
+        document.getElementById('deleteUnivExtra').innerText = extraText;
+
+        const modal = document.getElementById('deleteModal');
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
     }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+        activeDeleteId = null;
+    }
+
+    function executeDelete() {
+        if (activeDeleteId) {
+            const form = document.getElementById('delete-form-' + activeDeleteId);
+            if (form) {
+                form.submit();
+            }
+        }
+    }
+
+    // Close modal on click backdrop
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('deleteModal');
+            if (modal && !modal.classList.contains('hidden')) {
+                closeDeleteModal();
+            }
+        }
+    });
 </script>
 @endpush
 @endsection

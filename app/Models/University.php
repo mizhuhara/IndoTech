@@ -31,6 +31,10 @@ class University extends Model
         'website',
         'phone',
         'description',
+        'gallery',
+        'latitude',
+        'longitude',
+        'map_link',
         'tags',
         'total_students',
         'total_faculties',
@@ -47,6 +51,9 @@ class University extends Model
     {
         return [
             'tags' => 'array',
+            'gallery' => 'array',
+            'latitude' => 'float',
+            'longitude' => 'float',
             'total_students' => 'integer',
             'total_faculties' => 'integer',
             'founded' => 'integer',

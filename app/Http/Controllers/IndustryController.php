@@ -368,7 +368,7 @@ class IndustryController extends Controller
                 'specialties' => ['Luxury Brand Storytelling', 'Cinematic Video Production', 'High-end Resort Web Design'],
                 'tech_stack' => ['Premiere Pro', 'Figma', 'Webflow', 'Node.js'],
                 'full_description' => 'Uluwatu Digital Innovation menghadirkan narasi visual yang kuat, sinematografi brand, dan situs web interaktif untuk resort mewah dan destinasi eksklusif.',
-            ]
+            ],
         ];
 
         return view('industry.industry', compact('companies'));

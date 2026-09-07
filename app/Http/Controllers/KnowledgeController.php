@@ -131,7 +131,7 @@ class KnowledgeController extends Controller
         // Add rich structured content if not present
         if (! isset($article['content'])) {
             $article['content'] = [
-                'intro' => ($article['excerpt'] ?? '') . ' Dalam era pesatnya transformasi teknologi global, pemahaman lintas disiplin ilmu menjadi pondasi utama dalam menghadapi kompetisi dan efisiensi di industri digital modern.',
+                'intro' => ($article['excerpt'] ?? '').' Dalam era pesatnya transformasi teknologi global, pemahaman lintas disiplin ilmu menjadi pondasi utama dalam menghadapi kompetisi dan efisiensi di industri digital modern.',
                 'section1_title' => 'Perkembangan & Inovasi Lintas Bidang Ilmu',
                 'section1_body' => 'Kemajuan ilmu pengetahuan saat ini tidak lagi terisolasi pada satu bidang saja. Sinergi antara kecerdasan buatan, sains data, kesehatan, pertanian presisi, dan arsitektur perangkat lunak terbukti membuka peluang baru dalam memecahkan masalah kompleks skala nasional maupun global.',
                 'bullets' => [

@@ -81,6 +81,9 @@ class AdminUnivController extends Controller
     /**
      * Store a newly created university in database.
      */
+    /**
+     * Store a newly created university in database.
+     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -92,7 +95,12 @@ class AdminUnivController extends Controller
             'website' => ['nullable', 'url', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'address' => ['nullable', 'string', 'max:255'],
-            'logo' => ['nullable', 'image', 'max:2048'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'map_link' => ['nullable', 'string', 'max:500'],
+            'logo' => ['nullable', 'image', 'max:5120'],
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'max:5120'],
         ]);
 
         $locationParts = array_map('trim', explode(',', $validated['location']));
@@ -113,16 +121,29 @@ class AdminUnivController extends Controller
             'website' => $validated['website'] ?? null,
             'description' => $validated['description'] ?? null,
             'address' => $validated['address'] ?? null,
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
+            'map_link' => $validated['map_link'] ?? null,
             'status' => 'Active',
             'logo_text' => $logoText,
             'logo_bg' => 'bg-blue-700',
+            'gallery' => [],
         ];
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $path = $file->store('universities', 'public');
+            $path = $file->store('universities/logos', 'public');
             $data['logo_url'] = Storage::url($path);
             $data['logo_name'] = $file->getClientOriginalName();
+        }
+
+        if ($request->hasFile('gallery')) {
+            $galleryUrls = [];
+            foreach ($request->file('gallery') as $image) {
+                $path = $image->store('universities/gallery', 'public');
+                $galleryUrls[] = Storage::url($path);
+            }
+            $data['gallery'] = $galleryUrls;
         }
 
         University::create($data);
@@ -167,7 +188,14 @@ class AdminUnivController extends Controller
             'website' => ['nullable', 'url', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'address' => ['nullable', 'string', 'max:255'],
-            'logo' => ['nullable', 'image', 'max:2048'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'map_link' => ['nullable', 'string', 'max:500'],
+            'logo' => ['nullable', 'image', 'max:5120'],
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'max:5120'],
+            'existing_gallery' => ['nullable', 'array'],
+            'existing_gallery.*' => ['string'],
         ]);
 
         $locationParts = array_map('trim', explode(',', $validated['location']));
@@ -185,14 +213,32 @@ class AdminUnivController extends Controller
             'website' => $validated['website'] ?? $univ->website,
             'description' => $validated['description'] ?? $univ->description,
             'address' => $validated['address'] ?? $univ->address,
+            'latitude' => $validated['latitude'] ?? $univ->latitude,
+            'longitude' => $validated['longitude'] ?? $univ->longitude,
+            'map_link' => $validated['map_link'] ?? $univ->map_link,
         ];
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
-            $path = $file->store('universities', 'public');
+            $path = $file->store('universities/logos', 'public');
             $data['logo_url'] = Storage::url($path);
             $data['logo_name'] = $file->getClientOriginalName();
         }
+
+        // Handle gallery images: keep retained existing ones + add newly uploaded ones
+        $gallery = $request->input('existing_gallery', []);
+        if (! is_array($gallery)) {
+            $gallery = [];
+        }
+
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $image) {
+                $path = $image->store('universities/gallery', 'public');
+                $gallery[] = Storage::url($path);
+            }
+        }
+
+        $data['gallery'] = array_values($gallery);
 
         $univ->update($data);
 
