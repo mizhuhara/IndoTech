@@ -73,19 +73,19 @@
         {{-- Card 1: SCHOOLS --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">SCHOOLS</div>
-            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">520</div>
+            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $totalSchools }}</div>
         </div>
 
         {{-- Card 2: ACTIVE PARTNERS --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">ACTIVE PARTNERS</div>
-            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">480</div>
+            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $activePartners }}</div>
         </div>
 
         {{-- Card 3: NEW SUBMISSIONS --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">NEW SUBMISSIONS</div>
-            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">40</div>
+            <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $newSubmissions }}</div>
         </div>
     </div>
 
