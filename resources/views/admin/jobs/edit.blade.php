@@ -85,8 +85,30 @@
                     {{-- Salary Range --}}
                     <div>
                         <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Salary Range (IDR)</label>
-                        <input type="text" name="salary_range" value="{{ old('salary_range', $job['salary_range'] ?? '15.000.000 - 25.000.000') }}"
+                        <input type="text" name="salary_range" value="{{ old('salary_range', $job['salary_range'] ?? '') }}"
                                class="w-full bg-slate-100/70 border border-slate-200 rounded-xl px-4 py-2.5 text-[13.5px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                    </div>
+
+                    {{-- Career Category --}}
+                    <div>
+                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Career Category</label>
+                        <select name="category" class="w-full bg-slate-100/70 border border-slate-200 rounded-xl px-4 py-2.5 text-[13.5px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                            <option value="jobs" {{ ($job['category'] ?? '') === 'jobs' ? 'selected' : '' }}>Jobs (Reguler)</option>
+                            <option value="internship" {{ ($job['category'] ?? '') === 'internship' ? 'selected' : '' }}>Internship (Magang)</option>
+                            <option value="freelance" {{ ($job['category'] ?? '') === 'freelance' ? 'selected' : '' }}>Freelance / Kontrak</option>
+                            <option value="remote" {{ ($job['category'] ?? '') === 'remote' ? 'selected' : '' }}>Remote Work</option>
+                            <option value="graduate" {{ ($job['category'] ?? '') === 'graduate' ? 'selected' : '' }}>Graduate Job</option>
+                        </select>
+                    </div>
+
+                    {{-- Experience Level --}}
+                    <div>
+                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Experience Level</label>
+                        <select name="experience" class="w-full bg-slate-100/70 border border-slate-200 rounded-xl px-4 py-2.5 text-[13.5px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                            <option value="Entry" {{ ($job['experience'] ?? '') === 'Entry' ? 'selected' : '' }}>Entry Level</option>
+                            <option value="Mid" {{ ($job['experience'] ?? '') === 'Mid' ? 'selected' : '' }}>Mid Level</option>
+                            <option value="Senior" {{ ($job['experience'] ?? '') === 'Senior' ? 'selected' : '' }}>Senior Level</option>
+                        </select>
                     </div>
                 </div>
             </div>

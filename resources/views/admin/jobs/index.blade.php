@@ -19,6 +19,18 @@
         </form>
     </div>
 
+    @if(session('success'))
+    <div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-emerald-800 text-[13.5px] font-semibold flex items-center justify-between shadow-2xs">
+        <div class="flex items-center gap-2">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" class="text-emerald-600 shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+            <span>{{ session('success') }}</span>
+        </div>
+        <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 text-lg leading-none">&times;</button>
+    </div>
+    @endif
+
     {{-- Title & Action Button --}}
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -193,15 +205,10 @@
         {{-- Footer Pagination --}}
         <div class="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
             <div>
-                Showing <span class="font-semibold text-slate-800">1</span> to <span class="font-semibold text-slate-800">10</span> of <span class="font-semibold text-slate-800">4,285</span> jobs
+                Showing <span class="font-semibold text-slate-800">{{ $jobs->firstItem() ?? 0 }}</span> to <span class="font-semibold text-slate-800">{{ $jobs->lastItem() ?? 0 }}</span> of <span class="font-semibold text-slate-800">{{ $jobs->total() }}</span> jobs
             </div>
-            <div class="flex items-center gap-1.5 font-semibold">
-                <a href="#" class="px-2.5 py-1 text-slate-400 hover:text-slate-700 transition">&lt; Prev</a>
-                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#0b57d0] text-white shadow-2xs font-bold">1</a>
-                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 transition">2</a>
-                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 transition">3</a>
-                <span class="px-1 text-slate-400">...</span>
-                <a href="#" class="px-2.5 py-1 text-slate-600 hover:text-slate-900 transition">Next &gt;</a>
+            <div>
+                {{ $jobs->links('pagination::simple-tailwind') }}
             </div>
         </div>
     </div>

@@ -85,6 +85,28 @@
                         <input type="text" name="salary_range" placeholder="mis. 15.000.000 - 25.000.000"
                                class="w-full bg-slate-100/70 border border-slate-200 rounded-xl px-4 py-2.5 text-[13.5px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
                     </div>
+
+                    {{-- Career Category --}}
+                    <div>
+                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Career Category</label>
+                        <select name="category" class="w-full bg-slate-100/70 border border-slate-200 rounded-xl px-4 py-2.5 text-[13.5px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                            <option value="jobs">Jobs (Reguler)</option>
+                            <option value="internship">Internship (Magang)</option>
+                            <option value="freelance">Freelance / Kontrak</option>
+                            <option value="remote">Remote Work</option>
+                            <option value="graduate">Graduate Job</option>
+                        </select>
+                    </div>
+
+                    {{-- Experience Level --}}
+                    <div>
+                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">Experience Level</label>
+                        <select name="experience" class="w-full bg-slate-100/70 border border-slate-200 rounded-xl px-4 py-2.5 text-[13.5px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition">
+                            <option value="Entry">Entry Level</option>
+                            <option value="Mid" selected>Mid Level</option>
+                            <option value="Senior">Senior Level</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 

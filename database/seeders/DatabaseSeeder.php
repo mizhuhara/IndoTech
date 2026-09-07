@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,20 +18,22 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        \App\Models\User::updateOrCreate(
+        User::updateOrCreate(
             ['email' => 'test@example.com'],
-            ['name' => 'Test User', 'password' => \Illuminate\Support\Facades\Hash::make('password')]
+            ['name' => 'Test User', 'password' => Hash::make('password')]
         );
 
         // Super admin bersama (proyek tim). Password dari .env, fallback default.
-        \App\Models\User::updateOrCreate(
-            ['email' => \App\Models\User::ADMIN_EMAIL],
+        User::updateOrCreate(
+            ['email' => User::ADMIN_EMAIL],
             [
                 'name' => 'Super Admin',
-                'password' => \Illuminate\Support\Facades\Hash::make(env('ADMIN_PASSWORD', 'IndoTech#2026!Admin')),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'IndoTech#2026!Admin')),
                 'role' => 'super_admin',
                 'status' => 'active',
             ]
         );
+
+        $this->call(JobListingSeeder::class);
     }
 }
