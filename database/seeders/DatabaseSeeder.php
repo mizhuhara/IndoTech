@@ -91,7 +91,11 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $this->call(JobListingSeeder::class);
-        $this->call(SchoolSeeder::class);
+        if (class_exists('Database\\Seeders\\JobListingSeeder')) {
+            $this->call('Database\\Seeders\\JobListingSeeder');
+        }
+        if (class_exists('Database\\Seeders\\SchoolSeeder')) {
+            $this->call('Database\\Seeders\\SchoolSeeder');
+        }
     }
 }
