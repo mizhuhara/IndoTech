@@ -1,218 +1,296 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Manage Users — IndoTech Admin</title>
+@extends('admin.layouts.app')
 
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @else
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-        <script src="https://cdn.tailwindcss.com"></script>
+@section('title', 'User Management — IndoTech Admin')
+
+@section('content')
+<div class="space-y-6">
+
+    {{-- SUCCESS POPUP NOTIFICATION --}}
+    @if(session('success'))
+        <div id="toast-success-notification" 
+             class="fixed top-6 right-6 z-50 max-w-md w-full bg-white/95 backdrop-blur-md border border-emerald-200/80 rounded-2xl shadow-2xl shadow-emerald-500/10 p-4 transition-all duration-300 overflow-hidden">
+            <div class="flex items-start gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/30">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/>
+                    </svg>
+                </div>
+                <div class="flex-1 min-w-0 pt-0.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <h4 class="text-[14px] font-bold text-slate-900">Berhasil!</h4>
+                        <span class="text-[10px] font-semibold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">Sukses</span>
+                    </div>
+                    <p class="text-[13px] font-medium text-slate-600 mt-0.5 leading-snug">{{ session('success') }}</p>
+                </div>
+                <button type="button" 
+                        onclick="closeSuccessToast()" 
+                        class="text-slate-400 hover:text-slate-600 transition p-1 rounded-lg hover:bg-slate-100 shrink-0">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-emerald-100">
+                <div class="h-full bg-emerald-500 transition-all duration-4500 ease-linear w-full" id="toast-progress"></div>
+            </div>
+        </div>
     @endif
-    <script>
-        if (window.tailwind) {
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        fontFamily: {
-                            sans: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        },
-                    },
-                },
-            };
-        }
-    </script>
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
-</head>
-<body class="bg-gray-50 min-h-screen text-slate-800 antialiased">
 
-<div class="flex min-h-screen">
-
-    {{-- ===== SIDEBAR PARTIAL ===== --}}
-    @include('admin.partials.sidebar')
-
-    {{-- ===== MAIN CONTENT ===== --}}
-    <div class="flex-1 flex flex-col min-w-0">
-
-        {{-- Header Bar --}}
-        <header class="bg-white border-b border-slate-200 px-6 py-3.5 flex items-center gap-4">
-            {{-- Breadcrumb --}}
-            <div class="text-[13px] text-slate-500">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600">Home</a>
-                <span class="mx-1.5">›</span>
-                <span class="text-slate-900 font-medium">User Management</span>
+    {{-- ERROR POPUP NOTIFICATION --}}
+    @if(session('error'))
+        <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-xl flex items-center justify-between text-sm shadow-sm">
+            <div class="flex items-center gap-2.5">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-red-600"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"/></svg>
+                <span>{{ session('error') }}</span>
             </div>
+            <button type="button" onclick="this.parentElement.remove()" class="text-red-600 hover:text-red-800 font-bold">&times;</button>
+        </div>
+    @endif
 
-            <div class="flex-1"></div>
-
-            {{-- Search Bar --}}
-            <form action="{{ route('admin.users.index') }}" method="GET" class="hidden md:flex items-center gap-2 bg-slate-100 rounded-lg px-3 h-9 w-64">
-                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-slate-400">
-                    <circle cx="11" cy="11" r="7"/>
-                    <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
-                </svg>
-                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search data..." class="bg-transparent outline-none text-[13px] text-slate-700 placeholder-slate-400 flex-1 min-w-0">
-            </form>
-
-            {{-- Icons --}}
-            <button class="relative p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition" aria-label="Notifications">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.5-1.5V11a5.5 5.5 0 0 0-4-5.3V5a1.5 1.5 0 0 0-3 0v.7a5.5 5.5 0 0 0-4 5.3v4.5L6 17h5m4 0v1a3 3 0 0 1-6 0v-1"/></svg>
-                <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
-            </button>
-            <button class="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition" aria-label="Help">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.5 9a2.5 2.5 0 0 1 4.9.8c0 1.7-2.4 2.2-2.4 3.7m0 3h.01"/></svg>
-            </button>
-
-            {{-- Profile --}}
-            <div class="flex items-center gap-2.5 pl-3 border-l border-slate-200">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop" 
-                     alt="Admin User" 
-                     class="w-9 h-9 rounded-full object-cover border border-slate-200">
-                <div class="hidden sm:block">
-                    <div class="text-[13px] font-semibold text-slate-900 leading-none">Admin User</div>
-                    <div class="text-[11px] text-slate-500 mt-0.5">Superadmin</div>
-                </div>
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-slate-400"><path d="m8 10 4 4 4-4"/></svg>
+    {{-- Top Header Section --}}
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
+                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Dashboard</a>
+                <span class="text-slate-400">›</span>
+                <span class="text-slate-900 font-semibold">User Management</span>
             </div>
-        </header>
+            <h1 class="text-[24px] font-bold text-slate-900 tracking-tight">User Management</h1>
+            <p class="text-[13px] text-slate-500 mt-0.5">Kelola pengguna sistem, peran (role), dan status keaktifan user dalam database.</p>
+        </div>
 
-        {{-- Main Page Content --}}
-        <main class="flex-1 p-6 space-y-6">
-
-            {{-- Title --}}
-            <div>
-                <h1 class="text-[22px] font-bold text-slate-900">User Management</h1>
-                <p class="text-[13px] text-slate-500 mt-0.5">Manage system users, roles, and status active settings.</p>
-            </div>
-
-            {{-- Main Table Card Container --}}
-            <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-                
-                {{-- Table Top Bar: Title + Actions --}}
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                    <h2 class="text-base sm:text-lg font-bold text-slate-900">
-                        System User List
-                    </h2>
-
-                    {{-- Right Filter & Export Buttons --}}
-                    <div class="flex items-center gap-2.5">
-                        <button onclick="toggleModal('modal-filter')" 
-                                class="inline-flex items-center justify-center gap-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold px-3.5 py-1.5 rounded-full text-xs shadow-sm transition">
-                            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 21l3.39-.62A8.94 8.94 0 0012 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h3m-4.5 4h6m-3 4h3"/></svg>
-                            <span>Filter</span>
-                        </button>
-
-                        <button onclick="alert('Exporting user report...')" 
-                                class="inline-flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3.5 py-1.5 rounded-full text-xs shadow-sm transition">
-                            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
-                            <span>Export</span>
-                        </button>
-                    </div>
-                </div>
-
-                {{-- Table --}}
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-blue-50/50 border-y border-slate-100 text-slate-500 text-xs font-semibold uppercase tracking-wide">
-                                <th class="py-3 px-4 rounded-l-lg">User Name</th>
-                                <th class="py-3 px-4">Email</th>
-                                <th class="py-3 px-4">Role</th>
-                                <th class="py-3 px-4">Status</th>
-                                <th class="py-3 px-4 text-center rounded-r-lg">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-[13px] text-slate-700">
-                            @forelse($users as $user)
-                                <tr class="hover:bg-slate-50/70 transition">
-                                    <td class="py-3.5 px-4">
-                                        <div class="flex items-center gap-3">
-                                            @if(($user['avatar_type'] ?? '') === 'image' && !empty($user['avatar']))
-                                                <img src="{{ $user['avatar'] }}" alt="{{ $user['name'] }}" 
-                                                     class="w-9 h-9 rounded-full object-cover shrink-0 border border-slate-200">
-                                            @else
-                                                <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs shrink-0">
-                                                    {{ $user['initials'] ?? substr($user['name'], 0, 2) }}
-                                                </div>
-                                            @endif
-                                            <div>
-                                                <div class="font-bold text-slate-900 text-xs sm:text-sm">{{ $user['name'] }}</div>
-                                                <div class="text-[11px] text-slate-400 mt-0.5">Joined: {{ $user['joined'] }}</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="py-3.5 px-4 font-medium">{{ $user['email'] }}</td>
-                                    <td class="py-3.5 px-4 font-semibold text-slate-800">{{ $user['role'] }}</td>
-                                    <td class="py-3.5 px-4">
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $user['status_color'] }}">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-                                            <span>{{ $user['status'] }}</span>
-                                        </span>
-                                    </td>
-                                    <td class="py-3.5 px-4">
-                                        <div class="flex items-center justify-center gap-2.5 text-slate-400">
-                                            <button onclick="alert('Edit user: {{ $user['name'] }}')" class="hover:text-blue-600 transition" title="Edit">
-                                                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/></svg>
-                                            </button>
-                                            <button onclick="if(confirm('Delete {{ $user['name'] }}?')) alert('Deleted');" class="hover:text-red-600 transition" title="Delete">
-                                                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr><td colspan="5" class="py-6 text-center text-slate-400">No users found</td></tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                {{-- Table Footer --}}
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 font-medium">
-                    <div>Showing 1-3 of {{ $totalUsersCount }} users</div>
-                    <div class="flex items-center gap-1.5">
-                        <button disabled class="w-8 h-8 rounded-lg border border-slate-200 text-slate-300 flex items-center justify-center opacity-50">&lsaquo;</button>
-                        <button class="w-8 h-8 rounded-lg bg-blue-600 text-white font-bold shadow-sm">1</button>
-                        <a href="?page=2" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center font-semibold transition">2</a>
-                        <a href="?page=3" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center font-semibold transition">3</a>
-                        <span class="px-1 text-slate-400">...</span>
-                        <a href="?page=2" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center transition">&rsaquo;</a>
-                    </div>
-                </div>
-
-            </div>
-
-        </main>
+        {{-- Add User Button --}}
+        <div>
+            <a href="{{ route('admin.users.create') }}" 
+               class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl text-xs shadow-sm transition">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                <span>Tambah User Baru</span>
+            </a>
+        </div>
     </div>
+
+    {{-- Main Table Card Container --}}
+    <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+        
+        {{-- Table Top Bar: Search & Filter Actions --}}
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span>Daftar Pengguna Sistem</span>
+                <span class="bg-slate-100 text-slate-600 font-semibold px-2.5 py-0.5 rounded-full text-xs">
+                    {{ $users->total() }} Total
+                </span>
+            </h2>
+
+            {{-- Right Controls: Search, Filter, Reset --}}
+            <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+                {{-- Search Form --}}
+                <form action="{{ route('admin.users.index') }}" method="GET" class="flex-1 md:w-64 flex items-center gap-2 bg-slate-100/80 focus-within:bg-white border border-transparent focus-within:border-blue-500 rounded-xl px-3 h-9 transition">
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-slate-400">
+                        <circle cx="11" cy="11" r="7"/>
+                        <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama atau email..." class="bg-transparent outline-none text-[13px] text-slate-700 placeholder-slate-400 flex-1 min-w-0">
+                    @if(request()->hasAny(['q', 'status', 'role']))
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                        <input type="hidden" name="role" value="{{ request('role') }}">
+                    @endif
+                </form>
+
+                {{-- Filter Modal Trigger --}}
+                <button type="button" 
+                        onclick="toggleModal('modal-filter')" 
+                        class="inline-flex items-center justify-center gap-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold px-3.5 py-2 rounded-xl text-xs shadow-2xs transition">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 21l3.39-.62A8.94 8.94 0 0012 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h3m-4.5 4h6m-3 4h3"/></svg>
+                    <span>Filter</span>
+                    @if((request('status') && request('status') !== 'all') || (request('role') && request('role') !== 'all'))
+                        <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                    @endif
+                </button>
+
+                @if(request()->hasAny(['q', 'status', 'role']))
+                    <a href="{{ route('admin.users.index') }}" class="text-xs text-red-600 hover:text-red-700 font-semibold px-2 py-1">
+                        Reset Filter
+                    </a>
+                @endif
+            </div>
+        </div>
+
+        {{-- Table --}}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-blue-50/50 border-y border-slate-100 text-slate-500 text-xs font-semibold uppercase tracking-wide">
+                        <th class="py-3.5 px-4 rounded-l-lg">User Name</th>
+                        <th class="py-3.5 px-4">Email</th>
+                        <th class="py-3.5 px-4">Role</th>
+                        <th class="py-3.5 px-4">Status</th>
+                        <th class="py-3.5 px-4 text-center rounded-r-lg">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-[13px] text-slate-700">
+                    @forelse($users as $user)
+                        @php
+                            $roleMap = [
+                                'super_admin' => 'Super Admin',
+                                'admin' => 'Admin',
+                                'school_admin' => 'School Admin',
+                                'university_rep' => 'University Representative',
+                                'company_hr' => 'Company HR',
+                                'user' => 'User',
+                            ];
+                            $roleName = $roleMap[strtolower($user->role ?? '')] ?? ucfirst($user->role ?? 'User');
+
+                            $statusColorMap = [
+                                'active' => 'bg-emerald-100 text-emerald-700',
+                                'pending' => 'bg-amber-100 text-amber-700',
+                                'inactive' => 'bg-red-100 text-red-700',
+                            ];
+                            $statusColor = $statusColorMap[strtolower($user->status ?? '')] ?? 'bg-slate-100 text-slate-700';
+
+                            $initials = strtoupper(substr($user->name ?? 'U', 0, 2));
+                        @endphp
+                        <tr class="hover:bg-slate-50/70 transition">
+                            <td class="py-3.5 px-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs shrink-0 border border-blue-200/60">
+                                        {{ $initials }}
+                                    </div>
+                                    <div>
+                                        <a href="{{ route('admin.users.show', $user) }}" class="font-bold text-slate-900 text-xs sm:text-sm hover:text-blue-600 transition">
+                                            {{ $user->name }}
+                                        </a>
+                                        <div class="text-[11px] text-slate-400 mt-0.5">Joined: {{ $user->created_at ? $user->created_at->format('d M Y') : '-' }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3.5 px-4 font-medium text-slate-800">{{ $user->email }}</td>
+                            <td class="py-3.5 px-4 font-semibold text-slate-800">
+                                <span class="bg-slate-100 text-slate-700 border border-slate-200/80 px-2.5 py-1 rounded-lg text-xs font-medium">
+                                    {{ $roleName }}
+                                </span>
+                            </td>
+                            <td class="py-3.5 px-4">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold {{ $statusColor }}">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                                    <span>{{ ucfirst($user->status ?? 'Active') }}</span>
+                                </span>
+                            </td>
+                            <td class="py-3.5 px-4">
+                                <div class="flex items-center justify-center gap-3">
+                                    {{-- View Detail --}}
+                                    <a href="{{ route('admin.users.show', $user) }}" class="text-slate-400 hover:text-blue-600 transition" title="Lihat Detail">
+                                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 123c2.7 5.422 8.5 9 15.014 9 6.514 0 12.315-3.578 15.014-9C29.315 6.578 23.514 3 17.000000000000004 3c-6.514 0-12.314 3.578-15.014 9z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    </a>
+                                    {{-- Edit --}}
+                                    <a href="{{ route('admin.users.edit', $user) }}" class="text-slate-400 hover:text-amber-600 transition" title="Edit User">
+                                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/></svg>
+                                    </a>
+                                    {{-- Delete Button with Custom Modal Popup --}}
+                                    <button type="button" 
+                                            onclick="openUserDeleteModal('{{ route('admin.users.destroy', $user) }}', '{{ addslashes($user->name) }}')" 
+                                            class="text-slate-400 hover:text-red-600 transition" 
+                                            title="Hapus User">
+                                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-400">
+                                <div class="flex flex-col items-center justify-center gap-2">
+                                    <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" class="text-slate-300"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <span>Tidak ada user yang ditemukan</span>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Table Footer Pagination --}}
+        <div class="mt-6 pt-4 border-t border-slate-100">
+            {{ $users->links() }}
+        </div>
+
+    </div>
+
 </div>
 
-{{-- Modal Filter --}}
-<div id="modal-filter" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl p-6 max-w-sm w-full shadow-xl space-y-4">
+{{-- MODAL FILTER --}}
+<div id="modal-filter" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <h3 class="text-sm font-bold text-slate-900">Filter Users</h3>
-            <button onclick="toggleModal('modal-filter')" class="text-slate-400 hover:text-slate-600">&times;</button>
+            <h3 class="text-sm font-bold text-slate-900">Filter User</h3>
+            <button type="button" onclick="toggleModal('modal-filter')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
         </div>
         <form action="{{ route('admin.users.index') }}" method="GET" class="space-y-4 text-xs font-medium">
+            @if(request('q'))
+                <input type="hidden" name="q" value="{{ request('q') }}">
+            @endif
             <div>
-                <label class="block text-slate-700 mb-1 font-semibold">Filter by Status</label>
-                <select name="status" class="w-full border border-slate-200 rounded-lg px-3 py-2 outline-none focus:border-blue-600">
-                    <option value="all">All Statuses</option>
-                    <option value="active">Active</option>
-                    <option value="pending">Pending</option>
-                    <option value="inactive">Inactive</option>
+                <label class="block text-slate-700 mb-1.5 font-semibold">Status Pengguna</label>
+                <select name="status" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-blue-600 bg-slate-50 text-slate-800">
+                    <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>Semua Status</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-slate-700 mb-1.5 font-semibold">Role Pengguna</label>
+                <select name="role" class="w-full border border-slate-200 rounded-xl px-3 py-2.5 outline-none focus:border-blue-600 bg-slate-50 text-slate-800">
+                    <option value="all" {{ request('role') == 'all' ? 'selected' : '' }}>Semua Role</option>
+                    <option value="super_admin" {{ request('role') == 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                    <option value="school_admin" {{ request('role') == 'school_admin' ? 'selected' : '' }}>School Admin</option>
+                    <option value="university_rep" {{ request('role') == 'university_rep' ? 'selected' : '' }}>University Representative</option>
+                    <option value="company_hr" {{ request('role') == 'company_hr' ? 'selected' : '' }}>Company HR</option>
+                    <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
                 </select>
             </div>
             <div class="flex items-center justify-end gap-2 pt-2">
-                <button type="button" onclick="toggleModal('modal-filter')" class="px-3.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 font-semibold">Cancel</button>
-                <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white font-semibold shadow-sm hover:bg-blue-700">Apply Filter</button>
+                <button type="button" onclick="toggleModal('modal-filter')" class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50">Batal</button>
+                <button type="submit" class="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold shadow-xs hover:bg-blue-700">Terapkan Filter</button>
             </div>
+        </form>
+    </div>
+</div>
+
+{{-- MODAL POPUP KONFIRMASI HAPUS USER --}}
+<div id="modal-delete-user" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl border border-slate-100 relative space-y-6">
+        
+        <button type="button" onclick="closeUserDeleteModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 transition p-1 rounded-full hover:bg-slate-100">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+
+        <div class="flex flex-col items-center text-center space-y-3 pt-2">
+            <div class="w-16 h-16 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center ring-8 ring-red-50/60 shadow-xs">
+                <svg width="30" height="30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Hapus User Ini?</h3>
+                <p class="text-xs text-slate-500 mt-1.5 max-w-xs mx-auto leading-relaxed">
+                    Apakah Anda yakin ingin menghapus user <span id="delete-user-name" class="font-bold text-slate-800"></span>? Tindakan ini permanen dan tidak dapat dibatalkan.
+                </p>
+            </div>
+        </div>
+
+        <form id="form-delete-user" method="POST" action="" class="flex items-center gap-3 pt-2">
+            @csrf
+            @method('DELETE')
+            
+            <button type="button" 
+                    onclick="closeUserDeleteModal()" 
+                    class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-3 rounded-2xl text-xs transition">
+                Batal
+            </button>
+
+            <button type="submit" 
+                    class="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold px-4 py-3 rounded-2xl text-xs shadow-lg shadow-red-600/25 transition">
+                Ya, Hapus User
+            </button>
         </form>
     </div>
 </div>
@@ -222,7 +300,42 @@
         const m = document.getElementById(id);
         if (m) m.classList.toggle('hidden');
     }
-</script>
 
-</body>
-</html>
+    function openUserDeleteModal(actionUrl, userName) {
+        const modal = document.getElementById('modal-delete-user');
+        const form = document.getElementById('form-delete-user');
+        const nameSpan = document.getElementById('delete-user-name');
+
+        if (modal && form && nameSpan) {
+            form.action = actionUrl;
+            nameSpan.textContent = '"' + userName + '"';
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeUserDeleteModal() {
+        const modal = document.getElementById('modal-delete-user');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function closeSuccessToast() {
+        const toast = document.getElementById('toast-success-notification');
+        if (toast) {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-15px)';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const toast = document.getElementById('toast-success-notification');
+        if (toast) {
+            const progress = document.getElementById('toast-progress');
+            if (progress) {
+                setTimeout(() => progress.style.width = '0%', 50);
+            }
+            setTimeout(() => closeSuccessToast(), 4500);
+        }
+    });
+</script>
+@endsection
