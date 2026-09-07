@@ -168,7 +168,7 @@
                             {{-- Type Badge --}}
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-[#eef4ff] text-[#0b57d0]">
-                                    {{ $school['type'] ?? 'SMK (IT)' }}
+                                    {{ $school['institution_type'] ?? 'SMK (IT)' }}
                                 </span>
                             </td>
 
