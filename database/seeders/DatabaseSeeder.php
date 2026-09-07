@@ -35,5 +35,6 @@ class DatabaseSeeder extends Seeder
         );
 
         $this->call(JobListingSeeder::class);
+        $this->call(SchoolSeeder::class);
     }
 }
