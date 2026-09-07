@@ -81,9 +81,6 @@ class AdminUnivController extends Controller
     /**
      * Store a newly created university in database.
      */
-    /**
-     * Store a newly created university in database.
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
