@@ -69,6 +69,16 @@ class AdminSchoolController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $this->validateSchool($request);
+        $user = $request->user();
+
+        // Institusi: 1 akun = 1 data, wajib pending sampai di-approve admin
+        if (in_array($user->role, ['school', 'university', 'company'], true)) {
+            if (School::where('user_id', $user->id)->exists()) {
+                return back()->withErrors(['name' => 'Akun Anda sudah memiliki data sekolah. Hanya diperbolehkan 1 data per akun.']);
+            }
+            $data['user_id'] = $user->id;
+            $data['status'] = 'Pending';
+        }
 
         if ($request->user()->role === 'school') {
             $data['user_id'] = $request->user()->id;
@@ -107,6 +117,12 @@ class AdminSchoolController extends Controller
     {
         $school = $this->findVisibleSchool($id);
         $data = $this->validateSchool($request);
+        $user = $request->user();
+
+        // Institusi tidak boleh mengubah status — hanya admin yang approve/reject
+        if (in_array($user->role, ['school', 'university', 'company'], true)) {
+            unset($data['status']);
+        }
 
         $school->update($data);
 
@@ -155,7 +171,7 @@ class AdminSchoolController extends Controller
         return $request->validate([
             'npsn' => ['required', 'string', 'max:20'],
             'name' => ['required', 'string', 'max:255'],
-            'institution_type' => ['required', 'string', 'max:100'],
+            'institution_type' => ['required', 'string', 'max:100', 'in:SMK IT,SMK,SMA IT,SMK Non-IT,Sekolah IT,Vokasi IT'],
             'city' => ['nullable', 'string', 'max:100'],
             'province' => ['nullable', 'string', 'max:100'],
             'location' => ['required', 'string', 'max:150'],

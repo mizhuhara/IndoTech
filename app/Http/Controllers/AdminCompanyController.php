@@ -17,6 +17,11 @@ class AdminCompanyController extends Controller
     {
         $query = Company::query();
 
+        // Institusi hanya melihat data miliknya sendiri
+        if (in_array($request->user()->role, ['school', 'university', 'company'], true)) {
+            $query->where('user_id', $request->user()->id);
+        }
+
         // Search Filter (Nama, NPSN/Kode, Kota, Provinsi, Industri, Lokasi)
         if ($request->filled('search')) {
             $search = strtolower(trim($request->input('search')));
@@ -140,7 +145,15 @@ class AdminCompanyController extends Controller
         $mapLink = $this->formatMapLink($validated['map_link'] ?? null);
 
         // Standardize status: Active / Inactive
-        $status = strtolower($validated['status']) === 'inactive' ? 'Inactive' : 'Active';
+        $user = $request->user();
+        $isInstitution = in_array($user->role, ['school', 'university', 'company'], true);
+
+        // Institusi: 1 akun = 1 data, wajib pending sampai di-approve admin
+        if ($isInstitution && Company::where('user_id', $user->id)->exists()) {
+            return back()->withErrors(['name' => 'Akun Anda sudah memiliki data perusahaan. Hanya diperbolehkan 1 data per akun.']);
+        }
+
+        $status = $isInstitution ? 'Pending' : (strtolower($validated['status']) === 'inactive' ? 'Inactive' : 'Active');
 
         $company = Company::create([
             'name' => $validated['name'],
@@ -161,6 +174,7 @@ class AdminCompanyController extends Controller
             'logo_url' => $logoUrl,
             'gallery' => $galleryPaths,
             'map_link' => $mapLink,
+            'user_id' => $isInstitution ? $user->id : null,
         ]);
 
         return redirect()->route('admin.company.index')
@@ -172,9 +186,26 @@ class AdminCompanyController extends Controller
      */
     public function show(int $id): View
     {
-        $company = Company::findOrFail($id);
+        $company = $this->findVisibleCompany($id);
 
         return view('admin.company.show', compact('company'));
+    }
+
+    private function visibleCompanies()
+    {
+        $user = auth()->user();
+        if ($user && $user->role === 'company') {
+            return Company::where('user_id', $user->id);
+        }
+        return Company::query();
+    }
+
+    /**
+     * Ambil perusahaan dengan proteksi kepemilikan (404 kalau bukan miliknya).
+     */
+    private function findVisibleCompany(int $id): Company
+    {
+        return $this->visibleCompanies()->findOrFail($id);
     }
 
     /**
@@ -182,7 +213,7 @@ class AdminCompanyController extends Controller
      */
     public function edit(int $id): View
     {
-        $company = Company::findOrFail($id);
+        $company = $this->findVisibleCompany($id);
 
         return view('admin.company.edit', compact('company'));
     }
@@ -192,7 +223,7 @@ class AdminCompanyController extends Controller
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        $company = Company::findOrFail($id);
+        $company = $this->findVisibleCompany($id);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -229,6 +260,10 @@ class AdminCompanyController extends Controller
         }
 
         $status = strtolower($validated['status']) === 'inactive' ? 'Inactive' : 'Active';
+        $user = $request->user();
+        if (in_array($user->role, ['school', 'university', 'company'], true)) {
+            $status = $company->status; // institusi tidak boleh mengubah status
+        }
 
         $payload = [
             'name' => $validated['name'],
@@ -293,7 +328,7 @@ class AdminCompanyController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        $company = Company::findOrFail($id);
+        $company = $this->findVisibleCompany($id);
         $name = $company->name;
 
         // Delete logo and gallery files if present in public storage

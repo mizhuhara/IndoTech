@@ -78,9 +78,9 @@
                             <select name="institution_type" 
                                     class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
                                 <option value="SMK IT" {{ old('institution_type') == 'SMK IT' ? 'selected' : '' }}>SMK IT</option>
-                                <option value="SMK Non-IT" {{ old('institution_type') == 'SMK Non-IT' ? 'selected' : '' }}>SMK Non-IT</option>
-                                <option value="SMA" {{ old('institution_type') == 'SMA' ? 'selected' : '' }}>SMA</option>
-                                <option value="Universitas" {{ old('institution_type') == 'Universitas' ? 'selected' : '' }}>Universitas</option>
+                                <option value="SMK" {{ old('institution_type') == 'SMK' ? 'selected' : '' }}>SMK</option>
+                                <option value="SMA IT" {{ old('institution_type') == 'SMA IT' ? 'selected' : '' }}>SMA IT</option>
+                                <option value="Vokasi IT" {{ old('institution_type') == 'Vokasi IT' ? 'selected' : '' }}>Vokasi IT</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
                                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
