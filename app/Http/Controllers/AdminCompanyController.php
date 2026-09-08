@@ -2,255 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AdminCompanyController extends Controller
 {
     /**
-     * Centralized company data store.
-     *
-     * @return array<int, array<string, mixed>>
-     */
-    private function getCompaniesData(): array
-    {
-        return [
-            [
-                'id' => 1,
-                'npsn' => 'CMP001',
-                'name' => 'PT. Telekomunikasi Indonesia Tbk',
-                'type' => 'BUMN',
-                'industry' => 'Telekomunikasi',
-                'city' => 'Bandung',
-                'province' => 'Jawa Barat',
-                'location' => 'Bandung, Jawa Barat',
-                'address' => 'Jl. Japati No.1, Cibaduyut, Kec. Bojongloa Kidul, Kota Bandung, Jawa Barat 40212',
-                'status' => 'Active',
-                'logo_name' => 'Telkom_Logo.png',
-                'logo_url' => 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=120&h=120&q=80',
-                'logo_text' => 'TELKOM',
-                'logo_bg' => 'bg-blue-700',
-                'email' => 'corporate@telkom.co.id',
-                'website' => 'https://www.telkom.co.id',
-                'phone' => '022-7510000',
-                'description' => 'PT. Telekomunikasi Indonesia Tbk (Telkom) adalah perusahaan telekomunikasi dan jasa jaringan terbesar di Indonesia. Telkom menyediakan layanan telepon tetap, seluler, internet, dan layanan data serta komunikasi lainnya.',
-                'tags' => ['Telekomunikasi', 'Digital', 'Infrastruktur', 'BUMN'],
-                'total_employees' => 24000,
-                'founded' => 1965,
-                'created_at' => '2024-01-15',
-            ],
-            [
-                'id' => 2,
-                'npsn' => 'CMP002',
-                'name' => 'PT. Bank Rakyat Indonesia (Persero) Tbk',
-                'type' => 'BUMN',
-                'industry' => 'Perbankan',
-                'city' => 'Jakarta Pusat',
-                'province' => 'DKI Jakarta',
-                'location' => 'Jakarta Pusat, DKI Jakarta',
-                'address' => 'Jl. Jenderal Sudirman Kav.44-46, RT.2/RW.1, Kuningan Tim., Kec. Setiabudi, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12930',
-                'status' => 'Active',
-                'logo_name' => 'BRI_Logo.png',
-                'logo_url' => 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=120&h=120&q=80',
-                'logo_text' => 'BRI',
-                'logo_bg' => 'bg-yellow-600',
-                'email' => 'callcenter@bri.co.id',
-                'website' => 'https://www.bri.co.id',
-                'phone' => '14017',
-                'description' => 'PT. Bank Rakyat Indonesia (Persero) Tbk (BRI) adalah salah satu bank terbesar di Indonesia yang berfokus pada segmentasi mikro, kecil, dan menengah (UMKM). BRI memiliki jaringan kantor cabang dan unit terpadu yang luas di seluruh Indonesia.',
-                'tags' => ['Perbankan', 'UMKM', 'BUMN', 'Keuangan'],
-                'total_employees' => 58000,
-                'founded' => 1895,
-                'created_at' => '2024-02-10',
-            ],
-            [
-                'id' => 3,
-                'npsn' => 'CMP003',
-                'name' => 'PT. Gojek Indonesia',
-                'type' => 'Swasta',
-                'industry' => 'Teknologi & Transportasi',
-                'city' => 'Jakarta Selatan',
-                'province' => 'DKI Jakarta',
-                'location' => 'Jakarta Selatan, DKI Jakarta',
-                'address' => 'Gedung GoTo Tower, Jl. Profesional DR. Ide Anak Agung Gde Agung No. 10, RT.1/RW.3, Kuningan, Kec. Setiabudi, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12950',
-                'status' => 'Active',
-                'logo_name' => 'Gojek_Logo.png',
-                'logo_url' => 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=120&h=120&q=80',
-                'logo_text' => 'GOJEK',
-                'logo_bg' => 'bg-green-600',
-                'email' => 'support@gojek.com',
-                'website' => 'https://www.gojek.com',
-                'phone' => '021-50884444',
-                'description' => 'PT. Gojek Indonesia adalah platform teknologi terkemuka di Asia Tenggara yang menyediakan layanan transportasi, logistik, pembayaran, dan layanan gaya hidup melalui aplikasi super-app GoTo.',
-                'tags' => ['Teknologi', 'Transportasi', 'Fintech', 'Super App', 'Startup'],
-                'total_employees' => 8000,
-                'founded' => 2010,
-                'created_at' => '2024-03-05',
-            ],
-            [
-                'id' => 4,
-                'npsn' => 'CMP004',
-                'name' => 'PT. Astra International Tbk',
-                'type' => 'Swasta',
-                'industry' => 'Otomotif & Keuangan',
-                'city' => 'Jakarta Selatan',
-                'province' => 'DKI Jakarta',
-                'location' => 'Jakarta Selatan, DKI Jakarta',
-                'address' => 'Menara Astra, Jl. Jenderal Sudirman Kav. 5-6, Kuningan, Kec. Setiabudi, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12950',
-                'status' => 'Active',
-                'logo_name' => 'Astra_Logo.png',
-                'logo_url' => 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=120&h=120&q=80',
-                'logo_text' => 'ASTRA',
-                'logo_bg' => 'bg-red-700',
-                'email' => 'corporate@astra.co.id',
-                'website' => 'https://www.astra.co.id',
-                'phone' => '021-52326262',
-                'description' => 'PT. Astra International Tbk adalah konglomerat terbesar di Indonesia dengan bisnis utama di bidang otomotif, keuangan, pertanian, infrastruktur, dan logistik. Astra adalah distributor mobil Toyota dan Daihatsu di Indonesia.',
-                'tags' => ['Otomotif', 'Keuangan', 'Pertanian', 'Infrastruktur', 'Konglomerat'],
-                'total_employees' => 230000,
-                'founded' => 1957,
-                'created_at' => '2024-03-20',
-            ],
-            [
-                'id' => 5,
-                'npsn' => 'CMP005',
-                'name' => 'PT. Tokopedia',
-                'type' => 'Swasta',
-                'industry' => 'E-Commerce & Teknologi',
-                'city' => 'Jakarta Selatan',
-                'province' => 'DKI Jakarta',
-                'location' => 'Jakarta Selatan, DKI Jakarta',
-                'address' => 'Gedung GoTo Tower, Jl. Profesional DR. Ide Anak Agung Gde Agung No. 10, RT.1/RW.3, Kuningan, Kec. Setiabudi, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12950',
-                'status' => 'Active',
-                'logo_name' => 'Tokopedia_Logo.png',
-                'logo_url' => 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=120&h=120&q=80',
-                'logo_text' => 'TOKOPEDIA',
-                'logo_bg' => 'bg-green-700',
-                'email' => 'support@tokopedia.com',
-                'website' => 'https://www.tokopedia.com',
-                'phone' => '021-50884444',
-                'description' => 'PT. Tokopedia adalah perusahaan teknologi Indonesia yang mengoperasikan platform e-commerce terbesar di Indonesia. Sekarang bergabung dengan Gojek di bawah induk GoTo Group.',
-                'tags' => ['E-Commerce', 'Teknologi', 'Marketplace', 'Startup', 'GoTo'],
-                'total_employees' => 6000,
-                'founded' => 2009,
-                'created_at' => '2024-04-01',
-            ],
-            [
-                'id' => 6,
-                'npsn' => 'CMP006',
-                'name' => 'PT. Pertamina (Persero)',
-                'type' => 'BUMN',
-                'industry' => 'Migas & Energi',
-                'city' => 'Jakarta Pusat',
-                'province' => 'DKI Jakarta',
-                'location' => 'Jakarta Pusat, DKI Jakarta',
-                'address' => 'Jl. Medan Merdeka Timur No.1A, RT.1/RW.2, Gambir, Kec. Gambir, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10110',
-                'status' => 'Active',
-                'logo_name' => 'Pertamina_Logo.png',
-                'logo_url' => '',
-                'logo_text' => 'PERTAMINA',
-                'logo_bg' => 'bg-red-800',
-                'email' => 'corporate.secretary@pertamina.com',
-                'website' => 'https://www.pertamina.com',
-                'phone' => '021-3146800',
-                'description' => 'PT. Pertamina (Persero) adalah perusahaan BUMN yang bergerak di bidang minyak dan gas bumi (migas) serta energi baru terbarukan. Pertamina mengelola penambangan, pengolahan, hingga distribusi bahan bakar di Indonesia.',
-                'tags' => ['Migas', 'Energi', 'BUMN', 'Bahan Bakar', 'Renewable Energy'],
-                'total_employees' => 35000,
-                'founded' => 1968,
-                'created_at' => '2024-04-15',
-            ],
-            [
-                'id' => 7,
-                'npsn' => 'CMP007',
-                'name' => 'PT. Bukalapak.com',
-                'type' => 'Swasta',
-                'industry' => 'E-Commerce & Fintech',
-                'city' => 'Jakarta Selatan',
-                'province' => 'DKI Jakarta',
-                'location' => 'Jakarta Selatan, DKI Jakarta',
-                'address' => 'Cyber 2 Tower, 17th Floor, Jl. HR. Rasuna Said Blok X-5 Kav. 13, Kuningan, Kec. Setiabudi, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12950',
-                'status' => 'Active',
-                'logo_name' => 'Bukalapak_Logo.png',
-                'logo_url' => '',
-                'logo_text' => 'BUKALAPAK',
-                'logo_bg' => 'bg-orange-600',
-                'email' => 'support@bukalapak.com',
-                'website' => 'https://www.bukalapak.com',
-                'phone' => '021-50818888',
-                'description' => 'PT. Bukalapak.com adalah platform e-commerce dan fintech Indonesia yang membantu mitra usaha mikro dan kecil (UMK) untuk berdigitalisasi. BukaWarung dan BukaModal adalah produk unggulannya.',
-                'tags' => ['E-Commerce', 'Fintech', 'UMKM', 'Startup', 'Digitalisasi'],
-                'total_employees' => 3000,
-                'founded' => 2010,
-                'created_at' => '2024-05-10',
-            ],
-        ];
-    }
-
-    /**
-     * Display a listing of companies with search/filter support.
+     * Display a listing of companies with search & filter support.
      */
     public function index(Request $request): View
     {
-        $companies = collect($this->getCompaniesData());
+        $query = Company::query();
 
+        // Search Filter (Nama, NPSN/Kode, Kota, Provinsi, Industri, Lokasi)
         if ($request->filled('search')) {
-            $search = strtolower($request->input('search'));
-            $companies = $companies->filter(fn ($c) => str_contains(strtolower($c['name']), $search)
-                || str_contains(strtolower($c['npsn']), $search)
-                || str_contains(strtolower($c['city']), $search)
-                || str_contains(strtolower($c['province']), $search)
-                || str_contains(strtolower($c['industry']), $search)
-                || str_contains(strtolower($c['location']), $search)
-            );
+            $search = strtolower(trim($request->input('search')));
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(npsn) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(city) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(province) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(industry) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(location) LIKE ?', ["%{$search}%"]);
+            });
         }
 
-        if ($request->filled('status') && $request->input('status') !== 'all') {
-            $companies = $companies->filter(fn ($c) => strtolower($c['status']) === strtolower($request->input('status')));
+        // Status Filter
+        if ($request->filled('status') && strtolower($request->input('status')) !== 'all') {
+            $query->whereRaw('LOWER(status) = ?', [strtolower($request->input('status'))]);
         }
 
-        if ($request->filled('type') && $request->input('type') !== 'all') {
-            $companies = $companies->filter(fn ($c) => strtolower($c['type']) === strtolower($request->input('type')));
+        // Type Filter (Swasta, BUMN, Multinasional, Startup)
+        if ($request->filled('type') && strtolower($request->input('type')) !== 'all') {
+            $query->whereRaw('LOWER(type) = ?', [strtolower($request->input('type'))]);
         }
 
+        // Sort Filter
         if ($request->filled('sort')) {
             $sort = $request->input('sort');
             if ($sort === 'name_asc') {
-                $companies = $companies->sortBy('name');
+                $query->orderBy('name', 'asc');
             } elseif ($sort === 'name_desc') {
-                $companies = $companies->sortByDesc('name');
+                $query->orderBy('name', 'desc');
             } elseif ($sort === 'region_asc') {
-                $companies = $companies->sortBy('city');
+                $query->orderBy('city', 'asc');
             } elseif ($sort === 'region_desc') {
-                $companies = $companies->sortByDesc('city');
+                $query->orderBy('city', 'desc');
             } elseif ($sort === 'oldest') {
-                $companies = $companies->sortBy('id');
+                $query->orderBy('id', 'asc');
             } else {
-                $companies = $companies->sortByDesc('id');
+                $query->orderBy('id', 'desc');
             }
+        } else {
+            $query->orderBy('id', 'desc');
         }
 
-        $perPage = 4;
-        $page = (int) $request->input('page', 1);
-        $total = $companies->count();
-        $offset = ($page - 1) * $perPage;
-        $items = $companies->slice($offset, $perPage)->values();
+        $companies = $query->paginate(6)->withQueryString();
 
-        $paginatedCompanies = new LengthAwarePaginator(
-            $items,
-            $total,
-            $perPage,
-            $page,
-            ['path' => route('admin.company.index'), 'query' => $request->query()]
-        );
-
-        $totalCompanies = 1250;
-        $activePartners = 890;
-        $newSubmissions = 15;
+        $totalCompanies = Company::count();
+        $activePartners = Company::whereRaw('LOWER(status) = ?', ['active'])->count();
+        $newSubmissions = Company::where('created_at', '>=', now()->subDays(30))->count();
 
         return view('admin.company.index', [
-            'companies' => $paginatedCompanies,
+            'companies' => $companies,
             'totalCompanies' => $totalCompanies,
             'activePartners' => $activePartners,
             'newSubmissions' => $newSubmissions,
@@ -266,22 +83,88 @@ class AdminCompanyController extends Controller
     }
 
     /**
-     * Store a newly created company (stub — no DB yet).
+     * Store a newly created company in database.
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'npsn' => ['required', 'string', 'max:20'],
+            'npsn' => ['nullable', 'string', 'max:50'],
             'type' => ['required', 'string'],
             'industry' => ['required', 'string', 'max:100'],
-            'location' => ['required', 'string', 'max:150'],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'address' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'province' => ['nullable', 'string', 'max:100'],
+            'location' => ['nullable', 'string', 'max:150'],
+            'address' => ['nullable', 'string'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'description' => ['nullable', 'string'],
+            'total_employees' => ['nullable', 'integer', 'min:0'],
+            'founded' => ['nullable', 'integer', 'min:1800', 'max:2030'],
+            'status' => ['required', 'string'],
+            'map_link' => ['nullable', 'string', 'max:1000'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+        ], [
+            'name.required' => 'Nama perusahaan wajib diisi.',
+            'industry.required' => 'Bidang industri wajib diisi.',
+            'website.url' => 'Format URL website tidak valid. Sertakan http:// atau https://',
+        ]);
+
+        // Build location if not explicitly provided
+        $location = trim($validated['location'] ?? '');
+        if (empty($location)) {
+            $parts = array_filter([$validated['city'] ?? null, $validated['province'] ?? null]);
+            $location = ! empty($parts) ? implode(', ', $parts) : 'Indonesia';
+        }
+
+        // Process logo upload
+        $logoUrl = null;
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('company-logos', 'public');
+            $logoUrl = Storage::url($path);
+        }
+
+        // Process gallery images upload
+        $galleryPaths = [];
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $path = $file->store('company-gallery', 'public');
+                $galleryPaths[] = Storage::url($path);
+            }
+        }
+
+        // Normalize Google Maps embed url if link provided
+        $mapLink = $this->formatMapLink($validated['map_link'] ?? null);
+
+        // Standardize status: Active / Inactive
+        $status = strtolower($validated['status']) === 'inactive' ? 'Inactive' : 'Active';
+
+        $company = Company::create([
+            'name' => $validated['name'],
+            'npsn' => $validated['npsn'] ?? null,
+            'type' => $validated['type'],
+            'industry' => $validated['industry'],
+            'city' => $validated['city'] ?? null,
+            'province' => $validated['province'] ?? null,
+            'location' => $location,
+            'address' => $validated['address'] ?? null,
+            'email' => $validated['email'] ?? null,
+            'website' => $validated['website'] ?? null,
+            'phone' => $validated['phone'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'total_employees' => $validated['total_employees'] ?? null,
+            'founded' => $validated['founded'] ?? null,
+            'status' => $status,
+            'logo_url' => $logoUrl,
+            'gallery' => $galleryPaths,
+            'map_link' => $mapLink,
         ]);
 
         return redirect()->route('admin.company.index')
-            ->with('success', "Perusahaan \"{$request->input('name')}\" berhasil ditambahkan.");
+            ->with('success', "Perusahaan \"{$company->name}\" berhasil ditambahkan.");
     }
 
     /**
@@ -289,11 +172,7 @@ class AdminCompanyController extends Controller
      */
     public function show(int $id): View
     {
-        $company = collect($this->getCompaniesData())->firstWhere('id', $id);
-
-        if (! $company) {
-            $company = $this->getCompaniesData()[0];
-        }
+        $company = Company::findOrFail($id);
 
         return view('admin.company.show', compact('company'));
     }
@@ -303,43 +182,171 @@ class AdminCompanyController extends Controller
      */
     public function edit(int $id): View
     {
-        $company = collect($this->getCompaniesData())->firstWhere('id', $id);
-
-        if (! $company) {
-            $company = $this->getCompaniesData()[0];
-        }
+        $company = Company::findOrFail($id);
 
         return view('admin.company.edit', compact('company'));
     }
 
     /**
-     * Update the specified company (stub — no DB yet).
+     * Update the specified company in database.
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        $request->validate([
+        $company = Company::findOrFail($id);
+
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'npsn' => ['required', 'string', 'max:20'],
+            'npsn' => ['nullable', 'string', 'max:50'],
             'type' => ['required', 'string'],
             'industry' => ['required', 'string', 'max:100'],
-            'location' => ['required', 'string', 'max:150'],
-            'description' => ['nullable', 'string', 'max:1000'],
-            'address' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:100'],
+            'province' => ['nullable', 'string', 'max:100'],
+            'location' => ['nullable', 'string', 'max:150'],
+            'address' => ['nullable', 'string'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'description' => ['nullable', 'string'],
+            'total_employees' => ['nullable', 'integer', 'min:0'],
+            'founded' => ['nullable', 'integer', 'min:1800', 'max:2030'],
+            'status' => ['required', 'string'],
+            'map_link' => ['nullable', 'string', 'max:1000'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'remove_gallery' => ['nullable', 'array'],
+        ], [
+            'name.required' => 'Nama perusahaan wajib diisi.',
+            'industry.required' => 'Bidang industri wajib diisi.',
+            'website.url' => 'Format URL website tidak valid. Sertakan http:// atau https://',
         ]);
 
+        // Build location if not explicitly provided
+        $location = trim($validated['location'] ?? '');
+        if (empty($location)) {
+            $parts = array_filter([$validated['city'] ?? null, $validated['province'] ?? null]);
+            $location = ! empty($parts) ? implode(', ', $parts) : ($company->location ?: 'Indonesia');
+        }
+
+        $status = strtolower($validated['status']) === 'inactive' ? 'Inactive' : 'Active';
+
+        $payload = [
+            'name' => $validated['name'],
+            'npsn' => $validated['npsn'] ?? null,
+            'type' => $validated['type'],
+            'industry' => $validated['industry'],
+            'city' => $validated['city'] ?? null,
+            'province' => $validated['province'] ?? null,
+            'location' => $location,
+            'address' => $validated['address'] ?? null,
+            'email' => $validated['email'] ?? null,
+            'website' => $validated['website'] ?? null,
+            'phone' => $validated['phone'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'total_employees' => $validated['total_employees'] ?? null,
+            'founded' => $validated['founded'] ?? null,
+            'status' => $status,
+            'map_link' => $this->formatMapLink($validated['map_link'] ?? null),
+        ];
+
+        // Handle logo update
+        if ($request->hasFile('logo')) {
+            if ($company->logo_url && str_contains($company->logo_url, 'storage/company-logos/')) {
+                $oldPath = str_replace('/storage/', '', parse_url($company->logo_url, PHP_URL_PATH));
+                Storage::disk('public')->delete($oldPath);
+            }
+            $path = $request->file('logo')->store('company-logos', 'public');
+            $payload['logo_url'] = Storage::url($path);
+        }
+
+        // Handle gallery updates (remove selected images & add new images)
+        $currentGallery = $company->gallery ?? [];
+        if (! empty($validated['remove_gallery'])) {
+            foreach ($validated['remove_gallery'] as $imgToRemove) {
+                if (($key = array_search($imgToRemove, $currentGallery)) !== false) {
+                    unset($currentGallery[$key]);
+                    if (str_contains($imgToRemove, 'storage/company-gallery/')) {
+                        $oldPath = str_replace('/storage/', '', parse_url($imgToRemove, PHP_URL_PATH));
+                        Storage::disk('public')->delete($oldPath);
+                    }
+                }
+            }
+            $currentGallery = array_values($currentGallery);
+        }
+
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $path = $file->store('company-gallery', 'public');
+                $currentGallery[] = Storage::url($path);
+            }
+        }
+        $payload['gallery'] = $currentGallery;
+
+        $company->update($payload);
+
         return redirect()->route('admin.company.index')
-            ->with('success', "Data perusahaan \"{$request->input('name')}\" berhasil diperbarui.");
+            ->with('success', "Data perusahaan \"{$company->name}\" berhasil diperbarui.");
     }
 
     /**
-     * Remove the specified company (stub — no DB yet).
+     * Remove the specified company from storage.
      */
     public function destroy(int $id): RedirectResponse
     {
-        $company = collect($this->getCompaniesData())->firstWhere('id', $id);
-        $name = $company ? $company['name'] : 'Perusahaan';
+        $company = Company::findOrFail($id);
+        $name = $company->name;
+
+        // Delete logo and gallery files if present in public storage
+        if ($company->logo_url && str_contains($company->logo_url, 'storage/company-logos/')) {
+            $path = str_replace('/storage/', '', parse_url($company->logo_url, PHP_URL_PATH));
+            Storage::disk('public')->delete($path);
+        }
+
+        if (! empty($company->gallery)) {
+            foreach ($company->gallery as $imgUrl) {
+                if (str_contains($imgUrl, 'storage/company-gallery/')) {
+                    $path = str_replace('/storage/', '', parse_url($imgUrl, PHP_URL_PATH));
+                    Storage::disk('public')->delete($path);
+                }
+            }
+        }
+
+        $company->delete();
 
         return redirect()->route('admin.company.index')
             ->with('success', "Perusahaan \"{$name}\" berhasil dihapus.");
+    }
+
+    /**
+     * Helper to format Google Maps iframe or link URL.
+     */
+    private function formatMapLink(?string $link): ?string
+    {
+        if (! $link) {
+            return null;
+        }
+
+        $link = trim($link);
+
+        // If user pastes an <iframe> tag, extract src attribute
+        if (str_contains($link, '<iframe')) {
+            preg_match('/src="([^"]+)"/', $link, $matches);
+            if (! empty($matches[1])) {
+                return $matches[1];
+            }
+        }
+
+        // If Google Maps share link, convert query to embed format
+        if (str_contains($link, 'maps.google.com') || str_contains($link, 'google.com/maps')) {
+            if (! str_contains($link, 'output=embed') && ! str_contains($link, '/embed')) {
+                if (str_contains($link, '?')) {
+                    return $link.'&output=embed';
+                }
+
+                return $link.'?output=embed';
+            }
+        }
+
+        return $link;
     }
 }
