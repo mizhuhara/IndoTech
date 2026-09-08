@@ -64,6 +64,7 @@ class AuthController extends Controller
         if ($status === 'active') {
             Auth::login($user);
             $request->session()->regenerate();
+
             return redirect()->intended('/');
         }
 
@@ -87,6 +88,7 @@ class AuthController extends Controller
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+
             return back()->withErrors(['email' => 'Akun masih menunggu verifikasi super admin.'])->withInput();
         }
 
@@ -94,10 +96,12 @@ class AuthController extends Controller
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+
             return back()->withErrors(['email' => 'Pendaftaran ditolak. Hubungi admin untuk informasi.'])->withInput();
         }
 
         $request->session()->regenerate();
+
         return redirect()->intended($this->redirectFor($user));
     }
 
@@ -106,6 +110,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('login');
     }
 
