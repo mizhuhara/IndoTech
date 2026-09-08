@@ -14,7 +14,7 @@ class AdminSchoolController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = School::query();
+        $query = $this->visibleSchools();
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -45,11 +45,13 @@ class AdminSchoolController extends Controller
 
         $paginatedSchools = $query->paginate(4)->withQueryString();
 
+        $visible = $this->visibleSchools();
+
         return view('admin.schools.index', [
             'schools' => $paginatedSchools,
-            'totalSchools' => School::count(),
-            'activePartners' => School::where('status', 'Active')->count(),
-            'newSubmissions' => School::where('status', 'Inactive')->count(),
+            'totalSchools' => (clone $visible)->count(),
+            'activePartners' => (clone $visible)->where('status', 'Active')->count(),
+            'newSubmissions' => (clone $visible)->where('status', 'Inactive')->count(),
         ]);
     }
 
@@ -68,6 +70,10 @@ class AdminSchoolController extends Controller
     {
         $data = $this->validateSchool($request);
 
+        if ($request->user()->role === 'school') {
+            $data['user_id'] = $request->user()->id;
+        }
+
         School::create($data);
 
         return redirect()->route('admin.schools.index')
@@ -79,7 +85,7 @@ class AdminSchoolController extends Controller
      */
     public function show(int $id): View
     {
-        $school = School::findOrFail($id);
+        $school = $this->findVisibleSchool($id);
 
         return view('admin.schools.show', compact('school'));
     }
@@ -89,7 +95,7 @@ class AdminSchoolController extends Controller
      */
     public function edit(int $id): View
     {
-        $school = School::findOrFail($id);
+        $school = $this->findVisibleSchool($id);
 
         return view('admin.schools.edit', compact('school'));
     }
@@ -99,7 +105,7 @@ class AdminSchoolController extends Controller
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        $school = School::findOrFail($id);
+        $school = $this->findVisibleSchool($id);
         $data = $this->validateSchool($request);
 
         $school->update($data);
@@ -113,13 +119,35 @@ class AdminSchoolController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        $school = School::findOrFail($id);
+        $school = $this->findVisibleSchool($id);
         $name = $school->name;
 
         $school->delete();
 
         return redirect()->route('admin.schools.index')
             ->with('success', "Sekolah \"{$name}\" berhasil dihapus.");
+    }
+
+    /**
+     * Query schools yang boleh dilihat user: super_admin semua, role school hanya miliknya.
+     */
+    private function visibleSchools()
+    {
+        $user = auth()->user();
+
+        if ($user && $user->role === 'school') {
+            return School::where('user_id', $user->id);
+        }
+
+        return School::query();
+    }
+
+    /**
+     * Ambil sekolah dengan proteksi kepemilikan (404 kalau bukan miliknya).
+     */
+    private function findVisibleSchool(int $id): School
+    {
+        return $this->visibleSchools()->findOrFail($id);
     }
 
     private function validateSchool(Request $request): array
