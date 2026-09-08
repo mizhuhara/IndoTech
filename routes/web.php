@@ -10,6 +10,7 @@ use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminVerificationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CareerController;
@@ -138,6 +139,15 @@ Route::middleware('admin')->group(function () {
     Route::delete('/admin/articles/{id}', [AdminArticleController::class, 'destroy'])->name('admin.articles.destroy');
 
 }); // end admin group
+
+// Role dashboards (semua user login)
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/school', [DashboardController::class, 'school'])->name('dashboard.school');
+    Route::get('/dashboard/university', [DashboardController::class, 'university'])->name('dashboard.university');
+    Route::get('/dashboard/company', [DashboardController::class, 'company'])->name('dashboard.company');
+    Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
+});
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
