@@ -16,7 +16,7 @@ class AdminUnivController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = University::query();
+        $query = $this->visibleUnivs();
 
         // Institusi hanya melihat data miliknya sendiri
         if (in_array($request->user()->role, ['school', 'university', 'company'], true)) {
@@ -61,17 +61,18 @@ class AdminUnivController extends Controller
             $query->orderBy('id', 'desc');
         }
 
-        $univs = $query->paginate(6)->withQueryString();
+        $totalUnivs = (clone $query)->count();
+        $activePartners = (clone $query)->whereRaw('LOWER(status) = ?', ['active'])->count();
+        $newSubmissions = (clone $query)->where('created_at', '>=', now()->subDays(30))->count();
 
-        $totalUnivs = University::count();
-        $activePartners = University::whereRaw('LOWER(status) = ?', ['active'])->count();
-        $newSubmissions = University::where('created_at', '>=', now()->subDays(30))->count();
+        $univs = $query->paginate(6)->withQueryString();
 
         return view('admin.univ.index', [
             'univs' => $univs,
             'totalUnivs' => $totalUnivs,
             'activePartners' => $activePartners,
             'newSubmissions' => $newSubmissions,
+            'canManage' => in_array($request->user()->role, ['super_admin', 'admin'], true),
         ]);
     }
 
@@ -80,6 +81,8 @@ class AdminUnivController extends Controller
      */
     public function create(): View
     {
+        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+
         return view('admin.univ.create');
     }
 
@@ -88,6 +91,8 @@ class AdminUnivController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        abort_if($request->user()->role !== 'super_admin' && $request->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'npsn' => ['required', 'string', 'max:20', 'unique:universities,npsn'],
@@ -181,6 +186,7 @@ class AdminUnivController extends Controller
         if ($user && $user->role === 'university') {
             return University::where('user_id', $user->id);
         }
+
         return University::query();
     }
 
@@ -281,6 +287,8 @@ class AdminUnivController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+
         $univ = $this->findVisibleUniv($id);
         $name = $univ->name;
         $univ->delete();

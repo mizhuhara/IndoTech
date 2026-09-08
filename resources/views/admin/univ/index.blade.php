@@ -30,7 +30,8 @@
             </div>
 
 
-            {{-- Add New University Button --}}
+            {{-- Add New University Button (hanya admin) --}}
+            @if (!empty($canManage))
             <a href="{{ route('admin.univ.create') }}" 
                class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-sm transition">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
@@ -38,6 +39,7 @@
                 </svg>
                 Add New University
             </a>
+            @endif
         </div>
     </div>
 
@@ -219,7 +221,8 @@
                                         </svg>
                                     </a>
 
-                                    {{-- Delete Button with Form --}}
+                                    {{-- Delete Button with Form (admin only) --}}
+                                    @if (!empty($canManage))
                                     <form id="delete-form-{{ $univ['id'] }}" method="POST" action="{{ route('admin.univ.destroy', $univ['id']) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
@@ -235,6 +238,7 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    @endif
 
                                     {{-- More Actions Dropdown/Menu --}}
                                     <a href="{{ route('admin.univ.show', $univ['id']) }}" class="p-1.5 rounded-lg hover:text-slate-800 hover:bg-slate-100 transition" title="Detail Universitas">

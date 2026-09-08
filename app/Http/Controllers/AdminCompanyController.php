@@ -65,17 +65,18 @@ class AdminCompanyController extends Controller
             $query->orderBy('id', 'desc');
         }
 
-        $companies = $query->paginate(6)->withQueryString();
+        $totalCompanies = (clone $query)->count();
+        $activePartners = (clone $query)->whereRaw('LOWER(status) = ?', ['active'])->count();
+        $newSubmissions = (clone $query)->where('created_at', '>=', now()->subDays(30))->count();
 
-        $totalCompanies = Company::count();
-        $activePartners = Company::whereRaw('LOWER(status) = ?', ['active'])->count();
-        $newSubmissions = Company::where('created_at', '>=', now()->subDays(30))->count();
+        $companies = $query->paginate(6)->withQueryString();
 
         return view('admin.company.index', [
             'companies' => $companies,
             'totalCompanies' => $totalCompanies,
             'activePartners' => $activePartners,
             'newSubmissions' => $newSubmissions,
+            'canManage' => in_array($request->user()->role, ['super_admin', 'admin'], true),
         ]);
     }
 
@@ -84,6 +85,8 @@ class AdminCompanyController extends Controller
      */
     public function create(): View
     {
+        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+
         return view('admin.company.create');
     }
 
@@ -197,6 +200,7 @@ class AdminCompanyController extends Controller
         if ($user && $user->role === 'company') {
             return Company::where('user_id', $user->id);
         }
+
         return Company::query();
     }
 
@@ -328,6 +332,8 @@ class AdminCompanyController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+
         $company = $this->findVisibleCompany($id);
         $name = $company->name;
 

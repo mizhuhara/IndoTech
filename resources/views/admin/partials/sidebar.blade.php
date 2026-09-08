@@ -8,8 +8,9 @@
             </a>
         </div>
 
-        {{-- New Record Button (sesuai role) --}}
+        {{-- New Record Button (hanya admin yang bisa menambah) --}}
         @php
+            $canCreate = in_array($userRole, ['super_admin', 'admin'], true);
             $createRoute = match ($userRole) {
                 'school' => 'admin.schools.create',
                 'university' => 'admin.univ.create',
@@ -17,12 +18,14 @@
                 default => 'admin.schools.create',
             };
         @endphp
+        @if ($canCreate)
         <div class="px-4 pt-2 pb-4">
             <a href="{{ route($createRoute) }}" class="w-full flex items-center justify-center gap-2 h-11 rounded-full bg-[#0b57d0] text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
                 New Record
             </a>
         </div>
+        @endif
 
         {{-- Nav --}}
         <nav class="px-3 py-2 space-y-1 overflow-y-auto max-h-[calc(100vh-210px)]">
