@@ -201,8 +201,8 @@
 
                     {{-- Registration Quota Progress Bar --}}
                     @php
-                        $quota = $event['quota'] ?? 50;
-                        $total = $event['total_quota'] ?? 100;
+                        $quota = (int) ($event['quota'] ?? 0);
+                        $total = (int) ($event['total_quota'] ?? 100);
                         $percent = min(100, max(0, round(($quota / $total) * 100)));
                     @endphp
                     <div class="space-y-2">
