@@ -1,188 +1,184 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Internship Management — Admin IndoTech')
+@section('title', 'Internship Management — IndoTech Admin')
 
 @section('content')
 <div class="space-y-6">
-    {{-- Search Bar --}}
-    <div class="bg-white rounded-xl border border-slate-200/80 px-4 py-2.5 shadow-2xs flex items-center gap-3">
-        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-slate-400 shrink-0">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
-        </svg>
-        <form action="{{ route('admin.internships.index') }}" method="GET" class="flex-1">
-            <input type="text" 
-                   name="search"
-                   value="{{ $search ?? '' }}" 
-                   placeholder="Search internships, companies, or IDs..." 
-                   class="w-full bg-transparent text-[13.5px] text-slate-800 placeholder-slate-400 focus:outline-none"
-                   onchange="this.form.submit()">
-        </form>
-    </div>
 
-    {{-- Title & Action Button --}}
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    {{-- Error Banner --}}
+    @if ($errors->any())
+        <div class="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-sm shadow-sm flex items-start gap-3 animate-fade-in">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-red-500 shrink-0 mt-0.5">
+                <circle cx="12" cy="12" r="9"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <div class="flex-1">
+                <div class="font-bold">Terdapat beberapa kesalahan:</div>
+                <ul class="list-disc list-inside mt-1 text-xs space-y-0.5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700 font-bold">&times;</button>
+        </div>
+    @endif
+
+    {{-- Success Banner --}}
+    @if (session('success'))
+        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm shadow-sm flex items-start gap-3 animate-fade-in">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-emerald-500 shrink-0 mt-0.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <div class="flex-1">{{ session('success') }}</div>
+            <button type="button" onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 font-bold">&times;</button>
+        </div>
+    @endif
+
+    {{-- Header Section & Actions --}}
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-[26px] font-extrabold text-slate-900 tracking-tight">Internship Management</h1>
-            <p class="text-[13.5px] text-slate-500 mt-0.5">Manage and track all internship postings across the platform.</p>
-        </div>
-        <a href="{{ route('admin.internships.create') }}" class="inline-flex items-center justify-center gap-2 bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg shadow-xs transition">
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.8"><path d="M12 5v14M5 12h14"/></svg>
-            <span>POST NEW INTERNSHIP</span>
-        </a>
-    </div>
-
-    {{-- Stats Cards (3 Columns) --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {{-- Total Postings --}}
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs">
-            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">TOTAL POSTINGS</div>
-            <div class="text-[32px] font-extrabold text-slate-900 tracking-tight leading-tight mt-2.5">{{ $totalPostings }}</div>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-emerald-600">
-                <span class="font-bold">+18%</span>
-                <span class="text-slate-400 font-normal">from last month</span>
+            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
+                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
+                <span class="text-slate-400">›</span>
+                <span class="text-slate-900 font-semibold">Internship Management</span>
             </div>
+            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">Internship Management</h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Kelola data internship, profil, dan status keaktifan.</p>
         </div>
 
-        {{-- Active Internships --}}
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs">
-            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">ACTIVE INTERNSHIPS</div>
-            <div class="text-[32px] font-extrabold text-slate-900 tracking-tight leading-tight mt-2.5">{{ $activeInternships }}</div>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-emerald-600">
-                <span class="font-bold">+8%</span>
-                <span class="text-slate-400 font-normal">from last month</span>
-            </div>
-        </div>
-
-        {{-- Applications --}}
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs">
-            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">APPLICATIONS</div>
-            <div class="text-[32px] font-extrabold text-slate-900 tracking-tight leading-tight mt-2.5">{{ $applicationsCount }}</div>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-emerald-600">
-                <span class="font-bold">+31%</span>
-                <span class="text-slate-400 font-normal">from last month</span>
-            </div>
+        <div class="flex items-center gap-3">
+            {{-- Tambah Internship Button --}}
+            <button type="button" 
+                    onclick="openAddModal()" 
+                    class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-[13.5px] font-semibold shadow-md shadow-blue-500/20 transition transform active:scale-95">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                <span>Tambah Internship</span>
+            </button>
         </div>
     </div>
 
-    {{-- Main Table Container --}}
-    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden">
-        {{-- Filter Tabs and Actions Header --}}
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between px-6 border-b border-slate-200/80 gap-4 pt-2">
-            {{-- Nav Tabs --}}
-            <div class="flex items-center gap-6 text-[13px] font-bold">
-                <a href="{{ route('admin.internships.index', ['tab' => 'all']) }}" 
-                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'all' ? 'border-[#0b57d0] text-[#0b57d0]' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
-                    ALL INTERNSHIPS
-                </a>
-                <a href="{{ route('admin.internships.index', ['tab' => 'active']) }}" 
-                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'active' ? 'border-[#0b57d0] text-[#0b57d0]' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
-                    ACTIVE
-                </a>
-                <a href="{{ route('admin.internships.index', ['tab' => 'drafts']) }}" 
-                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'drafts' ? 'border-[#0b57d0] text-[#0b57d0]' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
-                    DRAFTS
-                </a>
-                <a href="{{ route('admin.internships.index', ['tab' => 'closed']) }}" 
-                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'closed' ? 'border-[#0b57d0] text-[#0b57d0]' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
-                    CLOSED
-                </a>
+    {{-- Stats Cards --}}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
+            <div>
+                <div class="text-[11.5px] font-bold tracking-wider text-slate-400 uppercase">TOTAL INTERNSHIPS</div>
+                <div class="text-3xl font-extrabold text-slate-900 mt-1">{{ number_format($totalPostings) }}</div>
             </div>
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4m0 2v4m0-11v2m0 0h2m-2 0h-2M9 11h2m-2 0h-2m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
 
-            {{-- Right Actions (Filter & Export) --}}
-            <div class="flex items-center gap-4 py-3 text-[12.5px] font-bold text-slate-500">
-                <button type="button" class="flex items-center gap-1.5 hover:text-slate-800 transition">
-                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h18m-15 5h12m-9 5h6m-3 5h0"/></svg>
-                    <span>FILTER</span>
-                </button>
-                <button type="button" class="flex items-center gap-1.5 hover:text-slate-800 transition">
-                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M7.5 12 12 16.5m0 0 4.5-4.5M12 16.5v-13.5"/></svg>
-                    <span>EXPORT</span>
-                </button>
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
+            <div>
+                <div class="text-[11.5px] font-bold tracking-wider text-slate-400 uppercase">ACTIVE</div>
+                <div class="text-3xl font-extrabold text-emerald-600 mt-1">{{ number_format($activeInternships) }}</div>
             </div>
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
+            <div>
+                <div class="text-[11.5px] font-bold tracking-wider text-slate-400 uppercase">INACTIVE</div>
+                <div class="text-3xl font-extrabold text-amber-600 mt-1">{{ number_format($inactiveInternships) }}</div>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    {{-- Main Container Card --}}
+    <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        {{-- Table Header --}}
+        <div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50">
+            <form action="{{ route('admin.internships.index') }}" method="GET" class="flex flex-1 items-center gap-2">
+                <input type="text" name="search" placeholder="Cari berdasarkan judul, perusahaan, atau lokasi..." value="{{ $search }}" class="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs placeholder-slate-400 focus:border-blue-500 focus:outline-none">
+                <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition">Cari</button>
+            </form>
         </div>
 
         {{-- Table --}}
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/50">
-                        <th class="py-4 pl-6 pr-3 w-10">
-                            <input type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                        </th>
-                        <th class="py-4 px-4 font-bold">INTERNSHIP TITLE</th>
-                        <th class="py-4 px-4 font-bold">COMPANY / PROVIDER</th>
-                        <th class="py-4 px-4 font-bold">TYPE</th>
-                        <th class="py-4 px-4 font-bold">DATE POSTED</th>
-                        <th class="py-4 px-4 font-bold">STATUS</th>
-                        <th class="py-4 pr-6 pl-4 font-bold text-right">ACTIONS</th>
+            <table class="w-full text-xs sm:text-sm">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-semibold text-slate-700">Judul</th>
+                        <th class="px-6 py-3 text-left font-semibold text-slate-700">Perusahaan</th>
+                        <th class="px-6 py-3 text-left font-semibold text-slate-700">User</th>
+                        <th class="px-6 py-3 text-left font-semibold text-slate-700">Lokasi</th>
+                        <th class="px-6 py-3 text-left font-semibold text-slate-700">Status</th>
+                        <th class="px-6 py-3 text-center font-semibold text-slate-700">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100 text-[13.5px]">
-                    @forelse ($internships as $item)
-                        <tr class="hover:bg-slate-50/80 transition group">
-                            <td class="py-4 pl-6 pr-3">
-                                <input type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                            </td>
-                            <td class="py-4 px-4">
-                                <a href="{{ route('admin.internships.show', $item['id']) }}" class="font-bold text-slate-900 hover:text-[#0b57d0] transition block leading-tight">
-                                    {{ $item['title'] }}
-                                </a>
-                                <span class="text-[11.5px] text-slate-400 font-medium block mt-0.5">
-                                    ID: {{ $item['code'] }}
-                                </span>
-                            </td>
-                            <td class="py-4 px-4 font-semibold text-slate-700">
-                                {{ $item['company'] }}
-                            </td>
-                            <td class="py-4 px-4 text-slate-600 font-medium">
-                                {{ $item['type'] }}
-                            </td>
-                            <td class="py-4 px-4 text-slate-500 font-medium">
-                                {{ $item['date_posted'] }}
-                            </td>
-                            <td class="py-4 px-4">
-                                @if ($item['status'] === 'Active')
-                                    <span class="font-bold text-emerald-600 text-[13px]">Active</span>
-                                @elseif ($item['status'] === 'Paused')
-                                    <span class="font-bold text-amber-500 text-[13px]">Paused</span>
-                                @elseif ($item['status'] === 'Draft')
-                                    <span class="font-bold text-slate-400 text-[13px]">Draft</span>
+                <tbody class="divide-y divide-slate-100">
+                    @forelse ($internships as $internship)
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="px-6 py-4 font-medium text-slate-900">{{ $internship->title }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $internship->company }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $internship->user->name ?? '-' }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $internship->location ?? '-' }}</td>
+                            <td class="px-6 py-4">
+                                @if ($internship->status === 'active')
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 font-medium text-xs">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Active
+                                    </span>
+                                @elseif ($internship->status === 'completed')
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 font-medium text-xs">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                        Completed
+                                    </span>
                                 @else
-                                    <span class="font-bold text-red-500 text-[13px]">Closed</span>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-100 text-red-700 font-medium text-xs">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        Inactive
+                                    </span>
                                 @endif
                             </td>
-                            <td class="py-4 pr-6 pl-4 text-right">
-                                <div class="flex items-center justify-end gap-3 text-slate-400">
-                                    {{-- View Icon --}}
-                                    <a href="{{ route('admin.internships.show', $item['id']) }}" class="hover:text-slate-700 transition" title="View Internship">
-                                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.573 16.49 16.638 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+
+                            {{-- Actions --}}
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex items-center justify-center gap-2">
+                                    {{-- Edit Button --}}
+                                    <button type="button" 
+                                            onclick="openEditModal({{ json_encode($internship) }})" 
+                                            class="p-2 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition" 
+                                            title="Edit Internship">
+                                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/>
                                         </svg>
-                                    </a>
-                                    {{-- Edit Icon --}}
-                                    <a href="{{ route('admin.internships.edit', $item['id']) }}" class="hover:text-blue-600 transition" title="Edit Internship">
-                                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
+                                    </button>
+
+                                    {{-- Delete Button --}}
+                                    <button type="button" 
+                                            onclick="openDeleteModal({{ $internship->id }}, '{{ addslashes($internship->title) }}')" 
+                                            class="p-2 rounded-xl text-slate-500 hover:text-red-600 hover:bg-red-50 transition" 
+                                            title="Hapus Internship">
+                                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
                                         </svg>
-                                    </a>
-                                    {{-- Delete Icon --}}
-                                    <form action="{{ route('admin.internships.destroy', $item['id']) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus internship listing ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="hover:text-red-600 transition" title="Delete Internship">
-                                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
-                                            </svg>
-                                        </button>
-                                    </form>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-8 text-center text-slate-400 text-[13.5px]">
-                                Tidak ada data internship posting yang ditemukan.
+                            <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                                <div class="max-w-sm mx-auto space-y-2">
+                                    <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
+                                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+                                    </div>
+                                    <div class="font-bold text-slate-800 text-sm">Tidak ada internship ditemukan</div>
+                                    <p class="text-xs text-slate-400">Coba ubah kata kunci pencarian atau tambahkan internship baru.</p>
+                                    <a href="{{ route('admin.internships.index') }}" class="inline-block text-xs font-semibold text-blue-600 hover:underline">Reset Search</a>
+                                </div>
                             </td>
                         </tr>
                     @endforelse
@@ -190,20 +186,303 @@
             </table>
         </div>
 
-        {{-- Footer Pagination --}}
-        <div class="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
-            <div>
-                Showing <span class="font-semibold text-slate-800">1</span> to <span class="font-semibold text-slate-800">10</span> of <span class="font-semibold text-slate-800">1,850</span> internships
+        {{-- Table Footer & Pagination --}}
+        <div class="p-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-[13px] text-slate-500">
+                Showing <span class="font-semibold text-slate-800">{{ $internships->firstItem() ?? 0 }}-{{ $internships->lastItem() ?? 0 }}</span> of <span class="font-semibold text-slate-800">{{ $internships->total() }}</span> internships
             </div>
-            <div class="flex items-center gap-1.5 font-semibold">
-                <a href="#" class="px-2.5 py-1 text-slate-400 hover:text-slate-700 transition">&lt; Prev</a>
-                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[#0b57d0] text-white shadow-2xs font-bold">1</a>
-                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 transition">2</a>
-                <a href="#" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-600 transition">3</a>
-                <span class="px-1 text-slate-400">...</span>
-                <a href="#" class="px-2.5 py-1 text-slate-600 hover:text-slate-900 transition">Next &gt;</a>
+
+            <div class="flex items-center gap-1.5 text-[13.5px]">
+                @if ($internships->onFirstPage())
+                    <span class="w-8 h-8 rounded-lg flex items-center justify-center border border-slate-100 text-slate-300 cursor-not-allowed select-none">‹</span>
+                @else
+                    <a href="{{ $internships->previousPageUrl() }}" class="w-8 h-8 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition">‹</a>
+                @endif
+
+                @for ($page = 1; $page <= max(1, $internships->lastPage()); $page++)
+                    @if ($page == $internships->currentPage())
+                        <span class="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-600 text-white font-bold shadow-xs select-none">{{ $page }}</span>
+                    @else
+                        <a href="{{ $internships->url($page) }}" class="w-8 h-8 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition">{{ $page }}</a>
+                    @endif
+                @endfor
+
+                @if ($internships->hasMorePages())
+                    <a href="{{ $internships->nextPageUrl() }}" class="w-8 h-8 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition">›</a>
+                @else
+                    <span class="w-8 h-8 rounded-lg flex items-center justify-center border border-slate-100 text-slate-300 cursor-not-allowed select-none">›</span>
+                @endif
             </div>
         </div>
+
+    </div>
+
+</div>
+
+{{-- ========================================================================= --}}
+{{-- MODAL POP-UP 1: TAMBAH INTERNSHIP BARU --}}
+{{-- ========================================================================= --}}
+<div id="modal-add-internship" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
+        {{-- Modal Header --}}
+        <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold">Tambah Internship Baru</h3>
+                    <p class="text-xs text-blue-100">Isi formulir di bawah untuk menambahkan internship baru.</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeAddModal()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 text-xl font-bold transition">&times;</button>
+        </div>
+
+        {{-- Modal Body Form --}}
+        <form action="{{ route('admin.internships.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700 max-h-[70vh] overflow-y-auto">
+            @csrf
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">User <span class="text-red-500">*</span></label>
+                <select name="user_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                    <option value="">Pilih User</option>
+                    @foreach (\App\Models\User::all() as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">Judul <span class="text-red-500">*</span></label>
+                <input type="text" name="title" required placeholder="Contoh: Full Stack Developer" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">Perusahaan <span class="text-red-500">*</span></label>
+                <input type="text" name="company" required placeholder="Contoh: PT Tech Indonesia" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">Deskripsi</label>
+                <textarea name="description" rows="3" placeholder="Deskripsi internship..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition resize-none"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">Lokasi</label>
+                    <input type="text" name="location" placeholder="Contoh: Jakarta" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">Status <span class="text-red-500">*</span></label>
+                    <select name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">Tanggal Mulai</label>
+                    <input type="date" name="start_date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">Tanggal Selesai</label>
+                    <input type="date" name="end_date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">Foto Profil</label>
+                <input type="file" name="profile_picture" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-xs">
+                <p class="text-[11px] text-slate-500 mt-1">Format: JPG, PNG, GIF (Max 2MB)</p>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onclick="closeAddModal()" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold transition">Batal</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-500/20 transition">Simpan Internship</button>
+            </div>
+        </form>
     </div>
 </div>
+
+{{-- ========================================================================= --}}
+{{-- MODAL POP-UP 2: EDIT DATA INTERNSHIP --}}
+{{-- ========================================================================= --}}
+<div id="modal-edit-internship" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
+        {{-- Modal Header --}}
+        <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                </div>
+                <div>
+                    <h3 class="text-base font-bold">Edit Data Internship</h3>
+                    <p class="text-xs text-slate-400">Perbarui informasi internship berikut ini.</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 text-xl font-bold transition">&times;</button>
+        </div>
+
+        {{-- Modal Body Form --}}
+        <form id="form-edit-internship" method="POST" enctype="multipart/form-data" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700 max-h-[70vh] overflow-y-auto">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">User <span class="text-red-500">*</span></label>
+                <select id="edit_user_id" name="user_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                    <option value="">Pilih User</option>
+                    @foreach (\App\Models\User::all() as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">Judul <span class="text-red-500">*</span></label>
+                <input type="text" id="edit_title" name="title" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">Perusahaan <span class="text-red-500">*</span></label>
+                <input type="text" id="edit_company" name="company" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">Deskripsi</label>
+                <textarea id="edit_description" name="description" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition resize-none"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">Lokasi</label>
+                    <input type="text" id="edit_location" name="location" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">Status <span class="text-red-500">*</span></label>
+                    <select id="edit_status" name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">Tanggal Mulai</label>
+                    <input type="date" id="edit_start_date" name="start_date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-800 mb-1">Tanggal Selesai</label>
+                    <input type="date" id="edit_end_date" name="end_date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-800 mb-1">Foto Profil <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                <input type="file" id="edit_profile_picture" name="profile_picture" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-xs">
+                <p class="text-[11px] text-slate-500 mt-1">Format: JPG, PNG, GIF (Max 2MB). Biarkan kosong untuk tidak mengubah.</p>
+                <div id="current_profile" class="mt-2"></div>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold transition">Batal</button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-md transition">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ========================================================================= --}}
+{{-- MODAL POP-UP 3: KONFIRMASI HAPUS INTERNSHIP --}}
+{{-- ========================================================================= --}}
+<div id="modal-delete-internship" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-center">
+        <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto shadow-xs">
+            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-slate-900">Konfirmasi Hapus Internship</h3>
+            <p class="text-xs text-slate-500 mt-1">
+                Apakah Anda yakin ingin menghapus internship <strong id="delete_internship_title" class="text-slate-900"></strong>?
+            </p>
+            <p class="text-[11px] text-red-500 mt-2 font-medium bg-red-50 p-2.5 rounded-xl border border-red-100">
+                Peringatan: Tindakan ini permanen dan data internship tidak dapat dikembalikan.
+            </p>
+        </div>
+
+        <form id="form-delete-internship" method="POST" class="pt-2 flex items-center justify-center gap-3">
+            @csrf
+            @method('DELETE')
+            <button type="button" onclick="closeDeleteModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition text-xs sm:text-sm">Batal</button>
+            <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold shadow-md shadow-red-500/20 transition text-xs sm:text-sm">Ya, Hapus</button>
+        </form>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function openAddModal() {
+        document.getElementById('modal-add-internship').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeAddModal() {
+        document.getElementById('modal-add-internship').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    function openEditModal(internship) {
+        const form = document.getElementById('form-edit-internship');
+        form.action = `{{ url('/admin/internships') }}/${internship.id}`;
+        
+        document.getElementById('edit_user_id').value = internship.user_id || '';
+        document.getElementById('edit_title').value = internship.title || '';
+        document.getElementById('edit_company').value = internship.company || '';
+        document.getElementById('edit_description').value = internship.description || '';
+        document.getElementById('edit_location').value = internship.location || '';
+        document.getElementById('edit_status').value = internship.status || 'active';
+        document.getElementById('edit_start_date').value = internship.start_date || '';
+        document.getElementById('edit_end_date').value = internship.end_date || '';
+
+        // Show current profile picture if exists
+        let profileHTML = '';
+        if (internship.profile_picture) {
+            profileHTML = `<div class="text-left"><p class="text-xs font-semibold text-slate-600 mb-1">Foto Profil Saat Ini:</p><img src="/storage/${internship.profile_picture}" alt="Profile" class="w-20 h-20 rounded-lg object-cover border border-slate-200"></div>`;
+        }
+        document.getElementById('current_profile').innerHTML = profileHTML;
+
+        document.getElementById('modal-edit-internship').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('modal-edit-internship').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    function openDeleteModal(id, title) {
+        const form = document.getElementById('form-delete-internship');
+        form.action = `{{ url('/admin/internships') }}/${id}`;
+        document.getElementById('delete_internship_title').textContent = title;
+        document.getElementById('modal-delete-internship').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('modal-delete-internship').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+</script>
+@endpush
 @endsection
