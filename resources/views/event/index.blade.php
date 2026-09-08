@@ -225,62 +225,9 @@
                     </div>
                 @endif
 
-                {{-- Pagination Component --}}
-                @php
-                    $curr = $currentPage ?? 1;
-                    $maxP = $totalPages ?? 3;
-                    $queryParams = request()->query();
-                @endphp
-                <div class="flex items-center justify-center gap-1.5 pt-4">
-                    {{-- Prev --}}
-                    @if($curr > 1)
-                        <a href="{{ route('event.index', array_merge($queryParams, ['page' => $curr - 1])) }}" 
-                           class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center text-xs font-semibold transition">
-                            &lsaquo;
-                        </a>
-                    @else
-                        <span class="w-8 h-8 rounded-lg border border-slate-200 text-slate-300 flex items-center justify-center text-xs opacity-50 cursor-not-allowed">
-                            &lsaquo;
-                        </span>
-                    @endif
-
-                    {{-- Page 1 --}}
-                    <a href="{{ route('event.index', array_merge($queryParams, ['page' => 1])) }}" 
-                       class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs transition {{ $curr === 1 ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-200 text-slate-600 hover:bg-slate-100' }}">
-                        1
-                    </a>
-
-                    {{-- Page 2 --}}
-                    <a href="{{ route('event.index', array_merge($queryParams, ['page' => 2])) }}" 
-                       class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs transition {{ $curr === 2 ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-200 text-slate-600 hover:bg-slate-100' }}">
-                        2
-                    </a>
-
-                    {{-- Page 3 --}}
-                    <a href="{{ route('event.index', array_merge($queryParams, ['page' => 3])) }}" 
-                       class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs transition {{ $curr === 3 ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-200 text-slate-600 hover:bg-slate-100' }}">
-                        3
-                    </a>
-
-                    @if($maxP > 3)
-                        <span class="px-1 text-slate-400 text-xs">...</span>
-                        <a href="{{ route('event.index', array_merge($queryParams, ['page' => $maxP])) }}" 
-                           class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs transition {{ $curr === $maxP ? 'bg-blue-600 text-white shadow-sm' : 'border border-slate-200 text-slate-600 hover:bg-slate-100' }}">
-                            {{ $maxP }}
-                        </a>
-                    @endif
-
-                    {{-- Next --}}
-                    @if($curr < $maxP)
-                        <a href="{{ route('event.index', array_merge($queryParams, ['page' => $curr + 1])) }}" 
-                           class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 flex items-center justify-center text-xs font-semibold transition">
-                            &rsaquo;
-                        </a>
-                    @else
-                        <span class="w-8 h-8 rounded-lg border border-slate-200 text-slate-300 flex items-center justify-center text-xs opacity-50 cursor-not-allowed">
-                            &rsaquo;
-                        </span>
-                    @endif
+                {{-- Pagination --}}
+                <div class="pt-4">
+                    {{ $events->appends(request()->query())->links('vendor.pagination.tailwind') }}
                 </div>
 
             </div>

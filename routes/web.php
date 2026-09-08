@@ -123,6 +123,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/admin/events/{id}', [AdminEventController::class, 'show'])->name('admin.events.show');
     Route::post('/admin/events/{id}/approve', [AdminEventController::class, 'approve'])->name('admin.events.approve');
     Route::post('/admin/events/{id}/reject', [AdminEventController::class, 'reject'])->name('admin.events.reject');
+    Route::delete('/admin/events/{id}', [AdminEventController::class, 'destroy'])->name('admin.events.destroy');
 
     // Admin Reports
     Route::view('/admin/reports', 'admin.reports.index')->name('admin.reports.index');

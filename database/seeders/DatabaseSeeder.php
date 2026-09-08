@@ -31,13 +31,15 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make(env('ADMIN_PASSWORD', 'IndoTech#2026!Admin')),
                 'role' => 'super_admin',
                 'status' => 'active',
-            ]);
+            ]
+        );
 
         $this->call([
             UniversitySeeder::class,
             JobListingSeeder::class,
             SchoolSeeder::class,
             CompanySeeder::class,
+            EventSeeder::class,
         ]);
     }
 }
