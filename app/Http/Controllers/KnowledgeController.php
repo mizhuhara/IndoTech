@@ -2,33 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 class KnowledgeController extends Controller
 {
     public function index(Request $request)
     {
-        $articles = collect($this->getArticles());
+        $query = Article::published();
 
         // Category filter
         $category = $request->query('category', 'All');
         if (strtolower($category) !== 'all' && strtolower($category) !== 'articles') {
-            $articles = $articles->filter(function ($article) use ($category) {
-                return strtolower($article['category']) === strtolower($category)
-                    || strtolower($article['category_tag'] ?? '') === strtolower($category);
+            $query->where('category', $category);
+        }
+
+        // Search keyword
+        if ($request->filled('q')) {
+            $q = trim($request->query('q'));
+            $query->where(function ($sq) use ($q) {
+                $sq->where('title', 'like', "%{$q}%")
+                    ->orWhere('author_name', 'like', "%{$q}%")
+                    ->orWhere('category', 'like', "%{$q}%")
+                    ->orWhere('excerpt', 'like', "%{$q}%");
             });
         }
 
-        // Search Keyword
-        if ($request->filled('q')) {
-            $q = strtolower($request->query('q'));
-            $articles = $articles->filter(function ($article) use ($q) {
-                return str_contains(strtolower($article['title']), $q)
-                    || str_contains(strtolower($article['author_name']), $q)
-                    || str_contains(strtolower($article['category']), $q)
-                    || str_contains(strtolower($article['excerpt']), $q);
-            });
-        }
+        $perPage     = 3;
+        $currentPage = max(1, (int) $request->query('page', 1));
+        $total       = $query->count();
+        $totalPages  = max(1, (int) ceil($total / $perPage));
+        $currentPage = min($currentPage, $totalPages);
+
+        $articles = $query->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->skip(($currentPage - 1) * $perPage)
+            ->take($perPage)
+            ->get()
+            ->map(fn (Article $a) => $this->articleToArray($a))
+            ->all();
 
         $categories = [
             'All', 'Articles', 'Technology', 'Programming', 'Web Development',
@@ -36,30 +48,12 @@ class KnowledgeController extends Controller
             'Cloud', 'Database', 'UI/UX', 'Career', 'Education',
         ];
 
-        // Pagination setup
-        $perPage = 3;
-        $totalItems = $articles->count();
-        $totalPages = max(1, (int) ceil($totalItems / $perPage));
-        // If "All" or "Articles" category, match the 12 pages in the design
-        if ((strtolower($category) === 'all' || strtolower($category) === 'articles') && ! $request->filled('q')) {
-            $totalPages = max(4, (int) ceil($totalItems / $perPage));
-        }
-
-        $currentPage = max(1, min((int) $request->query('page', 1), $totalPages));
-
-        // Paginate slice
-        $paginatedArticles = $articles->slice(($currentPage - 1) * $perPage, $perPage)->values()->all();
-        // If current page is beyond slice (e.g. page 2-12 for demo), cycle or fallback to articles
-        if (empty($paginatedArticles) && count($articles) > 0) {
-            $paginatedArticles = $articles->take($perPage)->values()->all();
-        }
-
         return view('knowladge.index', [
-            'articles' => $paginatedArticles,
-            'categories' => $categories,
+            'articles'       => $articles,
+            'categories'     => $categories,
             'activeCategory' => $category,
-            'currentPage' => $currentPage,
-            'totalPages' => $totalPages,
+            'currentPage'    => $currentPage,
+            'totalPages'     => $totalPages,
         ]);
     }
 
@@ -121,36 +115,61 @@ class KnowledgeController extends Controller
 
     public function show($id)
     {
-        $articles = collect($this->getArticles());
-        $article = $articles->firstWhere('id', (int) $id);
+        $article = Article::findOrFail($id);
 
-        if (! $article) {
-            $article = $articles->firstWhere('id', 1);
-        }
+        $articleArray = $this->articleToArray($article);
 
-        // Add rich structured content if not present
-        if (! isset($article['content'])) {
-            $article['content'] = [
-                'intro' => ($article['excerpt'] ?? '').' Dalam era pesatnya transformasi teknologi global, pemahaman lintas disiplin ilmu menjadi pondasi utama dalam menghadapi kompetisi dan efisiensi di industri digital modern.',
-                'section1_title' => 'Perkembangan & Inovasi Lintas Bidang Ilmu',
-                'section1_body' => 'Kemajuan ilmu pengetahuan saat ini tidak lagi terisolasi pada satu bidang saja. Sinergi antara kecerdasan buatan, sains data, kesehatan, pertanian presisi, dan arsitektur perangkat lunak terbukti membuka peluang baru dalam memecahkan masalah kompleks skala nasional maupun global.',
-                'bullets' => [
-                    'Penerapan analitik data berbasis bukti untuk pengambilan keputusan strategis.',
-                    'Peningkatan daya saing talenta muda melalui penguasaan teknologi terkini.',
-                    'Integrasi standar keamanan, efisiensi sistem, dan keberlanjutan solusi digital.',
-                ],
-                'callout' => 'Wawasan yang komprehensif dan terbarukan di semua kalangan ilmu adalah kunci sukses dalam membangun inovasi yang berdampak nyata.',
-                'section2_title' => 'Prospek & Implementasi Industri',
-                'section2_body' => 'Guna menyongsong ekosistem teknologi yang kian inklusif, Knowledge Hub menyajikan informasi terkurasi yang relevan bagi mahasiswa, akademisi, hingga praktisi di berbagai bidang keahlian.',
+        // Ensure rich content structure exists
+        if (empty($article->content)) {
+            $articleArray['content'] = [
+                'intro'          => $article->excerpt ?? '',
+                'section1_title' => 'Perkembangan & Inovasi',
+                'section1_body'  => 'Artikel ini belum memiliki konten lengkap.',
+                'bullets'        => [],
+                'callout'        => '',
+                'section2_title' => '',
+                'section2_body'  => '',
             ];
+        } else {
+            $articleArray['content'] = $article->content;
         }
 
-        $relatedArticles = $articles->where('id', '!=', $article['id'])->take(3)->values()->all();
+        $relatedArticles = Article::published()
+            ->where('id', '!=', $article->id)
+            ->inRandomOrder()
+            ->take(3)
+            ->get()
+            ->map(fn (Article $a) => $this->articleToArray($a))
+            ->all();
 
         return view('knowladge.show', [
-            'article' => $article,
+            'article'        => $articleArray,
             'relatedArticles' => $relatedArticles,
         ]);
+    }
+
+    /**
+     * Convert an Article model to the array shape expected by the Knowledge Hub views.
+     *
+     * @return array<string, mixed>
+     */
+    private function articleToArray(Article $article): array
+    {
+        return [
+            'id'            => $article->id,
+            'title'         => $article->title,
+            'category'      => $article->category,
+            'category_tag'  => $article->category,
+            'excerpt'       => $article->excerpt ?? '',
+            'image'         => $article->image ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop',
+            'author_name'   => $article->author_name,
+            'author_avatar' => $article->author_avatar ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
+            'author_role'   => $article->author_role ?? '',
+            'date'          => $article->formatted_date,
+            'read_time'     => $article->read_time ?? '5 min read',
+            'tags'          => $article->tags ?? [],
+            'content'       => $article->content ?? '',
+        ];
     }
 
     private function getArticles(): array
