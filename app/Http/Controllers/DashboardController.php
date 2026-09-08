@@ -28,23 +28,29 @@ class DashboardController extends Controller
     {
         $owned = School::where('user_id', auth()->id())->get();
 
+        $cards = [];
+        if ($owned->isNotEmpty()) {
+            $cards[] = [
+                'label' => 'Sekolah Saya',
+                'value' => $owned->first()->name,
+                'sub' => 'Status: '.$owned->first()->status,
+                'action' => 'Kelola',
+                'url' => route('admin.schools.index'),
+            ];
+        } else {
+            $cards[] = [
+                'label' => 'Sekolah Saya',
+                'value' => 'Belum ada data',
+                'sub' => 'Lengkapi data sekolah Anda.',
+                'action' => 'Tambah Sekolah',
+                'url' => route('admin.schools.create'),
+            ];
+        }
+
         return view('admin.dashboards.institution', [
             'title' => 'Dashboard Sekolah',
             'subtitle' => 'Kelola data sekolah milik Anda.',
-            'cards' => [
-                [
-                    'label' => 'Sekolah Saya',
-                    'value' => $owned->count().' sekolah',
-                    'action' => 'Kelola',
-                    'url' => route('admin.schools.index'),
-                ],
-                [
-                    'label' => 'Tambah Sekolah',
-                    'value' => '+',
-                    'action' => 'Tambah baru',
-                    'url' => route('admin.schools.create'),
-                ],
-            ],
+            'cards' => $cards,
         ]);
     }
 
