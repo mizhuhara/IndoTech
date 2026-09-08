@@ -22,14 +22,22 @@
     </a>
 </div>
 
+{{-- Flash message --}}
+@if (session('success'))
+    <div class="mb-5 flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-[13.5px] font-medium">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="shrink-0 text-emerald-500"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        {{ session('success') }}
+    </div>
+@endif
+
 {{-- Stat cards --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     @php
         $stats = [
-            ['label' => 'Total Articles', 'value' => '1,284', 'delta' => '+12%', 'up' => true,  'icon' => 'articles', 'bg' => 'bg-blue-50',   'fg' => 'text-blue-600'],
-            ['label' => 'Published',      'value' => '942',   'delta' => '+5%',  'up' => true,  'icon' => 'check',    'bg' => 'bg-emerald-50','fg' => 'text-emerald-600'],
-            ['label' => 'Drafts',         'value' => '215',   'delta' => '0%',   'up' => null,  'icon' => 'draft',    'bg' => 'bg-orange-50', 'fg' => 'text-orange-500'],
-            ['label' => 'Total Views',    'value' => '1.2M',  'delta' => '+24%', 'up' => true,  'icon' => 'views',    'bg' => 'bg-violet-50', 'fg' => 'text-violet-600'],
+            ['label' => 'Total Articles', 'value' => $totalArticles,  'icon' => 'articles', 'bg' => 'bg-blue-50',   'fg' => 'text-blue-600'],
+            ['label' => 'Published',      'value' => $publishedCount, 'icon' => 'check',    'bg' => 'bg-emerald-50','fg' => 'text-emerald-600'],
+            ['label' => 'Drafts',         'value' => $draftCount,     'icon' => 'draft',    'bg' => 'bg-orange-50', 'fg' => 'text-orange-500'],
+            ['label' => 'Total Views',    'value' => $totalViews,     'icon' => 'views',    'bg' => 'bg-violet-50', 'fg' => 'text-violet-600'],
         ];
     @endphp
     @foreach ($stats as $s)
@@ -46,12 +54,6 @@
                         <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                     @endif
                 </div>
-                <span class="inline-flex items-center gap-0.5 text-[12.5px] font-semibold {{ $s['up'] === true ? 'text-emerald-600' : ($s['up'] === false ? 'text-red-500' : 'text-slate-400') }}">
-                    {{ $s['delta'] }}
-                    @if ($s['up'] !== null)
-                        <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="{{ $s['up'] ? '' : 'rotate-180' }}"><path d="M7 17 17 7m0 0H8m9 0v9"/></svg>
-                    @endif
-                </span>
             </div>
             <div class="mt-3 text-[24px] font-extrabold text-slate-900 leading-none">{{ $s['value'] }}</div>
             <div class="mt-1.5 text-[13px] text-slate-500">{{ $s['label'] }}</div>
@@ -59,21 +61,26 @@
     @endforeach
 </div>
 
-{{-- Table: Recent Articles --}}
+{{-- Table --}}
 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-slate-100">
         <div>
-            <h2 class="text-[16px] font-bold text-slate-900">Recent Articles</h2>
-            <p class="text-[12.5px] text-slate-500">Latest published and drafted content</p>
+            <h2 class="text-[16px] font-bold text-slate-900">All Articles</h2>
+            <p class="text-[12.5px] text-slate-500">{{ $articles->total() }} article(s) total</p>
         </div>
-        <select class="h-9 px-3 rounded-lg border border-slate-200 bg-white text-[13px] text-slate-600 focus:outline-none focus:border-blue-500">
-            <option>All Categories</option>
-            <option>Technology</option>
-            <option>Education</option>
-            <option>Career</option>
-            <option>News</option>
-            <option>Press Release</option>
-        </select>
+        {{-- Search + filter --}}
+        <form method="GET" action="{{ route('admin.articles.index') }}" class="flex items-center gap-2">
+            <input type="text" name="search" value="{{ $search }}" placeholder="Search articles…"
+                   class="h-9 px-3 rounded-lg border border-slate-200 bg-white text-[13px] text-slate-600 outline-none focus:border-blue-500 w-52">
+            <select name="tab" onchange="this.form.submit()"
+                    class="h-9 px-3 rounded-lg border border-slate-200 bg-white text-[13px] text-slate-600 focus:outline-none focus:border-blue-500">
+                <option value="all"      {{ $currentTab === 'all'      ? 'selected' : '' }}>All Status</option>
+                <option value="published"{{ $currentTab === 'published' ? 'selected' : '' }}>Published</option>
+                <option value="draft"    {{ $currentTab === 'draft'    ? 'selected' : '' }}>Draft</option>
+                <option value="archived" {{ $currentTab === 'archived' ? 'selected' : '' }}>Archived</option>
+            </select>
+            <button type="submit" class="h-9 px-3 rounded-lg bg-[#0b57d0] text-white text-[13px] font-semibold hover:bg-blue-700 transition">Search</button>
+        </form>
     </div>
 
     <div class="overflow-x-auto">
@@ -89,61 +96,100 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 text-[13.5px]">
-                @php
-                    $rows = [
-                        ['title' => 'The Future of EdTech in Indonesia', 'cat' => 'Technology',   'author' => 'Budi Santoso',  'init' => 'BS', 'color' => 'bg-blue-100 text-blue-700',  'date' => 'Oct 24, 2024', 'status' => 'Published', 'st' => 'bg-emerald-50 text-emerald-600 before:bg-emerald-500'],
-                        ['title' => 'Navigating the New Curriculum',    'cat' => 'Education',    'author' => 'Dewi Lestari',  'init' => 'DL', 'color' => 'bg-violet-100 text-violet-700', 'date' => 'Oct 22, 2024', 'status' => 'Published', 'st' => 'bg-emerald-50 text-emerald-600 before:bg-emerald-500'],
-                        ['title' => 'Top 10 Vocational Skills for 2024', 'cat' => 'Career',       'author' => 'Andi Rahman',   'init' => 'AR', 'color' => 'bg-orange-100 text-orange-700','date' => '—',           'status' => 'Draft',    'st' => 'bg-orange-50 text-orange-600 before:bg-orange-500'],
-                        ['title' => 'Quarterly Education Report Release','cat' => 'News',        'author' => 'Budi Santoso',  'init' => 'BS', 'color' => 'bg-blue-100 text-blue-700',  'date' => 'Oct 15, 2024', 'status' => 'Archived', 'st' => 'bg-slate-100 text-slate-600 before:bg-slate-400'],
-                        ['title' => 'Partnership: IndoTech & Telkom',    'cat' => 'Press Release','author' => 'Siti Aminah',  'init' => 'SA', 'color' => 'bg-emerald-100 text-emerald-700','date' => 'Oct 12, 2024','status' => 'Published', 'st' => 'bg-emerald-50 text-emerald-600 before:bg-emerald-500'],
-                    ];
-                @endphp
-                @foreach ($rows as $r)
+                @forelse ($articles as $article)
+                    @php
+                        $initials = collect(explode(' ', $article->author_name))->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
+                        $colors   = ['bg-blue-100 text-blue-700','bg-violet-100 text-violet-700','bg-orange-100 text-orange-700','bg-emerald-100 text-emerald-700','bg-rose-100 text-rose-700'];
+                        $avatarBg = $colors[$article->id % count($colors)];
+                        $statusCfg = match($article->status) {
+                            'published' => 'bg-emerald-50 text-emerald-600 before:bg-emerald-500',
+                            'archived'  => 'bg-slate-100 text-slate-600 before:bg-slate-400',
+                            default     => 'bg-orange-50 text-orange-600 before:bg-orange-500',
+                        };
+                        $statusLabel = ucfirst($article->status);
+                    @endphp
                     <tr class="hover:bg-slate-50/70 transition">
-                        <td class="px-5 py-4 font-medium text-slate-900 max-w-[280px] truncate">{{ $r['title'] }}</td>
-                        <td class="px-5 py-4 text-slate-600">{{ $r['cat'] }}</td>
+                        <td class="px-5 py-4 font-medium text-slate-900 max-w-[280px] truncate">{{ $article->title }}</td>
+                        <td class="px-5 py-4 text-slate-600">{{ $article->category }}</td>
                         <td class="px-5 py-4">
                             <span class="inline-flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-full {{ $r['color'] }} flex items-center justify-center text-[11px] font-bold">{{ $r['init'] }}</span>
-                                <span class="text-slate-700">{{ $r['author'] }}</span>
+                                <span class="w-7 h-7 rounded-full {{ $avatarBg }} flex items-center justify-center text-[11px] font-bold">{{ $initials }}</span>
+                                <span class="text-slate-700">{{ $article->author_name }}</span>
                             </span>
                         </td>
-                        <td class="px-5 py-4 text-slate-500">{{ $r['date'] }}</td>
+                        <td class="px-5 py-4 text-slate-500">{{ $article->formatted_date }}</td>
                         <td class="px-5 py-4">
-                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-semibold {{ $r['st'] }} before:content-[''] before:w-1.5 before:h-1.5 before:rounded-full">{{ $r['status'] }}</span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[12px] font-semibold {{ $statusCfg }} before:content-[''] before:w-1.5 before:h-1.5 before:rounded-full">{{ $statusLabel }}</span>
                         </td>
                         <td class="px-5 py-4">
                             <div class="flex items-center justify-end gap-1.5">
-                                <a href="{{ route('admin.articles.edit', 1) }}" class="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" aria-label="Edit">
+                                <a href="{{ route('admin.articles.edit', $article->id) }}"
+                                   class="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition" aria-label="Edit">
                                     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                                 </a>
-                                <a href="#" class="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" aria-label="Delete">
-                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6m4-6v6"/></svg>
-                                </a>
+                                <form method="POST" action="{{ route('admin.articles.destroy', $article->id) }}"
+                                      onsubmit="return confirm('Hapus artikel ini? Tindakan tidak bisa dibatalkan.')" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition" aria-label="Delete">
+                                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14zM10 11v6m4-6v6"/></svg>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-5 py-16 text-center text-slate-400">
+                            <svg class="mx-auto mb-3 text-slate-300" width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 12h6"/></svg>
+                            <p class="text-[14px] font-medium">Belum ada artikel</p>
+                            <p class="text-[12.5px] mt-1">Klik <strong>Create New Article</strong> untuk membuat artikel pertama.</p>
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
 
     {{-- Pagination --}}
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 border-t border-slate-100">
-        <span class="text-[12.5px] text-slate-500">Showing 1 to 5 of 1,284 entries</span>
-        <div class="flex items-center gap-1">
-            <button class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 flex items-center justify-center transition" aria-label="Previous">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg>
-            </button>
-            <button class="w-8 h-8 rounded-lg bg-[#0b57d0] text-white text-[13px] font-semibold flex items-center justify-center">1</button>
-            <button class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-[13px] flex items-center justify-center transition">2</button>
-            <button class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-[13px] flex items-center justify-center transition">3</button>
-            <span class="px-1 text-slate-400 text-[13px]">…</span>
-            <button class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-[13px] flex items-center justify-center transition">257</button>
-            <button class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 flex items-center justify-center transition" aria-label="Next">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
-            </button>
+    @if ($articles->hasPages())
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 border-t border-slate-100">
+            <span class="text-[12.5px] text-slate-500">
+                Showing {{ $articles->firstItem() }} to {{ $articles->lastItem() }} of {{ $articles->total() }} entries
+            </span>
+            <div class="flex items-center gap-1">
+                {{-- Prev --}}
+                @if ($articles->onFirstPage())
+                    <span class="w-8 h-8 rounded-lg border border-slate-200 text-slate-300 flex items-center justify-center cursor-not-allowed">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg>
+                    </span>
+                @else
+                    <a href="{{ $articles->previousPageUrl() }}" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 flex items-center justify-center transition">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg>
+                    </a>
+                @endif
+
+                @foreach ($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
+                    @if ($page === $articles->currentPage())
+                        <span class="w-8 h-8 rounded-lg bg-[#0b57d0] text-white text-[13px] font-semibold flex items-center justify-center">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-[13px] flex items-center justify-center transition">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Next --}}
+                @if ($articles->hasMorePages())
+                    <a href="{{ $articles->nextPageUrl() }}" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 flex items-center justify-center transition">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+                    </a>
+                @else
+                    <span class="w-8 h-8 rounded-lg border border-slate-200 text-slate-300 flex items-center justify-center cursor-not-allowed">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
+                    </span>
+                @endif
+            </div>
         </div>
-    </div>
+    @endif
 </div>
 @endsection
+

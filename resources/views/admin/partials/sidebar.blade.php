@@ -1,4 +1,5 @@
 <aside class="w-64 shrink-0 bg-white border-r border-slate-200 flex flex-col justify-between h-screen sticky top-0">
+    @php $userRole = auth()->user()?->role ?? 'user'; @endphp
     <div>
         {{-- Logo --}}
         <div class="px-6 pt-6 pb-4">
@@ -7,9 +8,17 @@
             </a>
         </div>
 
-        {{-- New Record Button --}}
+        {{-- New Record Button (sesuai role) --}}
+        @php
+            $createRoute = match ($userRole) {
+                'school' => 'admin.schools.create',
+                'university' => 'admin.univ.create',
+                'company' => 'admin.company.create',
+                default => 'admin.schools.create',
+            };
+        @endphp
         <div class="px-4 pt-2 pb-4">
-            <a href="{{ route('admin.schools.create') }}" class="w-full flex items-center justify-center gap-2 h-11 rounded-full bg-[#0b57d0] text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
+            <a href="{{ route($createRoute) }}" class="w-full flex items-center justify-center gap-2 h-11 rounded-full bg-[#0b57d0] text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
                 New Record
             </a>
@@ -24,7 +33,8 @@
                         'label' => 'Dashboard',
                         'icon' => 'grid',
                         'active' => request()->routeIs('admin.dashboard'),
-                        'href' => route('admin.dashboard')
+                        'href' => route('admin.dashboard'),
+                        'roles' => ['super_admin', 'admin', 'school', 'university', 'company'],
                     ],
                     [
                         'label' => 'Users and Verification',
@@ -32,63 +42,76 @@
                         'active' => $isUserAndVerification,
                         'href' => route('admin.users.index'),
                         'arrow' => true,
-                        'is_group' => true
+                        'is_group' => true,
+                        'roles' => ['super_admin', 'admin'],
                     ],
                     [
                         'label' => 'School',
                         'icon' => 'school',
                         'active' => request()->routeIs('admin.schools.*'),
-                        'href' => route('admin.schools.index')
+                        'href' => route('admin.schools.index'),
+                        'roles' => ['super_admin', 'admin', 'school'],
                     ],
                     [
                         'label' => 'Universities',
                         'icon' => 'university',
                         'active' => request()->routeIs('admin.univ.*'),
-                        'href' => route('admin.univ.index')
+                        'href' => route('admin.univ.index'),
+                        'roles' => ['super_admin', 'admin', 'university'],
                     ],
                     [
                         'label' => 'Company',
                         'icon' => 'company',
                         'active' => request()->routeIs('admin.company.*'),
-                        'href' => route('admin.company.index')
+                        'href' => route('admin.company.index'),
+                        'roles' => ['super_admin', 'admin', 'company'],
                     ],
                     [
                         'label' => 'Jobs',
                         'icon' => 'jobs',
                         'active' => request()->routeIs('admin.jobs.*'),
-                        'href' => route('admin.jobs.index')
+                        'href' => route('admin.jobs.index'),
+                        'roles' => ['super_admin', 'admin'],
                     ],
                     [
                         'label' => 'Internships',
                         'icon' => 'internship',
                         'active' => request()->routeIs('admin.internships.*'),
-                        'href' => route('admin.internships.index')
+                        'href' => route('admin.internships.index'),
+                        'roles' => ['super_admin', 'admin'],
                     ],
                     [
                         'label' => 'Event',
                         'icon' => 'events',
                         'active' => request()->routeIs('admin.events.*'),
-                        'href' => route('admin.events.index')
+                        'href' => route('admin.events.index'),
+                        'roles' => ['super_admin', 'admin'],
                     ],
                     [
                         'label' => 'Articles',
                         'icon' => 'articles',
                         'active' => request()->routeIs('admin.articles.*'),
-                        'href' => route('admin.articles.index')
+                        'href' => route('admin.articles.index'),
+                        'roles' => ['super_admin', 'admin'],
                     ],
                     [
                         'label' => 'Community',
                         'icon' => 'community',
                         'active' => request()->routeIs('admin.community.*'),
-                        'href' => route('admin.community.index')
+                        'href' => route('admin.community.index'),
+                        'roles' => ['super_admin', 'admin'],
                     ],
                     [
                         'label' => 'Reports',
                         'icon' => 'reports',
                         'active' => request()->routeIs('admin.reports.*'),
-                        'href' => route('admin.reports.index')
+                        'href' => route('admin.reports.index'),
+                        'roles' => ['super_admin', 'admin'],
                     ],
                 ];
+
+                // Filter: hanya menu yang role boleh lihat
+                $menu = array_values(array_filter($menu, fn ($m) => in_array($userRole, $m['roles'], true)));
             @endphp
 
             @foreach ($menu as $item)
