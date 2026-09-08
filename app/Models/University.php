@@ -15,6 +15,7 @@ class University extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'name',
         'npsn',
         'type',
@@ -40,6 +41,7 @@ class University extends Model
         'total_faculties',
         'accreditation',
         'founded',
+        'user_id',
     ];
 
     /**

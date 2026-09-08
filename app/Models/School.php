@@ -10,7 +10,7 @@ class School extends Model
         'npsn', 'name', 'institution_type', 'city', 'province', 'location',
         'address', 'status', 'logo_url', 'logo_text', 'logo_bg', 'email',
         'website', 'phone', 'description', 'tags', 'total_students',
-        'industry_partners', 'founded', 'accreditation',
+        'industry_partners', 'founded', 'user_id',
     ];
 
     protected function casts(): array

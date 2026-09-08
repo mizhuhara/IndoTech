@@ -18,6 +18,11 @@ class AdminUnivController extends Controller
     {
         $query = University::query();
 
+        // Institusi hanya melihat data miliknya sendiri
+        if (in_array($request->user()->role, ['school', 'university', 'company'], true)) {
+            $query->where('user_id', $request->user()->id);
+        }
+
         if ($request->filled('search')) {
             $search = strtolower($request->input('search'));
             $query->where(function ($q) use ($search) {
@@ -100,12 +105,20 @@ class AdminUnivController extends Controller
             'gallery.*' => ['image', 'max:5120'],
         ]);
 
-        $locationParts = array_map('trim', explode(',', $validated['location']));
-        $city = $locationParts[0] ?? $validated['location'];
-        $province = $locationParts[1] ?? '';
+        $locations = array_map('trim', explode(',', $validated['location']));
+        $city = $locations[0] ?? $validated['location'];
+        $province = $locations[1] ?? '';
 
         $words = explode(' ', $validated['name']);
         $logoText = strtoupper(substr($words[0] ?? 'UNIV', 0, 3));
+
+        $user = $request->user();
+        $isInstitution = in_array($user->role, ['school', 'university', 'company'], true);
+
+        // Institusi: 1 akun = 1 data, wajib pending sampai di-approve admin
+        if ($isInstitution && University::where('user_id', $user->id)->exists()) {
+            return back()->withErrors(['name' => 'Akun Anda sudah memiliki data universitas. Hanya diperbolehkan 1 data per akun.']);
+        }
 
         $data = [
             'name' => $validated['name'],
@@ -121,11 +134,14 @@ class AdminUnivController extends Controller
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
             'map_link' => $validated['map_link'] ?? null,
-            'status' => 'Active',
+            'status' => $isInstitution ? 'Pending' : 'Active',
             'logo_text' => $logoText,
             'logo_bg' => 'bg-blue-700',
             'gallery' => [],
         ];
+        if ($isInstitution) {
+            $data['user_id'] = $user->id;
+        }
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
@@ -154,9 +170,26 @@ class AdminUnivController extends Controller
      */
     public function show(int $id): View
     {
-        $univ = University::findOrFail($id);
+        $univ = $this->findVisibleUniv($id);
 
         return view('admin.univ.show', compact('univ'));
+    }
+
+    private function visibleUnivs()
+    {
+        $user = auth()->user();
+        if ($user && $user->role === 'university') {
+            return University::where('user_id', $user->id);
+        }
+        return University::query();
+    }
+
+    /**
+     * Ambil universitas dengan proteksi kepemilikan (404 kalau bukan miliknya).
+     */
+    private function findVisibleUniv(int $id): University
+    {
+        return $this->visibleUnivs()->findOrFail($id);
     }
 
     /**
@@ -164,7 +197,7 @@ class AdminUnivController extends Controller
      */
     public function edit(int $id): View
     {
-        $univ = University::findOrFail($id);
+        $univ = $this->findVisibleUniv($id);
 
         return view('admin.univ.edit', compact('univ'));
     }
@@ -174,7 +207,7 @@ class AdminUnivController extends Controller
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        $univ = University::findOrFail($id);
+        $univ = $this->findVisibleUniv($id);
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -248,7 +281,7 @@ class AdminUnivController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        $univ = University::findOrFail($id);
+        $univ = $this->findVisibleUniv($id);
         $name = $univ->name;
         $univ->delete();
 
