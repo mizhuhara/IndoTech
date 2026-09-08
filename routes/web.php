@@ -10,10 +10,10 @@ use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminVerificationController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\IndustryController;
@@ -98,10 +98,7 @@ Route::middleware('admin')->group(function () {
 
     // Admin Internships Management
     Route::get('/admin/internships', [AdminInternshipController::class, 'index'])->name('admin.internships.index');
-    Route::get('/admin/internships/create', [AdminInternshipController::class, 'create'])->name('admin.internships.create');
     Route::post('/admin/internships', [AdminInternshipController::class, 'store'])->name('admin.internships.store');
-    Route::get('/admin/internships/{id}', [AdminInternshipController::class, 'show'])->name('admin.internships.show');
-    Route::get('/admin/internships/{id}/edit', [AdminInternshipController::class, 'edit'])->name('admin.internships.edit');
     Route::put('/admin/internships/{id}', [AdminInternshipController::class, 'update'])->name('admin.internships.update');
     Route::delete('/admin/internships/{id}', [AdminInternshipController::class, 'destroy'])->name('admin.internships.destroy');
 
