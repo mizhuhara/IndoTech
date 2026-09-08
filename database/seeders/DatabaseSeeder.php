@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             UniversitySeeder::class,
             JobListingSeeder::class,
             SchoolSeeder::class,
+            CompanySeeder::class,
             EventSeeder::class,
         ]);
     }
