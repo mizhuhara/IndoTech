@@ -108,7 +108,7 @@ class JobListing extends Model
             return $value;
         }
 
-        return $this->attributes['image'] ?? 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&h=200&fit=crop';
+        return $this->attributes['image'] ?? null;
     }
 
     public function getImageAttribute(?string $value): ?string
@@ -117,7 +117,7 @@ class JobListing extends Model
             return $value;
         }
 
-        return $this->attributes['logo_url'] ?? 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=200&fit=crop';
+        return $this->attributes['logo_url'] ?? null;
     }
 
     public function getLogoColorAttribute(?string $value): string

@@ -53,6 +53,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {{-- Left Column --}}
         <div class="lg:col-span-2 space-y-6">
+            {{-- Job Banner / Image Card --}}
+            @if (!empty($job['image']) || !empty($job['logo_url']))
+                <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-2xs">
+                    <img src="{{ $job['image'] ?? $job['logo_url'] }}" alt="{{ $job['title'] }}" class="w-full h-56 sm:h-72 object-cover">
+                </div>
+            @endif
+
             {{-- Job Description Card --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-7 shadow-2xs">
                 <h2 class="text-[18px] font-extrabold text-slate-900 pb-4 border-b border-slate-100">
@@ -94,13 +101,12 @@
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs">
                 <div class="flex items-center gap-4 pb-5 border-b border-slate-100">
                     <div class="w-14 h-14 rounded-xl border border-slate-200 bg-slate-50 overflow-hidden flex items-center justify-center shrink-0">
-                        @if (!empty($job['logo_url']))
-                            <img src="{{ $job['logo_url'] }}" alt="{{ $job['company'] }}" class="w-full h-full object-cover">
+                        @if (!empty($job['image']) || !empty($job['logo_url']))
+                            <img src="{{ $job['image'] ?? $job['logo_url'] }}" alt="{{ $job['company'] }}" class="w-full h-full object-cover">
                         @else
-                            <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" class="text-slate-400">
-                                <rect x="4" y="3" width="16" height="18" rx="2"/>
-                                <path d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
-                            </svg>
+                            <div class="w-full h-full flex items-center justify-center font-bold text-white text-[18px]" style="background: {{ $job['logo_color'] ?? '#0b57d0' }}">
+                                {{ $job['logo_text'] ?? strtoupper(substr($job['company'], 0, 2)) }}
+                            </div>
                         @endif
                     </div>
                     <div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobListing;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AdminJobController extends Controller
@@ -83,11 +84,38 @@ class AdminJobController extends Controller
             'location' => ['required', 'string', 'max:255'],
             'company_size' => ['required', 'string', 'max:100'],
             'is_active' => ['nullable'],
+            'image' => ['nullable', 'string', 'max:500'],
+            'image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+            'logo_url' => ['nullable', 'string', 'max:500'],
+            'logo_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
         ]);
 
         $isActive = $request->boolean('is_active', true);
         $status = $isActive ? 'Active' : 'Draft';
         $tabStatus = $isActive ? 'active' : 'drafts';
+
+        // Process image and logo
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('jobs', 'public');
+            $imageUrl = Storage::url($path);
+        } else {
+            $imageUrl = $validated['image'] ?? null;
+        }
+
+        if ($request->hasFile('logo_file')) {
+            $logoPath = $request->file('logo_file')->store('jobs/logos', 'public');
+            $logoUrl = Storage::url($logoPath);
+        } else {
+            $logoUrl = $validated['logo_url'] ?? $imageUrl;
+        }
+
+        if (empty($imageUrl) && ! empty($logoUrl)) {
+            $imageUrl = $logoUrl;
+        }
+
+        if (empty($logoUrl) && ! empty($imageUrl)) {
+            $logoUrl = $imageUrl;
+        }
 
         $job = JobListing::create([
             'title' => $validated['title'],
@@ -102,6 +130,8 @@ class AdminJobController extends Controller
             'location' => $validated['location'],
             'location_full' => $validated['location'],
             'company_size' => $validated['company_size'],
+            'image' => $imageUrl,
+            'logo_url' => $logoUrl,
             'status' => $status,
             'tab_status' => $tabStatus,
             'is_active' => $isActive,
@@ -151,11 +181,44 @@ class AdminJobController extends Controller
             'location' => ['required', 'string', 'max:255'],
             'company_size' => ['required', 'string', 'max:100'],
             'is_active' => ['nullable'],
+            'image' => ['nullable', 'string', 'max:500'],
+            'image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
+            'logo_url' => ['nullable', 'string', 'max:500'],
+            'logo_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
         ]);
 
         $isActive = $request->boolean('is_active', false);
         $status = $isActive ? 'Active' : 'Draft';
         $tabStatus = $isActive ? 'active' : 'drafts';
+
+        // Process image
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('jobs', 'public');
+            $imageUrl = Storage::url($path);
+            $logoUrl = $imageUrl;
+        } elseif ($request->filled('image')) {
+            $imageUrl = $validated['image'];
+            $logoUrl = $imageUrl;
+        } else {
+            $imageUrl = $job->image;
+            $logoUrl = $job->logo_url ?? $imageUrl;
+        }
+
+        // Process logo if explicitly uploaded
+        if ($request->hasFile('logo_file')) {
+            $logoPath = $request->file('logo_file')->store('jobs/logos', 'public');
+            $logoUrl = Storage::url($logoPath);
+        } elseif ($request->filled('logo_url')) {
+            $logoUrl = $validated['logo_url'];
+        }
+
+        if (empty($imageUrl) && ! empty($logoUrl)) {
+            $imageUrl = $logoUrl;
+        }
+
+        if (empty($logoUrl) && ! empty($imageUrl)) {
+            $logoUrl = $imageUrl;
+        }
 
         $job->update([
             'title' => $validated['title'],
@@ -170,6 +233,8 @@ class AdminJobController extends Controller
             'location' => $validated['location'],
             'location_full' => $validated['location'],
             'company_size' => $validated['company_size'],
+            'image' => $imageUrl,
+            'logo_url' => $logoUrl,
             'status' => $status,
             'tab_status' => $tabStatus,
             'is_active' => $isActive,

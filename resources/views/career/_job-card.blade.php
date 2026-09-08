@@ -10,7 +10,9 @@
 @endphp
 
 <article class="cr-card" id="job-{{ $job['id'] }}">
-    <img src="{{ $job['image'] ?? 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=200&fit=crop' }}" alt="{{ $job['company'] }} logo" class="cr-card-image">
+    @if (!empty($job['image']) || !empty($job['logo_url']))
+        <img src="{{ $job['image'] ?? $job['logo_url'] }}" alt="{{ $job['company'] }} logo" class="cr-card-image">
+    @endif
     <div class="cr-card-top">
         <div class="cr-logo" style="background: {{ $job['logo_color'] }}">{{ $job['logo_text'] }}</div>
         <span class="cr-tag {{ $tagClass }}">{{ $tagLabel }}</span>
