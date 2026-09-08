@@ -6,6 +6,7 @@ use App\Models\JobListing;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class JobListingFeatureTest extends TestCase
@@ -79,6 +80,65 @@ class JobListingFeatureTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_create_a_job_posting_with_image_file(): void
+    {
+        Storage::fake('public');
+        $admin = $this->createAdminUser();
+        $file = UploadedFile::fake()->image('job_banner.jpg', 600, 400);
+
+        $payload = [
+            'title' => 'AI Engineer Upload Test',
+            'department' => 'Engineering',
+            'type' => 'Full-time',
+            'category' => 'jobs',
+            'experience' => 'Senior',
+            'salary_range' => '25.000.000 - 35.000.000',
+            'description' => 'Working on advanced LLM pipelines.',
+            'company' => 'IndoTech AI Lab',
+            'location' => 'Bandung, Indonesia',
+            'company_size' => '51-200 Employees',
+            'is_active' => '1',
+            'image_file' => $file,
+        ];
+
+        $response = $this->actingAs($admin)->post(route('admin.jobs.store'), $payload);
+
+        $response->assertRedirect(route('admin.jobs.index'));
+        $job = JobListing::where('title', 'AI Engineer Upload Test')->first();
+        $this->assertNotNull($job);
+        $this->assertNotNull($job->image);
+        $this->assertStringContainsString('/storage/jobs/', $job->image);
+        Storage::disk('public')->assertExists(str_replace('/storage/', '', $job->image));
+    }
+
+    public function test_admin_can_create_a_job_posting_with_image_url(): void
+    {
+        $admin = $this->createAdminUser();
+
+        $payload = [
+            'title' => 'DevOps Specialist URL Test',
+            'department' => 'Engineering',
+            'type' => 'Full-time',
+            'category' => 'jobs',
+            'experience' => 'Mid',
+            'salary_range' => '20.000.000 - 30.000.000',
+            'description' => 'Managing cloud infrastructure and CI/CD.',
+            'company' => 'IndoTech Cloud Inc',
+            'location' => 'Surabaya, Indonesia',
+            'company_size' => '201-500 Employees',
+            'is_active' => '1',
+            'image' => 'https://example.com/custom-job-banner.png',
+        ];
+
+        $response = $this->actingAs($admin)->post(route('admin.jobs.store'), $payload);
+
+        $response->assertRedirect(route('admin.jobs.index'));
+        $this->assertDatabaseHas('job_listings', [
+            'title' => 'DevOps Specialist URL Test',
+            'image' => 'https://example.com/custom-job-banner.png',
+        ]);
+    }
+
     public function test_admin_can_update_a_job_posting(): void
     {
         $admin = $this->createAdminUser();
@@ -103,6 +163,35 @@ class JobListingFeatureTest extends TestCase
             'id' => $job->id,
             'title' => 'Lead Software Architect Updated',
         ]);
+    }
+
+    public function test_admin_can_update_a_job_posting_with_new_image_file(): void
+    {
+        Storage::fake('public');
+        $admin = $this->createAdminUser();
+        $job = $this->createSampleJob(['image' => 'https://example.com/old-banner.jpg']);
+
+        $file = UploadedFile::fake()->image('updated_banner.png', 800, 500);
+
+        $response = $this->actingAs($admin)->put(route('admin.jobs.update', $job->id), [
+            'title' => 'Updated Job Title with Image',
+            'department' => 'Engineering',
+            'type' => 'Full-time',
+            'category' => 'jobs',
+            'experience' => 'Senior',
+            'salary_range' => '25.000.000 - 35.000.000',
+            'description' => 'Updated description with new banner.',
+            'company' => 'IndoTech Labs',
+            'location' => 'Jakarta, Indonesia',
+            'company_size' => '51-200 Employees',
+            'is_active' => '1',
+            'image_file' => $file,
+        ]);
+
+        $response->assertRedirect(route('admin.jobs.index'));
+        $freshJob = $job->fresh();
+        $this->assertStringContainsString('/storage/jobs/', $freshJob->image);
+        Storage::disk('public')->assertExists(str_replace('/storage/', '', $freshJob->image));
     }
 
     public function test_admin_can_view_job_detail(): void

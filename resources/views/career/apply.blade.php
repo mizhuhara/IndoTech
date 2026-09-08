@@ -346,11 +346,13 @@
         {{-- ── sidebar ── --}}
         <aside>
             <div class="ap-job-card">
+                @if (!empty($job['image']) || !empty($job['logo_url']))
                 <img
-                    src="{{ $job['image'] ?? 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=640&h=280&fit=crop' }}"
+                    src="{{ $job['image'] ?? $job['logo_url'] }}"
                     alt="{{ $job['company'] }}"
                     class="ap-job-img"
                 >
+                @endif
                 <div class="ap-job-body">
                     <div class="ap-job-logo" style="background: {{ $job['logo_color'] }}">{{ $job['logo_text'] }}</div>
                     @php
