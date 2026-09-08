@@ -32,10 +32,13 @@ class DatabaseSeeder extends Seeder
                 'role' => 'super_admin',
                 'status' => 'active',
             ]
+        );
+
         $this->call([
             UniversitySeeder::class,
             JobListingSeeder::class,
             SchoolSeeder::class,
+            CompanySeeder::class,
         ]);
     }
 }

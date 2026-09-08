@@ -305,7 +305,7 @@
                 </div>
 
                 {{-- Tech Stack --}}
-                <div class="mb-2">
+                <div class="mb-6">
                     <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
                         <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
@@ -314,6 +314,21 @@
                     </div>
                     <div id="modalTechStack" class="flex flex-wrap gap-2">
                         {{-- Dynamic pills --}}
+                    </div>
+                </div>
+
+                {{-- Company Gallery --}}
+                <div id="modalGallerySection" class="mb-2 hidden">
+                    <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+                        <svg class="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
+                        </svg>
+                        <span>Foto Galeri Perusahaan</span>
+                    </div>
+                    <div id="modalGalleryGrid" class="grid grid-cols-3 gap-2">
+                        {{-- Dynamic gallery images --}}
                     </div>
                 </div>
 
@@ -480,9 +495,14 @@
             modalBadge.className = "inline-block text-xs font-bold px-3 py-1 rounded-full bg-rose-100 text-rose-700 border border-rose-200/60";
         }
 
-        // Cover image
+        // Cover banner: use first gallery image if available, else fallback
         const coverImg = document.getElementById("modalCoverImage");
-        coverImg.src = company.cover_image || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&h=400&fit=crop";
+        const gallery = company.gallery || [];
+        const bannerSrc = (gallery.length > 0) ? gallery[0] : (company.cover_image || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&h=400&fit=crop");
+        coverImg.src = bannerSrc;
+        coverImg.style.opacity = '0';
+        coverImg.onload = () => { coverImg.style.opacity = '1'; };
+        if (coverImg.complete) coverImg.style.opacity = '1';
 
         document.getElementById("modalDescription").innerText = company.full_description || company.description;
         document.getElementById("modalEmployees").innerText = company.employees || "20-50 Karyawan";
@@ -538,6 +558,22 @@
             });
         }
 
+        // Gallery section
+        const gallerySection = document.getElementById("modalGallerySection");
+        const galleryGrid = document.getElementById("modalGalleryGrid");
+        galleryGrid.innerHTML = '';
+        if (gallery.length > 0) {
+            gallerySection.classList.remove('hidden');
+            gallery.forEach((imgUrl, idx) => {
+                const div = document.createElement('div');
+                div.className = 'aspect-square rounded-xl overflow-hidden border border-slate-200 cursor-pointer hover:opacity-90 transition';
+                div.innerHTML = `<img src="${imgUrl}" alt="Galeri ${idx+1}" class="w-full h-full object-cover" onclick="setBannerFromGallery('${imgUrl}')">` ;
+                galleryGrid.appendChild(div);
+            });
+        } else {
+            gallerySection.classList.add('hidden');
+        }
+
         // Links
         document.getElementById("modalWebsiteLink").href = company.website || "#";
         document.getElementById("modalEmailLink").href = "mailto:" + (company.email || "info@example.com");
@@ -573,6 +609,16 @@
             closeCompanyModal();
         }
     });
+
+    function setBannerFromGallery(src) {
+        const coverImg = document.getElementById('modalCoverImage');
+        coverImg.style.opacity = '0';
+        setTimeout(() => {
+            coverImg.src = src;
+            coverImg.onload = () => { coverImg.style.opacity = '1'; };
+            if (coverImg.complete) coverImg.style.opacity = '1';
+        }, 150);
+    }
 
     function getIconSvg(type) {
         if (type === 'code' || type === 'cpu' || type === 'cloud' || type === 'terminal') {
