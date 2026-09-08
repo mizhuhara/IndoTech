@@ -52,6 +52,7 @@ class AdminSchoolController extends Controller
             'totalSchools' => (clone $visible)->count(),
             'activePartners' => (clone $visible)->where('status', 'Active')->count(),
             'newSubmissions' => (clone $visible)->where('status', 'Inactive')->count(),
+            'canManage' => in_array($request->user()->role, ['super_admin', 'admin'], true),
         ]);
     }
 
@@ -60,6 +61,8 @@ class AdminSchoolController extends Controller
      */
     public function create(): View
     {
+        $this->authorizeCreate();
+
         return view('admin.schools.create');
     }
 
@@ -68,22 +71,12 @@ class AdminSchoolController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $this->authorizeCreate();
+
         $data = $this->validateSchool($request);
         $user = $request->user();
 
-        // Institusi: 1 akun = 1 data, wajib pending sampai di-approve admin
-        if (in_array($user->role, ['school', 'university', 'company'], true)) {
-            if (School::where('user_id', $user->id)->exists()) {
-                return back()->withErrors(['name' => 'Akun Anda sudah memiliki data sekolah. Hanya diperbolehkan 1 data per akun.']);
-            }
-            $data['user_id'] = $user->id;
-            $data['status'] = 'Pending';
-        }
-
-        if ($request->user()->role === 'school') {
-            $data['user_id'] = $request->user()->id;
-        }
-
+        // Feed lama (data diisi manual oleh admin) dipakai untuk apa?
         School::create($data);
 
         return redirect()->route('admin.schools.index')
@@ -135,6 +128,8 @@ class AdminSchoolController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
+        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+
         $school = $this->findVisibleSchool($id);
         $name = $school->name;
 
@@ -164,6 +159,15 @@ class AdminSchoolController extends Controller
     private function findVisibleSchool(int $id): School
     {
         return $this->visibleSchools()->findOrFail($id);
+    }
+
+    private function authorizeCreate(): void
+    {
+        $user = auth()->user();
+
+        if (in_array($user->role, ['school', 'university', 'company'], true)) {
+            abort(403, 'Akses ditolak. Akun institusi tidak dapat menambah data baru.');
+        }
     }
 
     private function validateSchool(Request $request): array

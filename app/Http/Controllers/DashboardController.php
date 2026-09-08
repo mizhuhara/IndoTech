@@ -41,9 +41,9 @@ class DashboardController extends Controller
             $cards[] = [
                 'label' => 'Sekolah Saya',
                 'value' => 'Belum ada data',
-                'sub' => 'Lengkapi data sekolah Anda.',
-                'action' => 'Tambah Sekolah',
-                'url' => route('admin.schools.create'),
+                'sub' => 'Data sekolah Anda sedang diproses.',
+                'action' => 'Lihat',
+                'url' => route('admin.schools.index'),
             ];
         }
 
