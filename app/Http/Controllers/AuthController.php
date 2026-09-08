@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -60,6 +61,17 @@ class AuthController extends Controller
             'org_address' => $data['org_address'] ?? null,
             'org_doc' => $orgDocPath,
         ]);
+
+        if ($user->role === 'school') {
+            School::create([
+                'user_id' => $user->id,
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['org_phone'] ?? null,
+                'address' => $data['org_address'] ?? null,
+                'status' => 'Active',
+            ]);
+        }
 
         if ($status === 'active') {
             Auth::login($user);
