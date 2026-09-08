@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminArticleController;
 use App\Http\Controllers\AdminCommunityController;
 use App\Http\Controllers\AdminCompanyController;
 use App\Http\Controllers\AdminEventController;
@@ -129,15 +130,12 @@ Route::middleware('admin')->group(function () {
     })->name('admin.reports.show');
 
     // Admin Articles
-    Route::view('/admin/articles', 'admin.articles.index')->name('admin.articles.index');
-    Route::view('/admin/articles/create', 'admin.articles.create')->name('admin.articles.create');
-    Route::get('/admin/articles/{id}/edit', function () {
-        return view('admin.articles.create');
-    })->name('admin.articles.edit');
-    Route::post('/admin/articles', function () {
-        // TODO: handle article store
-        return back()->with('success', 'Article berhasil disimpan (stub).');
-    })->name('admin.articles.store');
+    Route::get('/admin/articles', [AdminArticleController::class, 'index'])->name('admin.articles.index');
+    Route::get('/admin/articles/create', [AdminArticleController::class, 'create'])->name('admin.articles.create');
+    Route::post('/admin/articles', [AdminArticleController::class, 'store'])->name('admin.articles.store');
+    Route::get('/admin/articles/{id}/edit', [AdminArticleController::class, 'edit'])->name('admin.articles.edit');
+    Route::put('/admin/articles/{id}', [AdminArticleController::class, 'update'])->name('admin.articles.update');
+    Route::delete('/admin/articles/{id}', [AdminArticleController::class, 'destroy'])->name('admin.articles.destroy');
 
 }); // end admin group
 
