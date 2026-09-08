@@ -130,8 +130,10 @@ class AuthController extends Controller
     {
         return match ($user->role) {
             'super_admin' => '/admin',
-            'school', 'university', 'company' => '/',
-            default => '/',
+            'school' => '/dashboard/school',
+            'university' => '/dashboard/university',
+            'company' => '/dashboard/company',
+            default => '/dashboard/user',
         };
     }
 }
