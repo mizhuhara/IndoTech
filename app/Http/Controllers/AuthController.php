@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\School;
+use App\Models\Company;
+use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -62,14 +64,34 @@ class AuthController extends Controller
             'org_doc' => $orgDocPath,
         ]);
 
-        if ($user->role === 'school') {
+        // Auto-create data institusi dari data registrasi (1 akun = 1 data).
+        // User login nanti tinggal melengkapi data yang kurang, bukan menambah baru.
+        if ($role === 'school') {
             School::create([
                 'user_id' => $user->id,
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['org_phone'] ?? null,
                 'address' => $data['org_address'] ?? null,
-                'status' => 'Active',
+                'status' => 'Pending',
+            ]);
+        } elseif ($role === 'university') {
+            University::create([
+                'user_id' => $user->id,
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['org_phone'] ?? null,
+                'address' => $data['org_address'] ?? null,
+                'status' => 'Pending',
+            ]);
+        } elseif ($role === 'company') {
+            Company::create([
+                'user_id' => $user->id,
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['org_phone'] ?? null,
+                'address' => $data['org_address'] ?? null,
+                'status' => 'Pending',
             ]);
         }
 
