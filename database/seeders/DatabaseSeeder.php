@@ -38,7 +38,6 @@ class DatabaseSeeder extends Seeder
             JobListingSeeder::class,
             SchoolSeeder::class,
             CompanySeeder::class,
-            InternshipSeeder::class,
         ]);
     }
 }
