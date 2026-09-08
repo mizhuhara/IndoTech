@@ -22,14 +22,11 @@
         {{-- Admin Profile Badge --}}
         <div class="flex items-center gap-3 pl-1">
             <div class="text-right hidden sm:block">
-                <div class="text-[13px] font-bold text-slate-900 leading-tight">ADMIN USER</div>
-                <div class="text-[11px] text-slate-500">Super Admin</div>
+                <div class="text-[13px] font-bold text-slate-900 leading-tight">{{ Auth::user()->name }}</div>
+                <div class="text-[11px] text-slate-500 capitalize">{{ str_replace('-', ' ', Auth::user()->role) }}</div>
             </div>
             <div class="w-9 h-9 rounded-full bg-[#0b57d0] text-white flex items-center justify-center shadow-sm">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="8" r="4"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
-                </svg>
+                <span class="text-[13px] font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
             </div>
         </div>
     </div>
