@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminJobController extends Controller
 {
@@ -25,6 +26,21 @@ class AdminJobController extends Controller
             $query->where('tab_status', 'drafts');
         } elseif ($tab === 'closed') {
             $query->where('tab_status', 'closed');
+        }
+
+        // Status filter
+        if ($request->filled('status') && $request->query('status') !== 'all') {
+            $query->where('status', $request->query('status'));
+        }
+
+        // Job Type filter
+        if ($request->filled('type') && $request->query('type') !== 'all') {
+            $query->where('type', 'like', "%{$request->query('type')}%");
+        }
+
+        // Department filter
+        if ($request->filled('department') && $request->query('department') !== 'all') {
+            $query->where('department', 'like', "%{$request->query('department')}%");
         }
 
         // Search query filter
@@ -48,6 +64,10 @@ class AdminJobController extends Controller
         $activeJobs = number_format(JobListing::where('tab_status', 'active')->count());
         $applicationsCount = number_format(JobListing::sum('applicants_count'));
 
+        $hasActiveFilter = ($request->filled('status') && $request->query('status') !== 'all') ||
+                           ($request->filled('type') && $request->query('type') !== 'all') ||
+                           ($request->filled('department') && $request->query('department') !== 'all');
+
         return view('admin.jobs.index', [
             'jobs' => $paginatedJobs,
             'currentTab' => $tab,
@@ -55,6 +75,103 @@ class AdminJobController extends Controller
             'activeJobs' => $activeJobs,
             'applicationsCount' => $applicationsCount,
             'search' => $request->query('search', ''),
+            'status' => $request->query('status', 'all'),
+            'type' => $request->query('type', 'all'),
+            'department' => $request->query('department', 'all'),
+            'hasActiveFilter' => $hasActiveFilter,
+        ]);
+    }
+
+    /**
+     * Export job listings to Excel-compatible CSV.
+     */
+    public function export(Request $request): StreamedResponse
+    {
+        $query = JobListing::query();
+
+        $tab = $request->query('tab', 'all');
+        if ($tab === 'active') {
+            $query->where('tab_status', 'active');
+        } elseif ($tab === 'drafts') {
+            $query->where('tab_status', 'drafts');
+        } elseif ($tab === 'closed') {
+            $query->where('tab_status', 'closed');
+        }
+
+        if ($request->filled('status') && $request->query('status') !== 'all') {
+            $query->where('status', $request->query('status'));
+        }
+
+        if ($request->filled('type') && $request->query('type') !== 'all') {
+            $query->where('type', 'like', "%{$request->query('type')}%");
+        }
+
+        if ($request->filled('department') && $request->query('department') !== 'all') {
+            $query->where('department', 'like', "%{$request->query('department')}%");
+        }
+
+        if ($request->filled('search')) {
+            $search = trim($request->query('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('company', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%")
+                    ->orWhere('type', 'like', "%{$search}%")
+                    ->orWhere('department', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        $jobs = $query->orderByDesc('id')->get();
+        $filename = 'jobs_export_'.date('Ymd_His').'.csv';
+
+        return response()->streamDownload(function () use ($jobs) {
+            $output = fopen('php://output', 'w');
+
+            // UTF-8 BOM for Microsoft Excel compatibility
+            fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            fputcsv($output, [
+                'ID / Kode',
+                'Judul Pekerjaan',
+                'Perusahaan',
+                'Departemen',
+                'Tipe Pekerjaan',
+                'Pengalaman',
+                'Rentang Gaji',
+                'Lokasi',
+                'Status',
+                'Jumlah Pelamar',
+                'Total Dilihat',
+                'Tanggal Diposting',
+                'Tanggal Dibuat',
+            ]);
+
+            foreach ($jobs as $job) {
+                fputcsv($output, [
+                    $job->code ?? ('JOB-'.$job->id),
+                    $job->title,
+                    $job->company,
+                    $job->department,
+                    $job->type,
+                    $job->experience ?? '-',
+                    $job->salary_range ?? '-',
+                    $job->location,
+                    $job->status,
+                    $job->applicants_count ?? 0,
+                    $job->total_views ?? 0,
+                    $job->date_posted,
+                    $job->created_at ? $job->created_at->format('Y-m-d H:i:s') : '-',
+                ]);
+            }
+
+            fclose($output);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
         ]);
     }
 

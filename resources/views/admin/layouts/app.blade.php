@@ -69,6 +69,12 @@
     </div>
 </div>
 
+{{-- ===== ADMIN ASSETS: POPUPS & MODALS ===== --}}
+@include('admin.assets.splash-toast')
+@include('admin.assets.delete-modal')
+@include('admin.assets.show-modal')
+@include('admin.assets.update-modal')
+
 @stack('scripts')
 </body>
 </html>

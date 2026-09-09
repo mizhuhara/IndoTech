@@ -287,20 +287,22 @@
 {{-- ========================================================================= --}}
 {{-- MODAL POP-UP 1: TAMBAH USER BARU --}}
 {{-- ========================================================================= --}}
-<div id="modal-add-user" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+<div id="modal-add-user" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto transition-all duration-200">
     <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
         {{-- Modal Header --}}
-        <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
+        <div class="px-6 py-4.5 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#0b57d0] border border-blue-100 flex items-center justify-center">
+                    <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                 </div>
                 <div>
-                    <h3 class="text-base font-bold">Tambah User Baru</h3>
-                    <p class="text-xs text-blue-100">Isi formulir di bawah untuk menambahkan pengguna baru.</p>
+                    <h3 class="text-[15px] font-bold text-slate-900">Tambah User Baru</h3>
+                    <p class="text-[12px] text-slate-500">Lengkapi formulir untuk menambahkan pengguna baru.</p>
                 </div>
             </div>
-            <button type="button" onclick="closeAddModal()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 text-xl font-bold transition">&times;</button>
+            <button type="button" onclick="closeAddModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
 
         {{-- Modal Body Form --}}
@@ -308,23 +310,23 @@
             @csrf
             <div>
                 <label class="block font-bold text-slate-800 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
-                <input type="text" name="name" required placeholder="Contoh: Ahmad Rizky" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="text" name="name" required placeholder="Contoh: Ahmad Rizky" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div>
                 <label class="block font-bold text-slate-800 mb-1">Email <span class="text-red-500">*</span></label>
-                <input type="email" name="email" required placeholder="user@indotech.id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="email" name="email" required placeholder="user@indotech.id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div>
                 <label class="block font-bold text-slate-800 mb-1">Password <span class="text-red-500">*</span></label>
-                <input type="password" name="password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="password" name="password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block font-bold text-slate-800 mb-1">Role / Peranan <span class="text-red-500">*</span></label>
-                    <select name="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                    <select name="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="user">User / Alumni</option>
                         <option value="school_admin">School Admin</option>
                         <option value="univ_rep">University Representative</option>
@@ -334,7 +336,7 @@
 
                 <div>
                     <label class="block font-bold text-slate-800 mb-1">Status Akun <span class="text-red-500">*</span></label>
-                    <select name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                    <select name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="active">Active (Aktif)</option>
                         <option value="pending">Pending (Verifikasi)</option>
                         <option value="inactive">Inactive (Non-aktif)</option>
@@ -342,9 +344,9 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                <button type="button" onclick="closeAddModal()" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold transition">Batal</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-500/20 transition">Simpan User</button>
+            <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button type="button" onclick="closeAddModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-[13px] transition cursor-pointer">Batal</button>
+                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan User</button>
             </div>
         </form>
     </div>
@@ -353,20 +355,22 @@
 {{-- ========================================================================= --}}
 {{-- MODAL POP-UP 2: EDIT DATA USER --}}
 {{-- ========================================================================= --}}
-<div id="modal-edit-user" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+<div id="modal-edit-user" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto transition-all duration-200">
     <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
         {{-- Modal Header --}}
-        <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+        <div class="px-6 py-4.5 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#0b57d0] border border-blue-100 flex items-center justify-center">
+                    <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </div>
                 <div>
-                    <h3 class="text-base font-bold">Edit Data User</h3>
-                    <p class="text-xs text-slate-400">Perbarui informasi pengguna berikut ini.</p>
+                    <h3 class="text-[15px] font-bold text-slate-900">Edit Data User</h3>
+                    <p class="text-[12px] text-slate-500">Perbarui informasi pengguna berikut.</p>
                 </div>
             </div>
-            <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 text-xl font-bold transition">&times;</button>
+            <button type="button" onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
 
         {{-- Modal Body Form --}}
@@ -376,23 +380,23 @@
 
             <div>
                 <label class="block font-bold text-slate-800 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
-                <input type="text" id="edit_name" name="name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="text" id="edit_name" name="name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div>
                 <label class="block font-bold text-slate-800 mb-1">Email <span class="text-red-500">*</span></label>
-                <input type="email" id="edit_email" name="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="email" id="edit_email" name="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div>
                 <label class="block font-bold text-slate-800 mb-1">Password Baru <span class="text-slate-400 font-normal">(Opsional)</span></label>
-                <input type="password" id="edit_password" name="password" minlength="6" placeholder="Biarkan kosong jika tidak ingin mengubah password" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                <input type="password" id="edit_password" name="password" minlength="6" placeholder="Biarkan kosong jika tidak ingin mengubah password" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="block font-bold text-slate-800 mb-1">Role / Peranan <span class="text-red-500">*</span></label>
-                    <select id="edit_role" name="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                    <select id="edit_role" name="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="user">User / Alumni</option>
                         <option value="school_admin">School Admin</option>
                         <option value="univ_rep">University Representative</option>
@@ -402,7 +406,7 @@
 
                 <div>
                     <label class="block font-bold text-slate-800 mb-1">Status Akun <span class="text-red-500">*</span></label>
-                    <select id="edit_status" name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
+                    <select id="edit_status" name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="active">Active (Aktif)</option>
                         <option value="pending">Pending (Verifikasi)</option>
                         <option value="inactive">Inactive (Non-aktif)</option>
@@ -410,48 +414,18 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold transition">Batal</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold shadow-md transition">Simpan Perubahan</button>
+            <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+                <button type="button" onclick="closeEditModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-[13px] transition cursor-pointer">Batal</button>
+                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan Perubahan</button>
             </div>
         </form>
     </div>
 </div>
 
 {{-- ========================================================================= --}}
-{{-- MODAL POP-UP 3: KONFIRMASI HAPUS USER --}}
+{{-- MODAL POP-UP 3: FILTER USER --}}
 {{-- ========================================================================= --}}
-<div id="modal-delete-user" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-center">
-        <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto shadow-xs">
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-        </div>
-
-        <div>
-            <h3 class="text-lg font-bold text-slate-900">Konfirmasi Hapus User</h3>
-            <p class="text-xs text-slate-500 mt-1">
-                Apakah Anda yakin ingin menghapus user <strong id="delete_user_name" class="text-slate-900"></strong> (<span id="delete_user_email" class="text-slate-700"></span>)?
-            </p>
-            <p class="text-[11px] text-red-500 mt-2 font-medium bg-red-50 p-2.5 rounded-xl border border-red-100">
-                Peringatan: Tindakan ini permanen dan data user tidak dapat dikembalikan.
-            </p>
-        </div>
-
-        <form id="form-delete-user" method="POST" class="pt-2 flex items-center justify-center gap-3">
-            @csrf
-            @method('DELETE')
-            <button type="button" onclick="closeDeleteModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition text-xs sm:text-sm">Batal</button>
-            <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold shadow-md shadow-red-500/20 transition text-xs sm:text-sm">Ya, Hapus</button>
-        </form>
-    </div>
-</div>
-
-{{-- ========================================================================= --}}
-{{-- MODAL POP-UP 4: FILTER USER --}}
-{{-- ========================================================================= --}}
-<div id="modal-filter" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="modal-filter" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4 border border-slate-100">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2">
@@ -532,17 +506,14 @@
     }
 
     function openDeleteModal(id, name, email) {
-        const form = document.getElementById('form-delete-user');
-        form.action = `{{ url('/admin/users') }}/${id}`;
-        document.getElementById('delete_user_name').textContent = name;
-        document.getElementById('delete_user_email').textContent = email;
-        document.getElementById('modal-delete-user').classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
+        window.confirmDelete(`{{ url('/admin/users') }}/${id}`, `${name} (${email})`, {
+            title: 'Konfirmasi Hapus User',
+            warning: 'Peringatan: Tindakan ini permanen dan data user tidak dapat dikembalikan.'
+        });
     }
 
     function closeDeleteModal() {
-        document.getElementById('modal-delete-user').classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
+        window.closeGlobalDeleteModal();
     }
 
     function openFilterModal() {

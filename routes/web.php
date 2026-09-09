@@ -91,6 +91,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/admin/jobs', [AdminJobController::class, 'index'])->name('admin.jobs.index');
     Route::get('/admin/jobs/create', [AdminJobController::class, 'create'])->name('admin.jobs.create');
     Route::post('/admin/jobs', [AdminJobController::class, 'store'])->name('admin.jobs.store');
+    Route::get('/admin/jobs/export', [AdminJobController::class, 'export'])->name('admin.jobs.export');
     Route::get('/admin/jobs/{id}', [AdminJobController::class, 'show'])->name('admin.jobs.show');
     Route::get('/admin/jobs/{id}/edit', [AdminJobController::class, 'edit'])->name('admin.jobs.edit');
     Route::put('/admin/jobs/{id}', [AdminJobController::class, 'update'])->name('admin.jobs.update');
@@ -98,6 +99,7 @@ Route::middleware('admin')->group(function () {
 
     // Admin Internships Management
     Route::get('/admin/internships', [AdminInternshipController::class, 'index'])->name('admin.internships.index');
+    Route::get('/admin/internships/create', [AdminInternshipController::class, 'create'])->name('admin.internships.create');
     Route::post('/admin/internships', [AdminInternshipController::class, 'store'])->name('admin.internships.store');
     Route::put('/admin/internships/{id}', [AdminInternshipController::class, 'update'])->name('admin.internships.update');
     Route::delete('/admin/internships/{id}', [AdminInternshipController::class, 'destroy'])->name('admin.internships.destroy');

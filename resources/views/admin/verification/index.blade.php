@@ -335,133 +335,39 @@
 {{-- ========================================================================= --}}
 {{-- MODAL POP-UP 1: DETAIL VERIFIKASI INSTITUSI / USER --}}
 {{-- ========================================================================= --}}
-<div id="modal-detail-verification" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
-        
-        {{-- Header --}}
-        <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                </div>
-                <div>
-                    <h3 class="text-base font-bold" id="detail_name">Detail Akun / Institusi</h3>
-                    <p class="text-xs text-slate-400">Informasi pengajuan & dokumen verifikasi.</p>
-                </div>
-            </div>
-            <button type="button" onclick="closeDetailModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 text-xl font-bold transition">&times;</button>
-        </div>
-
-        {{-- Content --}}
-        <div class="p-6 space-y-5 text-xs sm:text-sm font-medium text-slate-700">
-            
-            {{-- Overview Grid --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                <div>
-                    <div class="text-[11px] font-bold text-slate-400 uppercase">Role / Tipe</div>
-                    <div class="font-extrabold text-slate-900 capitalize mt-0.5" id="detail_role">-</div>
-                </div>
-                <div>
-                    <div class="text-[11px] font-bold text-slate-400 uppercase">Status Verifikasi</div>
-                    <div class="font-bold mt-0.5" id="detail_status_badge">-</div>
-                </div>
-                <div>
-                    <div class="text-[11px] font-bold text-slate-400 uppercase">Email</div>
-                    <div class="font-semibold text-slate-800 mt-0.5" id="detail_email">-</div>
-                </div>
-                <div>
-                    <div class="text-[11px] font-bold text-slate-400 uppercase">Tanggal Daftar</div>
-                    <div class="font-semibold text-slate-800 mt-0.5" id="detail_created_at">-</div>
-                </div>
-            </div>
-
-            {{-- Legal Contact & Info --}}
-            <div class="space-y-3">
-                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-1.5">Penanggung Jawab & Informasi Kontak</h4>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <span class="block text-xs font-semibold text-slate-500">Nama Penanggung Jawab:</span>
-                        <span class="font-bold text-slate-800" id="detail_contact">-</span>
-                    </div>
-
-                    <div>
-                        <span class="block text-xs font-semibold text-slate-500">No. Telepon / WhatsApp:</span>
-                        <span class="font-bold text-slate-800" id="detail_phone">-</span>
-                    </div>
-                </div>
-
-                <div>
-                    <span class="block text-xs font-semibold text-slate-500">Alamat Lengkap:</span>
-                    <span class="font-medium text-slate-800 leading-relaxed block mt-0.5" id="detail_address">-</span>
-                </div>
-            </div>
-
-            {{-- Legal Document File --}}
-            <div class="space-y-2 pt-2 border-t border-slate-100">
-                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Dokumen Verifikasi (SK / Surat Legalitas)</h4>
-                
-                <div id="detail_doc_container" class="p-3 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-blue-600"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
-                        <span class="text-xs font-semibold text-slate-800" id="detail_doc_name">Dokumen_Legalitas.pdf</span>
-                    </div>
-                    <a id="detail_doc_link" href="#" target="_blank" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-xs transition inline-flex items-center gap-1">
-                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        <span>Lihat Dokumen</span>
-                    </a>
-                </div>
-            </div>
-
-            {{-- Action Buttons inside Modal --}}
-            <div class="flex items-center justify-between gap-3 pt-4 border-t border-slate-100">
-                <button type="button" onclick="closeDetailModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold transition text-xs">Tutup</button>
-
-                <div class="flex items-center gap-2">
-                    <button type="button" 
-                            onclick="triggerDetailReject()" 
-                            class="px-4 py-2.5 rounded-xl bg-red-50 text-red-700 hover:bg-red-100 font-bold border border-red-200 transition text-xs">
-                        Tolak (Reject)
-                    </button>
-
-                    <button type="button" 
-                            onclick="triggerDetailApprove()" 
-                            class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md shadow-emerald-500/20 transition text-xs">
-                        Setujui (Approve)
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-</div>
+@include('admin.assets.verification-detail-modal')
 
 {{-- ========================================================================= --}}
 {{-- MODAL POP-UP 2: KONFIRMASI SETUJUI (APPROVE) --}}
 {{-- ========================================================================= --}}
-<div id="modal-approve-verification" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-center">
-        <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+<div id="modal-approve-verification" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4 transition-all duration-200">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-left">
+        <div class="flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 mt-0.5">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 class="text-[15px] font-bold text-slate-900 tracking-tight">Konfirmasi Setujui Akun</h3>
+                <p class="text-[13px] text-slate-500 leading-relaxed mt-1">
+                    Setujui verifikasi untuk <strong id="approve_user_name" class="text-slate-800 font-semibold"></strong> (<span id="approve_user_email" class="text-slate-600"></span>)?
+                </p>
+            </div>
+            <button type="button" onclick="closeApproveModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
 
-        <div>
-            <h3 class="text-lg font-bold text-slate-900">Konfirmasi Setujui Akun</h3>
-            <p class="text-xs text-slate-500 mt-1">
-                Apakah Anda yakin ingin menyetujui verifikasi untuk <strong id="approve_user_name" class="text-slate-900"></strong> (<span id="approve_user_email" class="text-slate-700"></span>)?
-            </p>
-            <p class="text-[11px] text-emerald-700 mt-2 font-medium bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
-                Akun ini akan langsung diaktifkan dan dapat digunakan untuk login ke dalam sistem.
-            </p>
+        <div class="text-[12px] text-emerald-800 bg-emerald-50/80 border border-emerald-100 px-3.5 py-2.5 rounded-xl flex items-center gap-2">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="shrink-0 text-emerald-600"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4"/></svg>
+            <span>Akun ini akan langsung diaktifkan dan dapat digunakan login ke sistem.</span>
         </div>
 
-        <form id="form-approve-verification" method="POST" class="pt-2 flex items-center justify-center gap-3">
+        <form id="form-approve-verification" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
             @csrf
-            <button type="button" onclick="closeApproveModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition text-xs sm:text-sm">Batal</button>
-            <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md shadow-emerald-500/20 transition text-xs sm:text-sm">Ya, Setujui</button>
+            <button type="button" onclick="closeApproveModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
+            <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] shadow-xs shadow-emerald-600/20 transition cursor-pointer">Setujui Akun</button>
         </form>
     </div>
 </div>
@@ -469,28 +375,34 @@
 {{-- ========================================================================= --}}
 {{-- MODAL POP-UP 3: KONFIRMASI TOLAK (REJECT) --}}
 {{-- ========================================================================= --}}
-<div id="modal-reject-verification" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-center">
-        <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto shadow-xs">
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
+<div id="modal-reject-verification" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4 transition-all duration-200">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-left">
+        <div class="flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 mt-0.5">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 class="text-[15px] font-bold text-slate-900 tracking-tight">Konfirmasi Tolak Verifikasi</h3>
+                <p class="text-[13px] text-slate-500 leading-relaxed mt-1">
+                    Tolak pendaftaran verifikasi untuk <strong id="reject_user_name" class="text-slate-800 font-semibold"></strong> (<span id="reject_user_email" class="text-slate-600"></span>)?
+                </p>
+            </div>
+            <button type="button" onclick="closeRejectModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
 
-        <div>
-            <h3 class="text-lg font-bold text-slate-900">Konfirmasi Tolak Verifikasi</h3>
-            <p class="text-xs text-slate-500 mt-1">
-                Apakah Anda yakin ingin MENOLAK pendaftaran verifikasi <strong id="reject_user_name" class="text-slate-900"></strong> (<span id="reject_user_email" class="text-slate-700"></span>)?
-            </p>
-            <p class="text-[11px] text-red-600 mt-2 font-medium bg-red-50 p-2.5 rounded-xl border border-red-100">
-                Status pendaftaran akan diubah menjadi Ditolak (Rejected).
-            </p>
+        <div class="text-[12px] text-rose-700 bg-rose-50/70 border border-rose-100/80 px-3.5 py-2.5 rounded-xl flex items-center gap-2">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="shrink-0 text-rose-500"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Status akun akan diubah menjadi Ditolak (Rejected).</span>
         </div>
 
-        <form id="form-reject-verification" method="POST" class="pt-2 flex items-center justify-center gap-3">
+        <form id="form-reject-verification" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
             @csrf
-            <button type="button" onclick="closeRejectModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition text-xs sm:text-sm">Batal</button>
-            <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold shadow-md shadow-red-500/20 transition text-xs sm:text-sm">Ya, Tolak</button>
+            <button type="button" onclick="closeRejectModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
+            <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-[13px] shadow-xs shadow-rose-600/20 transition cursor-pointer">Tolak Verifikasi</button>
         </form>
     </div>
 </div>
@@ -502,7 +414,13 @@
     function openDetailModal(req) {
         currentDetailReq = req;
         document.getElementById('detail_name').textContent = req.name || 'Detail Akun';
-        document.getElementById('detail_role').textContent = req.role || 'User';
+        document.getElementById('detail_role').textContent = req.role ? req.role.replace('_', ' ') : 'User';
+        
+        const roleBadge = document.getElementById('detail_role_badge');
+        if (roleBadge) {
+            roleBadge.textContent = req.role ? req.role.replace('_', ' ') : 'User';
+        }
+
         document.getElementById('detail_email').textContent = req.email || '-';
         document.getElementById('detail_created_at').textContent = req.created_at ? new Date(req.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
 
@@ -514,22 +432,53 @@
         const statusVal = (req.status || 'pending').toLowerCase();
         let badgeHtml = '';
         if (statusVal === 'active' || statusVal === 'approved') {
-            badgeHtml = '<span class="text-emerald-600 font-bold">Disetujui (Active)</span>';
+            badgeHtml = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>';
         } else if (statusVal === 'rejected') {
-            badgeHtml = '<span class="text-red-600 font-bold">Ditolak (Rejected)</span>';
+            badgeHtml = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-rose-50 text-rose-700 border border-rose-200"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Rejected</span>';
         } else {
-            badgeHtml = '<span class="text-amber-600 font-bold">Pending Verifikasi</span>';
+            badgeHtml = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-amber-50 text-amber-700 border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Pending</span>';
         }
         document.getElementById('detail_status_badge').innerHTML = badgeHtml;
 
         // Set document link
         const docContainer = document.getElementById('detail_doc_container');
+        const noDocContainer = document.getElementById('detail_no_doc');
         if (req.org_doc) {
-            docContainer.classList.remove('hidden');
-            document.getElementById('detail_doc_name').textContent = req.org_doc.split('/').pop();
-            document.getElementById('detail_doc_link').href = `{{ asset('storage') }}/${req.org_doc}`;
+            if (docContainer) docContainer.classList.remove('hidden');
+            if (noDocContainer) noDocContainer.classList.add('hidden');
+            const docNameEl = document.getElementById('detail_doc_name');
+            if (docNameEl) docNameEl.textContent = req.org_doc.split('/').pop();
+            const docLinkEl = document.getElementById('detail_doc_link');
+            if (docLinkEl) docLinkEl.href = `{{ asset('storage') }}/${req.org_doc}`;
         } else {
-            docContainer.classList.add('hidden');
+            if (docContainer) docContainer.classList.add('hidden');
+            if (noDocContainer) noDocContainer.classList.remove('hidden');
+        }
+
+        // Action buttons inside modal
+        const actionsContainer = document.getElementById('detail_actions_container');
+        if (actionsContainer) {
+            if (statusVal === 'active' || statusVal === 'approved') {
+                actionsContainer.innerHTML = '<span class="text-xs text-emerald-600 font-semibold flex items-center gap-1"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Akun Telah Aktif</span>';
+            } else if (statusVal === 'rejected') {
+                actionsContainer.innerHTML = `
+                    <button type="button" onclick="triggerDetailApprove()" class="px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] shadow-xs shadow-emerald-600/20 transition cursor-pointer flex items-center gap-1.5">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                        <span>Pulihkan & Setujui</span>
+                    </button>
+                `;
+            } else {
+                actionsContainer.innerHTML = `
+                    <button type="button" onclick="triggerDetailReject()" class="px-4 py-2.5 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200/80 font-semibold text-[13px] transition cursor-pointer flex items-center gap-1.5">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        <span>Tolak</span>
+                    </button>
+                    <button type="button" onclick="triggerDetailApprove()" class="px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] shadow-xs shadow-emerald-600/20 transition cursor-pointer flex items-center gap-1.5">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                        <span>Setujui Akun</span>
+                    </button>
+                `;
+            }
         }
 
         document.getElementById('modal-detail-verification').classList.remove('hidden');

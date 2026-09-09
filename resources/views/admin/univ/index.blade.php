@@ -210,14 +210,19 @@
 
                             {{-- Actions --}}
                             <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2 text-slate-400">
-                                    {{-- Edit Link --}}
-                                    <a href="{{ route('admin.univ.edit', $univ['id']) }}" 
-                                       class="p-1.5 rounded-lg hover:text-blue-600 hover:bg-blue-50 transition" 
-                                       title="Edit Data Universitas">
-                                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                <div class="flex items-center justify-end gap-3 text-slate-400">
+                                    {{-- View Icon (Eye) --}}
+                                    <a href="{{ route('admin.univ.show', $univ['id']) }}" class="hover:text-slate-700 transition" title="Lihat Detail Universitas">
+                                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.573 16.49 16.638 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        </svg>
+                                    </a>
+
+                                    {{-- Edit Icon --}}
+                                    <a href="{{ route('admin.univ.edit', $univ['id']) }}" class="hover:text-blue-600 transition" title="Edit Data Universitas">
+                                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
                                         </svg>
                                     </a>
 
@@ -228,26 +233,14 @@
                                         @method('DELETE')
                                         <button type="button" 
                                                 onclick="openDeleteModal('{{ $univ['id'] }}', '{{ addslashes($univ['name']) }}', '{{ $univ['npsn'] ?? '' }}', '{{ addslashes($univ['city'] ?? '') }}')"
-                                                class="p-1.5 rounded-lg hover:text-red-600 hover:bg-red-50 transition" 
+                                                class="hover:text-red-600 transition" 
                                                 title="Hapus Universitas">
-                                            <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <polyline points="3 6 5 6 21 6"/>
-                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                                                <line x1="10" y1="11" x2="10" y2="17"/>
-                                                <line x1="14" y1="11" x2="14" y2="17"/>
+                                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
                                             </svg>
                                         </button>
                                     </form>
                                     @endif
-
-                                    {{-- More Actions Dropdown/Menu --}}
-                                    <a href="{{ route('admin.univ.show', $univ['id']) }}" class="p-1.5 rounded-lg hover:text-slate-800 hover:bg-slate-100 transition" title="Detail Universitas">
-                                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="1"/>
-                                            <circle cx="12" cy="5" r="1"/>
-                                            <circle cx="12" cy="19" r="1"/>
-                                        </svg>
-                                    </a>
                                 </div>
                             </td>
                         </tr>
@@ -306,110 +299,19 @@
 
 </div>
 
-{{-- Custom Delete Confirmation Modal (Matches System Design) --}}
-<div id="deleteModal" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 transition-opacity">
-    <div class="bg-white rounded-3xl p-6 sm:p-7 max-w-[420px] w-full shadow-2xl text-center relative transform transition-all duration-200 scale-100 animate-in fade-in zoom-in-95" onclick="event.stopPropagation()">
-        
-        {{-- Warning Icon Badge --}}
-        <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4 border border-red-100/50">
-            <svg class="w-7 h-7 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-                <line x1="12" y1="9" x2="12" y2="13"/>
-                <line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-        </div>
-
-        {{-- Modal Title --}}
-        <h3 class="text-lg font-bold text-slate-900 mb-2">
-            Konfirmasi Hapus Universitas
-        </h3>
-
-        {{-- Modal Subtext --}}
-        <p class="text-[13.5px] text-slate-500 mb-4 leading-relaxed">
-            Apakah Anda yakin ingin menghapus universitas <strong class="text-slate-800 font-bold" id="deleteUnivName"></strong>
-            <span id="deleteUnivExtra" class="block text-slate-500 text-[13px] mt-0.5"></span>
-        </p>
-
-        {{-- Warning Message Card --}}
-        <div class="bg-red-50/80 border border-red-100 rounded-xl py-2.5 px-4 mb-6">
-            <p class="text-[12px] text-red-500 font-medium leading-relaxed">
-                Peringatan: Tindakan ini permanen dan data universitas tidak dapat dikembalikan.
-            </p>
-        </div>
-
-        {{-- Action Buttons --}}
-        <div class="flex items-center gap-3">
-            <button type="button" 
-                    onclick="closeDeleteModal()" 
-                    class="w-1/2 py-2.5 px-4 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition shadow-2xs cursor-pointer">
-                Batal
-            </button>
-            <button type="button" 
-                    id="confirmDeleteSubmitBtn" 
-                    onclick="executeDelete()" 
-                    class="w-1/2 py-2.5 px-4 rounded-xl bg-[#d92d20] hover:bg-red-700 active:bg-red-800 text-white font-semibold text-sm transition shadow-xs cursor-pointer">
-                Ya, Hapus
-            </button>
-        </div>
-
-    </div>
-</div>
-
 @push('scripts')
 <script>
-    let activeDeleteId = null;
-
     function openDeleteModal(id, name, npsn, city) {
-        activeDeleteId = id;
-        document.getElementById('deleteUnivName').innerText = name;
-        
-        let extraText = '';
-        if (npsn && city) {
-            extraText = `(${npsn} - ${city})`;
-        } else if (npsn) {
-            extraText = `(${npsn})`;
-        } else if (city) {
-            extraText = `(${city})`;
-        }
-        document.getElementById('deleteUnivExtra').innerText = extraText;
-
-        const modal = document.getElementById('deleteModal');
-        modal.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
+        let extra = npsn && city ? ` (${npsn} - ${city})` : (npsn ? ` (${npsn})` : (city ? ` (${city})` : ''));
+        window.confirmDelete(`{{ url('/admin/univ') }}/${id}`, `${name}${extra}`, {
+            title: 'Konfirmasi Hapus Universitas',
+            warning: 'Peringatan: Tindakan ini permanen dan data universitas tidak dapat dikembalikan.'
+        });
     }
 
     function closeDeleteModal() {
-        const modal = document.getElementById('deleteModal');
-        modal.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-        activeDeleteId = null;
+        window.closeGlobalDeleteModal();
     }
-
-    function executeDelete() {
-        if (activeDeleteId) {
-            const form = document.getElementById('delete-form-' + activeDeleteId);
-            if (form) {
-                form.submit();
-            }
-        }
-    }
-
-    // Close modal on click backdrop
-    document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeDeleteModal();
-        }
-    });
-
-    // Close modal on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const modal = document.getElementById('deleteModal');
-            if (modal && !modal.classList.contains('hidden')) {
-                closeDeleteModal();
-            }
-        }
-    });
 </script>
 @endpush
 @endsection
