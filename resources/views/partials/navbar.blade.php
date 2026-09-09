@@ -11,6 +11,7 @@
             <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industry</a>
             <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Career</a>
             <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Events</a>
+            <a href="/community" class="{{ request()->is('community*') ? 'it-active' : '' }}">Community</a>
             <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">Knowledge Hub</a>
         </nav>
 
@@ -67,6 +68,7 @@
         <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industry</a>
         <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Career</a>
         <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Events</a>
+        <a href="/community" class="{{ request()->is('community*') ? 'it-active' : '' }}">Community</a>
         <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">Knowledge Hub</a>
         <div class="it-mobile-btns">
             @auth

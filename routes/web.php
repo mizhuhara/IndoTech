@@ -13,6 +13,7 @@ use App\Http\Controllers\AdminVerificationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EducationController;
 use App\Http\Controllers\EventController;
@@ -44,6 +45,8 @@ Route::get('/event', function () {
 Route::get('/event/{id}', function ($id) {
     return redirect()->route('event.show', $id);
 });
+
+Route::get('/community', [CommunityController::class, 'index'])->name('community.index');
 
 // Admin routes — semua butuh login + role admin
 Route::middleware('admin')->group(function () {
