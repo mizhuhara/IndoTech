@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\School;
 use App\Models\Company;
+use App\Models\School;
 use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -146,7 +146,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->route('welcome');
     }
 
     private function redirectFor(User $user): string
