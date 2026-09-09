@@ -3,14 +3,16 @@
 @section('title', 'Edit Article — Admin')
 
 @section('content')
-{{-- Breadcrumb --}}
-<nav class="text-[13px] text-slate-500 mb-4">
-    <span class="hover:text-blue-600 cursor-pointer">Home</span>
-    <span class="mx-1.5">›</span>
-    <a href="{{ route('admin.articles.index') }}" class="hover:text-blue-600 cursor-pointer">Articles</a>
-    <span class="mx-1.5">›</span>
-    <span class="text-slate-900 font-medium">Edit Article</span>
-</nav>
+{{-- Actions --}}
+<div class="flex items-center justify-end mb-6 gap-3">
+    <a href="{{ route('admin.articles.index') }}" class="inline-flex items-center h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-600 text-[13.5px] font-semibold hover:bg-slate-50 transition">
+        Cancel
+    </a>
+    <button type="submit" form="article-edit-form" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#0b57d0] text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm3 0v5h8V4M7 15h10m-10 4h10"/></svg>
+        Update Article
+    </button>
+</div>
 
 {{-- Validation errors --}}
 @if ($errors->any())
@@ -23,23 +25,6 @@
         </ul>
     </div>
 @endif
-
-{{-- Header + actions --}}
-<div class="flex items-center justify-between mb-6">
-    <div>
-        <h1 class="text-[24px] font-bold text-slate-900">Edit Article</h1>
-        <p class="text-[13.5px] text-slate-500 mt-0.5">Update and republish the article</p>
-    </div>
-    <div class="flex items-center gap-3">
-        <a href="{{ route('admin.articles.index') }}" class="inline-flex items-center h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-600 text-[13.5px] font-semibold hover:bg-slate-50 transition">
-            Cancel
-        </a>
-        <button type="submit" form="article-edit-form" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#0b57d0] text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
-            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm3 0v5h8V4M7 15h10m-10 4h10"/></svg>
-            Update Article
-        </button>
-    </div>
-</div>
 
 <form id="article-edit-form" action="{{ route('admin.articles.update', $article->id) }}" method="POST" enctype="multipart/form-data">
     @csrf

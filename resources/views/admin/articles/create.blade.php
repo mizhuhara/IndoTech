@@ -3,33 +3,8 @@
 @section('title', 'Create Article — Admin')
 
 @section('content')
-{{-- Breadcrumb --}}
-<nav class="text-[13px] text-slate-500 mb-4">
-    <span class="hover:text-blue-600 cursor-pointer">Home</span>
-    <span class="mx-1.5">›</span>
-    <a href="{{ route('admin.articles.index') }}" class="hover:text-blue-600 cursor-pointer">Articles</a>
-    <span class="mx-1.5">›</span>
-    <span class="text-slate-900 font-medium">Create Article</span>
-</nav>
-
-{{-- Validation errors --}}
-@if ($errors->any())
-    <div class="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-[13.5px]">
-        <p class="font-semibold mb-1">Please fix the following errors:</p>
-        <ul class="list-disc list-inside space-y-0.5">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-{{-- Header + actions --}}
-<div class="flex items-center justify-between mb-6">
-    <div>
-        <h1 class="text-[24px] font-bold text-slate-900">Create Article</h1>
-        <p class="text-[13.5px] text-slate-500 mt-0.5">Write and publish a new article</p>
-    </div>
+{{-- Actions --}}
+<div class="flex items-center justify-end mb-6 gap-3">
     <div class="flex items-center gap-3">
         <a href="{{ route('admin.articles.index') }}" class="inline-flex items-center h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-600 text-[13.5px] font-semibold hover:bg-slate-50 transition">
             Cancel
@@ -39,7 +14,17 @@
             Save Article
         </button>
     </div>
-</div>
+{{-- Validation errors --}}
+@if ($errors->any())
+    <div class="mb-6 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-[13.5px]">
+        <p class="font-semibold mb-1">Please fix the following errors:</p>
+        <ul class="list-disc list-inside space-y-0.5">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <form id="article-form" action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
     @csrf

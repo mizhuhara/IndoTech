@@ -14,14 +14,6 @@
             </svg>
             Kembali
         </a>
-
-        <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-            <a href="{{ route('admin.company.index') }}" class="hover:text-blue-600 transition">Companies</a>
-            <span class="text-slate-400">›</span>
-            <span class="text-slate-900 font-semibold">Add New Company</span>
-        </div>
-
-        <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">Add New Company</h1>
     </div>
 
     {{-- Two Column Layout --}}

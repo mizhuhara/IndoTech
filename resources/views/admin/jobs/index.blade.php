@@ -31,12 +31,8 @@
     </div>
     @endif
 
-    {{-- Title & Action Button --}}
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-[26px] font-extrabold text-slate-900 tracking-tight">Job Management</h1>
-            <p class="text-[13.5px] text-slate-500 mt-0.5">Manage and track all job postings across the platform.</p>
-        </div>
+    {{-- Action Button --}}
+    <div class="flex items-center justify-end">
         <a href="{{ route('admin.jobs.create') }}" class="inline-flex items-center justify-center gap-2 bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg shadow-xs transition">
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.8"><path d="M12 5v14M5 12h14"/></svg>
             <span>POST NEW JOB</span>
@@ -102,26 +98,54 @@
 
             {{-- Right Actions (Filter & Export) --}}
             <div class="flex items-center gap-4 py-3 text-[12.5px] font-bold text-slate-500">
-                <button type="button" class="flex items-center gap-1.5 hover:text-slate-800 transition">
+                <button type="button" onclick="openFilterModal()" class="flex items-center gap-1.5 {{ $hasActiveFilter ? 'text-blue-600 font-extrabold' : 'text-slate-500 hover:text-slate-800' }} transition cursor-pointer">
                     <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h18m-15 5h12m-9 5h6m-3 5h0"/></svg>
                     <span>FILTER</span>
+                    @if($hasActiveFilter)
+                        <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                    @endif
                 </button>
-                <button type="button" class="flex items-center gap-1.5 hover:text-slate-800 transition">
+                <a href="{{ route('admin.jobs.export', request()->query()) }}" class="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 transition cursor-pointer" title="Export Data ke Excel (CSV)">
                     <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M7.5 12 12 16.5m0 0 4.5-4.5M12 16.5v-13.5"/></svg>
                     <span>EXPORT</span>
-                </button>
+                </a>
             </div>
         </div>
+
+        {{-- Active Filters Info Bar --}}
+        @if($hasActiveFilter)
+        <div class="px-6 py-2.5 bg-blue-50/60 border-b border-blue-100/80 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-slate-500 font-medium">Filter Aktif:</span>
+                @if(request('status') && request('status') !== 'all')
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white border border-blue-200 text-blue-700 font-semibold shadow-2xs">
+                        Status: {{ request('status') }}
+                        <a href="{{ route('admin.jobs.index', array_merge(request()->except('status'), ['status' => 'all'])) }}" class="hover:text-blue-900 ml-0.5">&times;</a>
+                    </span>
+                @endif
+                @if(request('type') && request('type') !== 'all')
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white border border-blue-200 text-blue-700 font-semibold shadow-2xs">
+                        Tipe: {{ request('type') }}
+                        <a href="{{ route('admin.jobs.index', array_merge(request()->except('type'), ['type' => 'all'])) }}" class="hover:text-blue-900 ml-0.5">&times;</a>
+                    </span>
+                @endif
+                @if(request('department') && request('department') !== 'all')
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white border border-blue-200 text-blue-700 font-semibold shadow-2xs">
+                        Departemen: {{ request('department') }}
+                        <a href="{{ route('admin.jobs.index', array_merge(request()->except('department'), ['department' => 'all'])) }}" class="hover:text-blue-900 ml-0.5">&times;</a>
+                    </span>
+                @endif
+            </div>
+            <a href="{{ route('admin.jobs.index', ['tab' => $currentTab]) }}" class="text-blue-600 hover:text-blue-800 font-bold hover:underline">Reset Filter</a>
+        </div>
+        @endif
 
         {{-- Table --}}
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/50">
-                        <th class="py-4 pl-6 pr-3 w-10">
-                            <input type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                        </th>
-                        <th class="py-4 px-4 font-bold">JOB TITLE</th>
+                        <th class="py-4 pl-6 pr-4 font-bold">JOB TITLE</th>
                         <th class="py-4 px-4 font-bold">COMPANY / PROVIDER</th>
                         <th class="py-4 px-4 font-bold">TYPE</th>
                         <th class="py-4 px-4 font-bold">DATE POSTED</th>
@@ -132,10 +156,7 @@
                 <tbody class="divide-y divide-slate-100 text-[13.5px]">
                     @forelse ($jobs as $job)
                         <tr class="hover:bg-slate-50/80 transition group">
-                            <td class="py-4 pl-6 pr-3">
-                                <input type="checkbox" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500">
-                            </td>
-                            <td class="py-4 px-4">
+                            <td class="py-4 pl-6 pr-4">
                                 <a href="{{ route('admin.jobs.show', $job['id']) }}" class="font-bold text-slate-900 hover:text-[#0b57d0] transition block leading-tight">
                                     {{ $job['title'] }}
                                 </a>
@@ -179,10 +200,13 @@
                                         </svg>
                                     </a>
                                     {{-- Delete Icon --}}
-                                    <form action="{{ route('admin.jobs.destroy', $job['id']) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus job listing ini?')">
+                                    <form id="delete-form-{{ $job['id'] }}" action="{{ route('admin.jobs.destroy', $job['id']) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="hover:text-red-600 transition" title="Delete Job">
+                                        <button type="button" 
+                                                onclick="openDeleteModal('{{ $job['id'] }}', '{{ addslashes($job['title']) }}', '{{ addslashes($job['company']) }}')"
+                                                class="hover:text-red-600 transition cursor-pointer" 
+                                                title="Delete Job">
                                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
                                             </svg>
@@ -193,7 +217,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-8 text-center text-slate-400 text-[13.5px]">
+                            <td colspan="6" class="py-8 text-center text-slate-400 text-[13.5px]">
                                 Tidak ada data job posting yang ditemukan.
                             </td>
                         </tr>
@@ -213,4 +237,107 @@
         </div>
     </div>
 </div>
+
+{{-- MODAL POP-UP: FILTER JOBS --}}
+<div id="modal-filter-jobs" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4 border border-slate-100" onclick="event.stopPropagation()">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-blue-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                </svg>
+                <h3 class="text-sm font-bold text-slate-900">Filter Data Lowongan</h3>
+            </div>
+            <button type="button" onclick="closeFilterModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer">&times;</button>
+        </div>
+
+        <form action="{{ route('admin.jobs.index') }}" method="GET" class="space-y-4 text-xs font-medium">
+            @if(request('search')) <input type="hidden" name="search" value="{{ request('search') }}"> @endif
+            @if(request('tab')) <input type="hidden" name="tab" value="{{ request('tab') }}"> @endif
+
+            <div>
+                <label class="block text-slate-700 mb-1.5 font-bold">Status Lowongan</label>
+                <select name="status" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600 cursor-pointer">
+                    <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>Semua Status</option>
+                    <option value="Active" {{ request('status') === 'Active' ? 'selected' : '' }}>Active</option>
+                    <option value="Paused" {{ request('status') === 'Paused' ? 'selected' : '' }}>Paused</option>
+                    <option value="Draft" {{ request('status') === 'Draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="Closed" {{ request('status') === 'Closed' ? 'selected' : '' }}>Closed</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-slate-700 mb-1.5 font-bold">Tipe Pekerjaan</label>
+                <select name="type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600 cursor-pointer">
+                    <option value="all" {{ request('type') === 'all' ? 'selected' : '' }}>Semua Tipe</option>
+                    <option value="Full-time" {{ request('type') === 'Full-time' ? 'selected' : '' }}>Full-time</option>
+                    <option value="Part-time" {{ request('type') === 'Part-time' ? 'selected' : '' }}>Part-time</option>
+                    <option value="Internship" {{ request('type') === 'Internship' ? 'selected' : '' }}>Internship</option>
+                    <option value="Contract" {{ request('type') === 'Contract' ? 'selected' : '' }}>Contract</option>
+                    <option value="Remote" {{ request('type') === 'Remote' ? 'selected' : '' }}>Remote</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-slate-700 mb-1.5 font-bold">Departemen</label>
+                <select name="department" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600 cursor-pointer">
+                    <option value="all" {{ request('department') === 'all' ? 'selected' : '' }}>Semua Departemen</option>
+                    <option value="Engineering" {{ request('department') === 'Engineering' ? 'selected' : '' }}>Engineering</option>
+                    <option value="Design" {{ request('department') === 'Design' ? 'selected' : '' }}>Design</option>
+                    <option value="Data" {{ request('department') === 'Data' ? 'selected' : '' }}>Data</option>
+                    <option value="Product" {{ request('department') === 'Product' ? 'selected' : '' }}>Product</option>
+                    <option value="Marketing" {{ request('department') === 'Marketing' ? 'selected' : '' }}>Marketing</option>
+                    <option value="Sales" {{ request('department') === 'Sales' ? 'selected' : '' }}>Sales</option>
+                </select>
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                <a href="{{ route('admin.jobs.index', ['tab' => $currentTab]) }}" class="px-3.5 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition cursor-pointer">Reset</a>
+                <button type="submit" class="px-4 py-2 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold shadow-xs transition cursor-pointer">Terapkan Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function openFilterModal() {
+        const modal = document.getElementById('modal-filter-jobs');
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+    }
+
+    function closeFilterModal() {
+        const modal = document.getElementById('modal-filter-jobs');
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+    }
+
+    function openDeleteModal(id, title, company) {
+        let label = company ? `${title} (${company})` : title;
+        window.confirmDelete(`{{ url('/admin/jobs') }}/${id}`, label, {
+            title: 'Konfirmasi Hapus Lowongan',
+            warning: 'Peringatan: Tindakan ini permanen dan data lowongan serta lamaran terkait akan dihapus.'
+        });
+    }
+
+    // Backdrop click to close filter
+    document.getElementById('modal-filter-jobs')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeFilterModal();
+        }
+    });
+
+    // Escape key to close filter
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeFilterModal();
+        }
+    });
+</script>
+@endpush
 @endsection

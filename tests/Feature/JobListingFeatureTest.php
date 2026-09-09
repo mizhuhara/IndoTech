@@ -243,4 +243,35 @@ class JobListingFeatureTest extends TestCase
         $response->assertRedirect(route('admin.jobs.index'));
         $this->assertDatabaseMissing('job_listings', ['id' => $id]);
     }
+
+    public function test_admin_jobs_index_filters_by_status_and_type(): void
+    {
+        $admin = $this->createAdminUser();
+        $this->createSampleJob(['title' => 'Senior Backend Engineer', 'status' => 'Active', 'type' => 'Full-time', 'department' => 'Engineering']);
+        $this->createSampleJob(['title' => 'UI UX Designer Intern', 'status' => 'Draft', 'type' => 'Internship', 'department' => 'Design']);
+
+        // Filter by status=Draft
+        $response = $this->actingAs($admin)->get(route('admin.jobs.index', ['status' => 'Draft']));
+        $response->assertStatus(200);
+        $response->assertSee('UI UX Designer Intern');
+        $response->assertDontSee('Senior Backend Engineer');
+
+        // Filter by type=Full-time
+        $response = $this->actingAs($admin)->get(route('admin.jobs.index', ['type' => 'Full-time']));
+        $response->assertStatus(200);
+        $response->assertSee('Senior Backend Engineer');
+        $response->assertDontSee('UI UX Designer Intern');
+    }
+
+    public function test_admin_can_export_jobs_to_excel_csv(): void
+    {
+        $admin = $this->createAdminUser();
+        $this->createSampleJob(['title' => 'Exportable Job Engineer', 'company' => 'Export Tech Ltd']);
+
+        $response = $this->actingAs($admin)->get(route('admin.jobs.export'));
+
+        $response->assertStatus(200);
+        $this->assertTrue(str_contains($response->headers->get('content-type'), 'text/csv'));
+        $this->assertTrue(str_contains($response->headers->get('content-disposition'), 'jobs_export_'));
+    }
 }

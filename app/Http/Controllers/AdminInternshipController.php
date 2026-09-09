@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Internship;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -51,10 +52,24 @@ class AdminInternshipController extends Controller
     }
 
     /**
+     * Show the form for creating a new internship.
+     */
+    public function create(): View
+    {
+        $users = User::orderBy('name')->get();
+
+        return view('admin.internship.create', compact('users'));
+    }
+
+    /**
      * Store a newly created internship in storage.
      */
     public function store(Request $request): RedirectResponse
     {
+        if (! $request->filled('user_id') && auth()->check()) {
+            $request->merge(['user_id' => auth()->id()]);
+        }
+
         $validated = $request->validate([
             'user_id' => ['required', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
@@ -64,7 +79,7 @@ class AdminInternshipController extends Controller
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date'],
             'status' => ['required', 'in:active,inactive,completed'],
-            'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
         ]);
 
         // Handle profile picture upload

@@ -36,29 +36,16 @@
         </div>
     @endif
 
-    {{-- Header Section & Actions --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
-                <span class="text-slate-400">›</span>
-                <span class="text-slate-900 font-semibold">Internship Management</span>
-            </div>
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">Internship Management</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Kelola data internship, profil, dan status keaktifan.</p>
-        </div>
-
-        <div class="flex items-center gap-3">
+    {{-- Actions --}}
+    <div class="flex items-center justify-end gap-3">
             {{-- Tambah Internship Button --}}
-            <button type="button" 
-                    onclick="openAddModal()" 
-                    class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-[13.5px] font-semibold shadow-md shadow-blue-500/20 transition transform active:scale-95">
+            <a href="{{ route('admin.internships.create') }}" 
+               class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-xs transition transform active:scale-95">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <path d="M12 5v14M5 12h14"/>
                 </svg>
                 <span>Tambah Internship</span>
-            </button>
-        </div>
+            </a>
     </div>
 
     {{-- Stats Cards --}}
@@ -220,96 +207,7 @@
 </div>
 
 {{-- ========================================================================= --}}
-{{-- MODAL POP-UP 1: TAMBAH INTERNSHIP BARU --}}
-{{-- ========================================================================= --}}
-<div id="modal-add-internship" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
-        {{-- Modal Header --}}
-        <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center">
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                </div>
-                <div>
-                    <h3 class="text-base font-bold">Tambah Internship Baru</h3>
-                    <p class="text-xs text-blue-100">Isi formulir di bawah untuk menambahkan internship baru.</p>
-                </div>
-            </div>
-            <button type="button" onclick="closeAddModal()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 text-xl font-bold transition">&times;</button>
-        </div>
-
-        {{-- Modal Body Form --}}
-        <form action="{{ route('admin.internships.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700 max-h-[70vh] overflow-y-auto">
-            @csrf
-            <div>
-                <label class="block font-bold text-slate-800 mb-1">User <span class="text-red-500">*</span></label>
-                <select name="user_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
-                    <option value="">Pilih User</option>
-                    @foreach (\App\Models\User::all() as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div>
-                <label class="block font-bold text-slate-800 mb-1">Judul <span class="text-red-500">*</span></label>
-                <input type="text" name="title" required placeholder="Contoh: Full Stack Developer" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
-            </div>
-
-            <div>
-                <label class="block font-bold text-slate-800 mb-1">Perusahaan <span class="text-red-500">*</span></label>
-                <input type="text" name="company" required placeholder="Contoh: PT Tech Indonesia" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
-            </div>
-
-            <div>
-                <label class="block font-bold text-slate-800 mb-1">Deskripsi</label>
-                <textarea name="description" rows="3" placeholder="Deskripsi internship..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition resize-none"></textarea>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block font-bold text-slate-800 mb-1">Lokasi</label>
-                    <input type="text" name="location" placeholder="Contoh: Jakarta" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-800 mb-1">Status <span class="text-red-500">*</span></label>
-                    <select name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block font-bold text-slate-800 mb-1">Tanggal Mulai</label>
-                    <input type="date" name="start_date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-slate-800 mb-1">Tanggal Selesai</label>
-                    <input type="date" name="end_date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
-                </div>
-            </div>
-
-            <div>
-                <label class="block font-bold text-slate-800 mb-1">Foto Profil</label>
-                <input type="file" name="profile_picture" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-xs">
-                <p class="text-[11px] text-slate-500 mt-1">Format: JPG, PNG, GIF (Max 2MB)</p>
-            </div>
-
-            <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-                <button type="button" onclick="closeAddModal()" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold transition">Batal</button>
-                <button type="submit" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md shadow-blue-500/20 transition">Simpan Internship</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-{{-- ========================================================================= --}}
-{{-- MODAL POP-UP 2: EDIT DATA INTERNSHIP --}}
+{{-- MODAL POP-UP: EDIT DATA INTERNSHIP --}}
 {{-- ========================================================================= --}}
 <div id="modal-edit-internship" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
@@ -400,48 +298,8 @@
     </div>
 </div>
 
-{{-- ========================================================================= --}}
-{{-- MODAL POP-UP 3: KONFIRMASI HAPUS INTERNSHIP --}}
-{{-- ========================================================================= --}}
-<div id="modal-delete-internship" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-center">
-        <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto shadow-xs">
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-        </div>
-
-        <div>
-            <h3 class="text-lg font-bold text-slate-900">Konfirmasi Hapus Internship</h3>
-            <p class="text-xs text-slate-500 mt-1">
-                Apakah Anda yakin ingin menghapus internship <strong id="delete_internship_title" class="text-slate-900"></strong>?
-            </p>
-            <p class="text-[11px] text-red-500 mt-2 font-medium bg-red-50 p-2.5 rounded-xl border border-red-100">
-                Peringatan: Tindakan ini permanen dan data internship tidak dapat dikembalikan.
-            </p>
-        </div>
-
-        <form id="form-delete-internship" method="POST" class="pt-2 flex items-center justify-center gap-3">
-            @csrf
-            @method('DELETE')
-            <button type="button" onclick="closeDeleteModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition text-xs sm:text-sm">Batal</button>
-            <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold shadow-md shadow-red-500/20 transition text-xs sm:text-sm">Ya, Hapus</button>
-        </form>
-    </div>
-</div>
-
 @push('scripts')
 <script>
-    function openAddModal() {
-        document.getElementById('modal-add-internship').classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
-    }
-
-    function closeAddModal() {
-        document.getElementById('modal-add-internship').classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-    }
-
     function openEditModal(internship) {
         const form = document.getElementById('form-edit-internship');
         form.action = `{{ url('/admin/internships') }}/${internship.id}`;
@@ -472,16 +330,14 @@
     }
 
     function openDeleteModal(id, title) {
-        const form = document.getElementById('form-delete-internship');
-        form.action = `{{ url('/admin/internships') }}/${id}`;
-        document.getElementById('delete_internship_title').textContent = title;
-        document.getElementById('modal-delete-internship').classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
+        window.confirmDelete(`{{ url('/admin/internships') }}/${id}`, title, {
+            title: 'Konfirmasi Hapus Internship',
+            warning: 'Peringatan: Tindakan ini permanen dan data internship tidak dapat dikembalikan.'
+        });
     }
 
     function closeDeleteModal() {
-        document.getElementById('modal-delete-internship').classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
+        window.closeGlobalDeleteModal();
     }
 </script>
 @endpush

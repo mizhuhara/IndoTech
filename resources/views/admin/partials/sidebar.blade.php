@@ -6,40 +6,17 @@
             : 0;
     @endphp
 
-    {{-- Header / Logo --}}
-    <div class="px-5 pt-5 pb-3.5 shrink-0">
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 group">
-            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0b57d0] to-blue-500 flex items-center justify-center text-white font-black text-[13px] shadow-sm shadow-blue-500/25 group-hover:scale-105 transition-transform">
-                IT
-            </div>
-            <div class="flex flex-col">
-                <span class="text-[17px] font-extrabold text-slate-900 tracking-tight leading-tight group-hover:text-[#0b57d0] transition-colors">IndoTech</span>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Workspace</span>
-            </div>
+    {{-- Header / Brand --}}
+    <div class="h-16 px-6 flex items-center border-b border-slate-200/80 shrink-0">
+        <a href="{{ route('admin.dashboard') }}" class="group flex items-center gap-2">
+            <span class="text-[21px] font-black text-slate-900 tracking-tight leading-none group-hover:text-[#0b57d0] transition-colors">
+                Indo<span class="text-[#0b57d0]">Tech</span>
+            </span>
         </a>
     </div>
-
-    {{-- New Record Button (hanya admin/institusi yang bisa menambah) --}}
-    @php
-        $canCreate = in_array($userRole, ['super_admin', 'admin'], true);
-        $createRoute = match ($userRole) {
-            'school' => 'admin.schools.create',
-            'university' => 'admin.univ.create',
-            'company' => 'admin.company.create',
-            default => 'admin.schools.create',
-        };
-    @endphp
-    @if ($canCreate)
-    <div class="px-3.5 pb-2.5 shrink-0">
-        <a href="{{ route($createRoute) }}" class="w-full flex items-center justify-center gap-2 h-10 rounded-xl bg-[#0b57d0] hover:bg-[#0842a0] text-white text-[13px] font-semibold shadow-xs shadow-blue-700/20 hover:shadow-sm transition-all duration-150">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            <span>New Record</span>
-        </a>
-    </div>
-    @endif
 
     {{-- Nav with Smooth Invisible/Ultra-thin Scrollbar --}}
-    <nav class="flex-1 overflow-y-auto px-3 py-1 space-y-0.5 custom-sidebar-nav min-h-0">
+    <nav class="flex-1 overflow-y-auto px-3 py-3 space-y-0.5 custom-sidebar-nav min-h-0">
         @php
             $isUserAndVerification = request()->routeIs('admin.users.*') || request()->routeIs('admin.verification.*');
             $menu = [
