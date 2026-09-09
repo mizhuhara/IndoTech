@@ -1,163 +1,192 @@
-<aside class="w-64 shrink-0 bg-white border-r border-slate-200 flex flex-col justify-between h-screen sticky top-0">
-    @php $userRole = auth()->user()?->role ?? 'user'; @endphp
-    <div>
-        {{-- Logo --}}
-        <div class="px-6 pt-6 pb-4">
-            <a href="{{ route('admin.dashboard') }}" class="text-[22px] font-extrabold text-slate-900 tracking-tight block">
-                IndoTech
-            </a>
-        </div>
+<aside class="w-64 shrink-0 bg-white border-r border-slate-200/80 flex flex-col h-screen sticky top-0 z-40 select-none">
+    @php 
+        $userRole = auth()->user()?->role ?? 'user'; 
+        $pendingVerificationsCount = in_array($userRole, ['super_admin', 'admin'], true) 
+            ? \App\Models\User::where('status', 'pending')->count() 
+            : 0;
+    @endphp
 
-        {{-- New Record Button (hanya admin yang bisa menambah) --}}
+    {{-- Header / Logo --}}
+    <div class="px-5 pt-5 pb-3.5 shrink-0">
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 group">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0b57d0] to-blue-500 flex items-center justify-center text-white font-black text-[13px] shadow-sm shadow-blue-500/25 group-hover:scale-105 transition-transform">
+                IT
+            </div>
+            <div class="flex flex-col">
+                <span class="text-[17px] font-extrabold text-slate-900 tracking-tight leading-tight group-hover:text-[#0b57d0] transition-colors">IndoTech</span>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Workspace</span>
+            </div>
+        </a>
+    </div>
+
+    {{-- New Record Button (hanya admin/institusi yang bisa menambah) --}}
+    @php
+        $canCreate = in_array($userRole, ['super_admin', 'admin'], true);
+        $createRoute = match ($userRole) {
+            'school' => 'admin.schools.create',
+            'university' => 'admin.univ.create',
+            'company' => 'admin.company.create',
+            default => 'admin.schools.create',
+        };
+    @endphp
+    @if ($canCreate)
+    <div class="px-3.5 pb-2.5 shrink-0">
+        <a href="{{ route($createRoute) }}" class="w-full flex items-center justify-center gap-2 h-10 rounded-xl bg-[#0b57d0] hover:bg-[#0842a0] text-white text-[13px] font-semibold shadow-xs shadow-blue-700/20 hover:shadow-sm transition-all duration-150">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>New Record</span>
+        </a>
+    </div>
+    @endif
+
+    {{-- Nav with Smooth Invisible/Ultra-thin Scrollbar --}}
+    <nav class="flex-1 overflow-y-auto px-3 py-1 space-y-0.5 custom-sidebar-nav min-h-0">
         @php
-            $canCreate = in_array($userRole, ['super_admin', 'admin'], true);
-            $createRoute = match ($userRole) {
-                'school' => 'admin.schools.create',
-                'university' => 'admin.univ.create',
-                'company' => 'admin.company.create',
-                default => 'admin.schools.create',
-            };
+            $isUserAndVerification = request()->routeIs('admin.users.*') || request()->routeIs('admin.verification.*');
+            $menu = [
+                [
+                    'label' => 'Dashboard',
+                    'icon' => 'grid',
+                    'active' => request()->routeIs('admin.dashboard'),
+                    'href' => route('admin.dashboard'),
+                    'roles' => ['super_admin', 'admin', 'school', 'university', 'company'],
+                ],
+                [
+                    'label' => 'Users and Verification',
+                    'icon' => 'users',
+                    'active' => $isUserAndVerification,
+                    'href' => route('admin.users.index'),
+                    'arrow' => true,
+                    'is_group' => true,
+                    'roles' => ['super_admin', 'admin'],
+                ],
+                [
+                    'label' => 'School',
+                    'icon' => 'school',
+                    'active' => request()->routeIs('admin.schools.*'),
+                    'href' => route('admin.schools.index'),
+                    'roles' => ['super_admin', 'admin', 'school'],
+                ],
+                [
+                    'label' => 'Universities',
+                    'icon' => 'university',
+                    'active' => request()->routeIs('admin.univ.*'),
+                    'href' => route('admin.univ.index'),
+                    'roles' => ['super_admin', 'admin', 'university'],
+                ],
+                [
+                    'label' => 'Company',
+                    'icon' => 'company',
+                    'active' => request()->routeIs('admin.company.*'),
+                    'href' => route('admin.company.index'),
+                    'roles' => ['super_admin', 'admin', 'company'],
+                ],
+                [
+                    'label' => 'Jobs',
+                    'icon' => 'jobs',
+                    'active' => request()->routeIs('admin.jobs.*'),
+                    'href' => route('admin.jobs.index'),
+                    'roles' => ['super_admin', 'admin'],
+                ],
+                [
+                    'label' => 'Internships',
+                    'icon' => 'internship',
+                    'active' => request()->routeIs('admin.internships.*'),
+                    'href' => route('admin.internships.index'),
+                    'roles' => ['super_admin', 'admin'],
+                ],
+                [
+                    'label' => 'Event',
+                    'icon' => 'events',
+                    'active' => request()->routeIs('admin.events.*'),
+                    'href' => route('admin.events.index'),
+                    'roles' => ['super_admin', 'admin'],
+                ],
+                [
+                    'label' => 'Articles',
+                    'icon' => 'articles',
+                    'active' => request()->routeIs('admin.articles.*'),
+                    'href' => route('admin.articles.index'),
+                    'roles' => ['super_admin', 'admin'],
+                ],
+                [
+                    'label' => 'Community',
+                    'icon' => 'community',
+                    'active' => request()->routeIs('admin.community.*'),
+                    'href' => route('admin.community.index'),
+                    'roles' => ['super_admin', 'admin'],
+                ],
+                [
+                    'label' => 'Reports',
+                    'icon' => 'reports',
+                    'active' => request()->routeIs('admin.reports.*'),
+                    'href' => route('admin.reports.index'),
+                    'roles' => ['super_admin', 'admin'],
+                ],
+            ];
+
+            // Filter: hanya menu yang role boleh lihat
+            $menu = array_values(array_filter($menu, fn ($m) => in_array($userRole, $m['roles'], true)));
         @endphp
-        @if ($canCreate)
-        <div class="px-4 pt-2 pb-4">
-            <a href="{{ route($createRoute) }}" class="w-full flex items-center justify-center gap-2 h-11 rounded-full bg-[#0b57d0] text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-                New Record
-            </a>
-        </div>
-        @endif
 
-        {{-- Nav --}}
-        <nav class="px-3 py-2 space-y-1 overflow-y-auto max-h-[calc(100vh-210px)]">
-            @php
-                $isUserAndVerification = request()->routeIs('admin.users.*') || request()->routeIs('admin.verification.*');
-                $menu = [
-                    [
-                        'label' => 'Dashboard',
-                        'icon' => 'grid',
-                        'active' => request()->routeIs('admin.dashboard'),
-                        'href' => route('admin.dashboard'),
-                        'roles' => ['super_admin', 'admin', 'school', 'university', 'company'],
-                    ],
-                    [
-                        'label' => 'Users and Verification',
-                        'icon' => 'users',
-                        'active' => $isUserAndVerification,
-                        'href' => route('admin.users.index'),
-                        'arrow' => true,
-                        'is_group' => true,
-                        'roles' => ['super_admin', 'admin'],
-                    ],
-                    [
-                        'label' => 'School',
-                        'icon' => 'school',
-                        'active' => request()->routeIs('admin.schools.*'),
-                        'href' => route('admin.schools.index'),
-                        'roles' => ['super_admin', 'admin', 'school'],
-                    ],
-                    [
-                        'label' => 'Universities',
-                        'icon' => 'university',
-                        'active' => request()->routeIs('admin.univ.*'),
-                        'href' => route('admin.univ.index'),
-                        'roles' => ['super_admin', 'admin', 'university'],
-                    ],
-                    [
-                        'label' => 'Company',
-                        'icon' => 'company',
-                        'active' => request()->routeIs('admin.company.*'),
-                        'href' => route('admin.company.index'),
-                        'roles' => ['super_admin', 'admin', 'company'],
-                    ],
-                    [
-                        'label' => 'Jobs',
-                        'icon' => 'jobs',
-                        'active' => request()->routeIs('admin.jobs.*'),
-                        'href' => route('admin.jobs.index'),
-                        'roles' => ['super_admin', 'admin'],
-                    ],
-                    [
-                        'label' => 'Internships',
-                        'icon' => 'internship',
-                        'active' => request()->routeIs('admin.internships.*'),
-                        'href' => route('admin.internships.index'),
-                        'roles' => ['super_admin', 'admin'],
-                    ],
-                    [
-                        'label' => 'Event',
-                        'icon' => 'events',
-                        'active' => request()->routeIs('admin.events.*'),
-                        'href' => route('admin.events.index'),
-                        'roles' => ['super_admin', 'admin'],
-                    ],
-                    [
-                        'label' => 'Articles',
-                        'icon' => 'articles',
-                        'active' => request()->routeIs('admin.articles.*'),
-                        'href' => route('admin.articles.index'),
-                        'roles' => ['super_admin', 'admin'],
-                    ],
-                    [
-                        'label' => 'Community',
-                        'icon' => 'community',
-                        'active' => request()->routeIs('admin.community.*'),
-                        'href' => route('admin.community.index'),
-                        'roles' => ['super_admin', 'admin'],
-                    ],
-                    [
-                        'label' => 'Reports',
-                        'icon' => 'reports',
-                        'active' => request()->routeIs('admin.reports.*'),
-                        'href' => route('admin.reports.index'),
-                        'roles' => ['super_admin', 'admin'],
-                    ],
-                ];
-
-                // Filter: hanya menu yang role boleh lihat
-                $menu = array_values(array_filter($menu, fn ($m) => in_array($userRole, $m['roles'], true)));
-            @endphp
-
-            @foreach ($menu as $item)
-                @if (!empty($item['is_group']))
-                    <div class="space-y-1">
-                        <button type="button" 
-                                onclick="toggleSubmenu('user-verification-submenu', 'user-verification-arrow')"
-                                class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13.5px] font-medium transition cursor-pointer select-none relative group
-                                       {{ $item['active'] ? 'bg-blue-50 text-[#0b57d0] font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                            @if ($item['active'])
-                                <span class="absolute right-0 top-1.5 bottom-1.5 w-1 bg-[#0b57d0] rounded-l"></span>
-                            @endif
-                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 20c1.2-3.2 3.7-4.8 6.5-4.8s5.3 1.6 6.5 4.8"/><path stroke-linecap="round" d="M16 5.5a3 3 0 0 1 0 5.8M18.5 15.6c1.2 1.1 2 2.4 2.6 4.4"/></svg>
-                            <span class="flex-1 text-left">{{ $item['label'] }}</span>
-                            <svg id="user-verification-arrow" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                                 class="transition-transform duration-200 {{ $item['active'] ? 'rotate-180 text-[#0b57d0]' : 'text-slate-400' }}">
-                                <path d="m8 10 4 4 4-4"/>
-                            </svg>
-                        </button>
-                        {{-- Submenu Items --}}
-                        <div id="user-verification-submenu" class="pl-8 pr-2 space-y-1 {{ $item['active'] ? '' : 'hidden' }} transition-all duration-200">
-                            <a href="{{ route('admin.users.index') }}" 
-                               class="flex items-center px-3 py-2 rounded-lg text-[13px] font-medium transition {{ request()->routeIs('admin.users.*') ? 'bg-[#0b57d0] text-white shadow-xs font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                                Manage Users
-                            </a>
-                            <a href="{{ route('admin.verification.index') }}" 
-                               class="flex items-center px-3 py-2 rounded-lg text-[13px] font-medium transition {{ request()->routeIs('admin.verification.*') ? 'bg-[#0b57d0] text-white shadow-xs font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                                Verification
-                            </a>
-                        </div>
-                    </div>
-                @else
-                    <a href="{{ $item['href'] }}"
-                       class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13.5px] font-medium transition relative group
-                              {{ $item['active']
-                                  ? 'bg-blue-50 text-[#0b57d0] font-semibold'
-                                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                        
-                        {{-- Active blue right edge bar indicator --}}
+        @foreach ($menu as $item)
+            @if (!empty($item['is_group']))
+                <div class="space-y-0.5">
+                    <button type="button" 
+                            onclick="toggleSubmenu('user-verification-submenu', 'user-verification-arrow')"
+                            class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 cursor-pointer select-none relative group
+                                   {{ $item['active'] ? 'bg-blue-50/80 text-[#0b57d0] font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                         @if ($item['active'])
-                            <span class="absolute right-0 top-1.5 bottom-1.5 w-1 bg-[#0b57d0] rounded-l"></span>
+                            <span class="absolute left-0 top-2 bottom-2 w-1 bg-[#0b57d0] rounded-r-full"></span>
+                        @endif
+                        <span class="{{ $item['active'] ? 'text-[#0b57d0]' : 'text-slate-400 group-hover:text-slate-600' }} transition-colors">
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 20c1.2-3.2 3.7-4.8 6.5-4.8s5.3 1.6 6.5 4.8"/><path stroke-linecap="round" d="M16 5.5a3 3 0 0 1 0 5.8M18.5 15.6c1.2 1.1 2 2.4 2.6 4.4"/></svg>
+                        </span>
+                        <span class="flex-1 text-left tracking-tight">{{ $item['label'] }}</span>
+                        
+                        @if($pendingVerificationsCount > 0)
+                            <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 leading-none mr-1">
+                                {{ $pendingVerificationsCount }}
+                            </span>
                         @endif
 
+                        <svg id="user-verification-arrow" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                             class="transition-transform duration-200 {{ $item['active'] ? 'rotate-180 text-[#0b57d0]' : 'text-slate-400 group-hover:text-slate-600' }}">
+                            <path d="m8 10 4 4 4-4"/>
+                        </svg>
+                    </button>
+
+                    {{-- Submenu Items with Elegant Connected Tree Line --}}
+                    <div id="user-verification-submenu" class="relative pl-7 pr-1 space-y-0.5 py-0.5 {{ $item['active'] ? '' : 'hidden' }} transition-all duration-200">
+                        <div class="absolute left-5 top-1 bottom-1 w-px bg-slate-200"></div>
+
+                        <a href="{{ route('admin.users.index') }}" 
+                           class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12.5px] font-medium transition-all duration-150 {{ request()->routeIs('admin.users.*') ? 'bg-[#0b57d0] text-white shadow-xs font-semibold' : 'text-slate-600 hover:bg-slate-100/70 hover:text-slate-900' }}">
+                            <span>Manage Users</span>
+                        </a>
+                        <a href="{{ route('admin.verification.index') }}" 
+                           class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12.5px] font-medium transition-all duration-150 {{ request()->routeIs('admin.verification.*') ? 'bg-[#0b57d0] text-white shadow-xs font-semibold' : 'text-slate-600 hover:bg-slate-100/70 hover:text-slate-900' }}">
+                            <span>Verification</span>
+                            @if($pendingVerificationsCount > 0)
+                                <span class="px-1.5 py-0.2 text-[10px] font-bold rounded-full {{ request()->routeIs('admin.verification.*') ? 'bg-white text-[#0b57d0]' : 'bg-amber-100 text-amber-800' }}">
+                                    {{ $pendingVerificationsCount }}
+                                </span>
+                            @endif
+                        </a>
+                    </div>
+                </div>
+            @else
+                <a href="{{ $item['href'] }}"
+                   class="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 relative group
+                          {{ $item['active']
+                              ? 'bg-blue-50/80 text-[#0b57d0] font-semibold'
+                              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    
+                    {{-- Active blue left edge pill indicator --}}
+                    @if ($item['active'])
+                        <span class="absolute left-0 top-2 bottom-2 w-1 bg-[#0b57d0] rounded-r-full"></span>
+                    @endif
+
+                    <span class="{{ $item['active'] ? 'text-[#0b57d0]' : 'text-slate-400 group-hover:text-slate-600' }} transition-colors">
                         @if ($item['icon'] === 'grid')
                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
                         @elseif ($item['icon'] === 'users')
@@ -181,26 +210,60 @@
                         @elseif ($item['icon'] === 'reports')
                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/></svg>
                         @endif
+                    </span>
 
-                        <span class="flex-1">{{ $item['label'] }}</span>
+                    <span class="flex-1 tracking-tight">{{ $item['label'] }}</span>
 
-                        @if (! empty($item['arrow']))
-                            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-slate-400"><path d="m8 10 4 4 4-4"/></svg>
-                        @endif
-                    </a>
-                @endif
-            @endforeach
-        </nav>
-    </div>
+                    @if (! empty($item['arrow']))
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-slate-400 group-hover:text-slate-600"><path d="m8 10 4 4 4-4"/></svg>
+                    @endif
+                </a>
+            @endif
+        @endforeach
+    </nav>
 
-    {{-- Sidebar footer / Logout --}}
-    <div class="p-4 border-t border-slate-100">
-        <a href="{{ url('/') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13.5px] font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 transition">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            Logout
-        </a>
+    {{-- Sidebar footer / Actions --}}
+    <div class="p-3 border-t border-slate-100 shrink-0 bg-white space-y-1">
+        <form method="POST" action="{{ route('logout') }}" class="w-full m-0">
+            @csrf
+            <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/80 transition-all duration-150 cursor-pointer text-left group">
+                <span class="text-slate-400 group-hover:text-red-500 transition-colors">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </span>
+                <span class="font-medium">Logout</span>
+            </button>
+        </form>
     </div>
 </aside>
+
+<style>
+    /* Custom Sleek Scrollbar (invisible by default, subtle rounded bar on hover) */
+    .custom-sidebar-nav {
+        scrollbar-width: thin;
+        scrollbar-color: transparent transparent;
+        transition: scrollbar-color 0.2s ease-in-out;
+    }
+    .custom-sidebar-nav:hover {
+        scrollbar-color: #cbd5e1 transparent;
+    }
+    .custom-sidebar-nav::-webkit-scrollbar {
+        width: 5px;
+    }
+    .custom-sidebar-nav::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-sidebar-nav::-webkit-scrollbar-thumb {
+        background: transparent;
+        border-radius: 9999px;
+        transition: background-color 0.2s;
+    }
+    .custom-sidebar-nav:hover::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+    }
+    .custom-sidebar-nav::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+</style>
 
 <script>
     if (typeof window.toggleSubmenu === 'undefined') {
