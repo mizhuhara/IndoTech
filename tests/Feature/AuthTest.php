@@ -36,4 +36,34 @@ class AuthTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect(route('welcome'));
     }
+
+    public function test_normal_user_login_redirects_to_welcome_page(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'user@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'user',
+            'status' => 'active',
+        ]);
+
+        $response = $this->post(route('login.submit'), [
+            'email' => 'user@example.com',
+            'password' => 'password123',
+        ]);
+
+        $this->assertAuthenticatedAs($user);
+        $response->assertRedirect('/');
+    }
+
+    public function test_normal_user_accessing_dashboard_redirects_to_welcome_page(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'user',
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertRedirect(route('welcome'));
+    }
 }

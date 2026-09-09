@@ -285,7 +285,7 @@ class DashboardController extends Controller
             'school' => 'dashboard.school',
             'university' => 'dashboard.university',
             'company' => 'dashboard.company',
-            default => 'dashboard.user',
+            default => 'welcome',
         };
 
         return redirect()->route($route);
