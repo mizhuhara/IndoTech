@@ -156,7 +156,7 @@ class AuthController extends Controller
             'school' => '/dashboard/school',
             'university' => '/dashboard/university',
             'company' => '/dashboard/company',
-            default => '/dashboard/user',
+            default => '/',
         };
     }
 }
