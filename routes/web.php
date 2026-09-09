@@ -49,7 +49,7 @@ Route::get('/event/{id}', function ($id) {
 Route::middleware('admin')->group(function () {
 
     // Admin Dashboard
-    Route::view('/admin', 'admin.dashboard')->name('admin.dashboard');
+    Route::get('/admin', [DashboardController::class, 'admin'])->name('admin.dashboard');
 
     // Admin School Management
     Route::get('/admin/schools', [AdminSchoolController::class, 'index'])->name('admin.schools.index');

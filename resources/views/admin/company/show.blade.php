@@ -1,27 +1,21 @@
 @extends('admin.layouts.app')
 
 @section('title', ($company['name'] ?? 'Company Details') . ' — IndoTech')
+@section('header_title', $company['name'] ?? 'Company Details')
+@section('header_breadcrumb', 'Detail Company')
+@section('header_subtitle', 'Informasi profil dan status legalitas mitra industri')
 
 @section('content')
 <div class="space-y-6 max-w-7xl mx-auto">
     
-    {{-- Top Back Link & Breadcrumb --}}
-    <div>
-        <a href="{{ route('admin.company.index') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 mb-2 transition">
+    {{-- Top Back Link & Actions --}}
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <a href="{{ route('admin.company.index') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 transition">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
-            Kembali
+            Kembali ke Daftar
         </a>
-
-        <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-            <a href="{{ route('admin.company.index') }}" class="hover:text-blue-600 transition">Companies</a>
-            <span class="text-slate-400">›</span>
-            <span class="text-slate-900 font-semibold">{{ $company['name'] ?? 'Detail' }}</span>
-        </div>
-
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2">
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">{{ $company['name'] ?? 'Company Details' }}</h1>
             
             <div class="flex items-center gap-3">
                 <a href="{{ route('admin.company.edit', $company['id']) }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-[13.5px] font-semibold transition">

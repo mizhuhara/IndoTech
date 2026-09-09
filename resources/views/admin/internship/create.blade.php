@@ -14,17 +14,6 @@
             </svg>
             Kembali ke Daftar Internship
         </a>
-
-        <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-            <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Beranda</a>
-            <span class="text-slate-400">›</span>
-            <a href="{{ route('admin.internships.index') }}" class="hover:text-blue-600 transition">Internship Management</a>
-            <span class="text-slate-400">›</span>
-            <span class="text-slate-900 font-semibold">Tambah Internship</span>
-        </div>
-
-        <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">Tambah Lowongan Internship Baru</h1>
-        <p class="text-[13.5px] text-slate-500 mt-0.5">Lengkapi formulir di bawah ini untuk mempublikasikan program magang baru.</p>
     </div>
 
     @if ($errors->any())

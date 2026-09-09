@@ -36,19 +36,8 @@
         </div>
     @endif
 
-    {{-- Header Section & Actions --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
-                <span class="text-slate-400">›</span>
-                <span class="text-slate-900 font-semibold">Internship Management</span>
-            </div>
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">Internship Management</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Kelola data internship, profil, dan status keaktifan.</p>
-        </div>
-
-        <div class="flex items-center gap-3">
+    {{-- Actions --}}
+    <div class="flex items-center justify-end gap-3">
             {{-- Tambah Internship Button --}}
             <a href="{{ route('admin.internships.create') }}" 
                class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-xs transition transform active:scale-95">
@@ -57,7 +46,6 @@
                 </svg>
                 <span>Tambah Internship</span>
             </a>
-        </div>
     </div>
 
     {{-- Stats Cards --}}

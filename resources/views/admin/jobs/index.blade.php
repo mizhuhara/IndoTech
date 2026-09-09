@@ -31,12 +31,8 @@
     </div>
     @endif
 
-    {{-- Title & Action Button --}}
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-            <h1 class="text-[26px] font-extrabold text-slate-900 tracking-tight">Job Management</h1>
-            <p class="text-[13.5px] text-slate-500 mt-0.5">Manage and track all job postings across the platform.</p>
-        </div>
+    {{-- Action Button --}}
+    <div class="flex items-center justify-end">
         <a href="{{ route('admin.jobs.create') }}" class="inline-flex items-center justify-center gap-2 bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg shadow-xs transition">
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.8"><path d="M12 5v14M5 12h14"/></svg>
             <span>POST NEW JOB</span>

@@ -25,19 +25,8 @@
         </div>
     @endif
 
-    {{-- Header Section & Actions --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
-                <span class="text-slate-400">›</span>
-                <span class="text-slate-900 font-semibold">User Management</span>
-            </div>
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">User Management</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Kelola data pengguna sistem, peranan (role), dan status keaktifan akun.</p>
-        </div>
-
-        <div class="flex items-center gap-3">
+    {{-- Actions --}}
+    <div class="flex items-center justify-end gap-3">
             {{-- Filter Modal Button --}}
             <button type="button" 
                     onclick="openFilterModal()" 
@@ -60,7 +49,6 @@
                 </svg>
                 <span>Tambah User</span>
             </button>
-        </div>
     </div>
 
     {{-- Stats Cards --}}

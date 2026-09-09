@@ -4,17 +4,6 @@
 
 @section('content')
 <div class="space-y-6">
-
-    {{-- Page Header: Title & Subtitle --}}
-    <div>
-        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">
-            Event Verification
-        </h1>
-        <p class="text-sm font-medium text-slate-500 mt-1">
-            Review and approve pending event requests from partners.
-        </p>
-    </div>
-
     {{-- Main Container Card --}}
     <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-xs space-y-6">
 

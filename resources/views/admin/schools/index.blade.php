@@ -10,18 +10,8 @@
     @endif
     <div class="space-y-6">
 
-    {{-- Top Bar: Breadcrumb, Title & Action Buttons --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
-                <span class="text-slate-400">›</span>
-                <span class="text-slate-900 font-semibold">School Management</span>
-            </div>
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">SMK IT Management</h1>
-        </div>
-
-        <div class="flex items-center gap-3">
+    {{-- Action Buttons --}}
+    <div class="flex items-center justify-end gap-3">
             {{-- Filter Button --}}
             <div class="relative" x-data="{ open: false }">
                 <button type="button" 
@@ -45,7 +35,6 @@
                 Add New School
             </a>
             @endif
-        </div>
     </div>
 
     {{-- Filter Modal / Drawer (Collapsible) --}}

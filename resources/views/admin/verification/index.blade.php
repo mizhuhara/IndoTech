@@ -5,19 +5,8 @@
 @section('content')
 <div class="space-y-6">
 
-    {{-- Title Header & Breadcrumb --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
-                <span class="text-slate-400">›</span>
-                <span class="text-slate-900 font-semibold">Verification</span>
-            </div>
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">Verification Request</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Tinjau, lihat rincian, setujui, atau tolak pendaftaran akun pengguna & institusi.</p>
-        </div>
-
-        {{-- Status Quick Filter Tabs --}}
+    {{-- Status Quick Filter Tabs --}}
+    <div class="flex items-center justify-start flex-wrap gap-4">
         <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-bold overflow-x-auto">
             <a href="{{ route('admin.verification.index', ['status' => 'pending', 'type' => request('type'), 'q' => request('q')]) }}" 
                class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ request('status', 'pending') === 'pending' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
