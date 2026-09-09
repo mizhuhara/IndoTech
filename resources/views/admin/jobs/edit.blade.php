@@ -7,15 +7,6 @@
     @csrf
     @method('PUT')
 
-    {{-- Top Breadcrumbs --}}
-    <div class="text-[13px] text-slate-500 flex items-center gap-2">
-        <a href="{{ route('admin.jobs.index') }}" class="hover:text-blue-600 font-medium transition">Jobs</a>
-        <span>›</span>
-        <a href="{{ route('admin.jobs.show', $job['id']) }}" class="hover:text-blue-600 font-medium transition truncate max-w-[200px] sm:max-w-none">{{ $job['title'] }}</a>
-        <span>›</span>
-        <span class="text-slate-900 font-semibold">Edit Posting</span>
-    </div>
-
     {{-- Validation errors --}}
     @if ($errors->any())
         <div class="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-[13.5px]">
@@ -28,16 +19,14 @@
         </div>
     @endif
 
-    {{-- Title Bar & Top Action Buttons --}}
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-            <a href="{{ route('admin.jobs.index') }}" class="p-2 rounded-lg text-slate-600 hover:bg-slate-200/60 transition" title="Kembali">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
-                </svg>
-            </a>
-            <h1 class="text-[24px] font-bold text-slate-900 tracking-tight">Edit Job Posting</h1>
-        </div>
+    {{-- Action Buttons --}}
+    <div class="flex items-center justify-between gap-4">
+        <a href="{{ route('admin.jobs.show', $job['id']) }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 transition">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
+            </svg>
+            Kembali
+        </a>
 
         <div class="flex items-center gap-3">
             <a href="{{ route('admin.jobs.show', $job['id']) }}" class="inline-flex items-center justify-center bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold px-5 py-2.5 rounded-lg text-[13.5px] transition">

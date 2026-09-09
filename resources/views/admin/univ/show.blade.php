@@ -1,6 +1,9 @@
 @extends('admin.layouts.app')
 
 @section('title', $univ['name'] . ' — Detail Universitas')
+@section('header_title', $univ['name'])
+@section('header_breadcrumb', 'Detail Universitas')
+@section('header_subtitle', 'Informasi profil dan status kemitraan universitas')
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -15,21 +18,13 @@
 @section('content')
 <div class="space-y-6 max-w-7xl mx-auto">
     {{-- Top Navigation & Action --}}
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-            <a href="{{ route('admin.univ.index') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 mb-2 transition">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-                Kembali ke Daftar
-            </a>
-            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-                <a href="{{ route('admin.univ.index') }}" class="hover:text-blue-600 transition">Universitas</a>
-                <span class="text-slate-400">›</span>
-                <span class="text-slate-900 font-semibold">{{ $univ['name'] }}</span>
-            </div>
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">{{ $univ['name'] }}</h1>
-        </div>
+    <div class="flex items-center justify-between gap-4">
+        <a href="{{ route('admin.univ.index') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 transition">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Kembali ke Daftar
+        </a>
 
         <div class="flex items-center gap-3">
             <a href="{{ route('admin.univ.edit', $univ['id']) }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-sm transition">

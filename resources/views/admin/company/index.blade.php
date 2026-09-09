@@ -28,19 +28,8 @@
         </div>
     @endif
 
-    {{-- Top Bar: Breadcrumb, Title & Action Buttons --}}
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="text-[13px] text-slate-500 mb-1 flex items-center gap-1.5 font-medium">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
-                <span class="text-slate-400">›</span>
-                <span class="text-slate-900 font-semibold">Company Management</span>
-            </div>
-            <h1 class="text-[26px] font-bold text-slate-900 tracking-tight">Company Management</h1>
-            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Kelola data mitra perusahaan, lokasi maps, galeri, dan profil lengkap.</p>
-        </div>
-
-        <div class="flex items-center gap-3">
+    {{-- Action Buttons --}}
+    <div class="flex items-center justify-end gap-3">
             {{-- Filter Button --}}
             <button type="button" 
                     onclick="openFilterModal()" 
@@ -64,7 +53,6 @@
                 <span>Tambah Perusahaan</span>
             </a>
             @endif
-        </div>
     </div>
 
     {{-- 3 Top Stat Cards --}}
@@ -303,39 +291,9 @@
 </div>
 
 {{-- ========================================================================= --}}
-{{-- MODAL POP-UP 1: KONFIRMASI HAPUS PERUSAHAAN --}}
+{{-- MODAL POP-UP: FILTER PERUSAHAAN --}}
 {{-- ========================================================================= --}}
-<div id="modal-delete-company" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-center">
-        <div class="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto shadow-xs">
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-            </svg>
-        </div>
-
-        <div>
-            <h3 class="text-lg font-bold text-slate-900">Konfirmasi Hapus Perusahaan</h3>
-            <p class="text-xs text-slate-500 mt-1">
-                Apakah Anda yakin ingin menghapus <strong id="delete_company_name" class="text-slate-900"></strong>?
-            </p>
-            <p class="text-[11px] text-red-500 mt-2 font-medium bg-red-50 p-2.5 rounded-xl border border-red-100">
-                Peringatan: Tindakan ini permanen dan data perusahaan serta galeri foto akan dihapus.
-            </p>
-        </div>
-
-        <form id="form-delete-company" method="POST" class="pt-2 flex items-center justify-center gap-3">
-            @csrf
-            @method('DELETE')
-            <button type="button" onclick="closeDeleteModal()" class="w-1/2 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition text-xs sm:text-sm">Batal</button>
-            <button type="submit" class="w-1/2 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold shadow-md shadow-red-500/20 transition text-xs sm:text-sm">Ya, Hapus</button>
-        </form>
-    </div>
-</div>
-
-{{-- ========================================================================= --}}
-{{-- MODAL POP-UP 2: FILTER PERUSAHAAN --}}
-{{-- ========================================================================= --}}
-<div id="modal-filter-company" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+<div id="modal-filter-company" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl space-y-4 border border-slate-100">
         <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2">
@@ -379,16 +337,14 @@
 @push('scripts')
 <script>
     function openDeleteModal(id, name) {
-        const form = document.getElementById('form-delete-company');
-        form.action = `{{ url('/admin/company') }}/${id}`;
-        document.getElementById('delete_company_name').textContent = name;
-        document.getElementById('modal-delete-company').classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
+        window.confirmDelete(`{{ url('/admin/company') }}/${id}`, name, {
+            title: 'Konfirmasi Hapus Perusahaan',
+            warning: 'Peringatan: Tindakan ini permanen dan data perusahaan serta galeri foto akan dihapus.'
+        });
     }
 
     function closeDeleteModal() {
-        document.getElementById('modal-delete-company').classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
+        window.closeGlobalDeleteModal();
     }
 
     function openFilterModal() {

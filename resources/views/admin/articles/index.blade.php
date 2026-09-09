@@ -3,19 +3,8 @@
 @section('title', 'Article Management — Admin')
 
 @section('content')
-{{-- Breadcrumb --}}
-<nav class="text-[13px] text-slate-500 mb-4">
-    <span class="hover:text-blue-600 cursor-pointer">Home</span>
-    <span class="mx-1.5">›</span>
-    <span class="text-slate-900 font-medium">Articles</span>
-</nav>
-
-{{-- Header + Create button --}}
-<div class="flex items-center justify-between mb-6">
-    <div>
-        <h1 class="text-[24px] font-bold text-slate-900">Article Management</h1>
-        <p class="text-[13.5px] text-slate-500 mt-0.5">Manage all articles on the platform</p>
-    </div>
+{{-- Action Button --}}
+<div class="flex items-center justify-end mb-6">
     <a href="{{ route('admin.articles.create') }}" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#0b57d0] text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         Create New Article
