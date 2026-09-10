@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 
 class CommunityController extends Controller
@@ -166,10 +167,28 @@ class CommunityController extends Controller
             default => $communities->sortByDesc('members'),
         };
 
+        // Paginate the filtered+sorted collection so the page works
+        // regardless of how many communities exist (static stub for now).
+        // Swap to a paginated Eloquent query when a `communities` table lands.
+        $perPage = 12;
+        $page = $request->input('page', 1) ?: 1;
+        $total = $communities->count();
+        $items = $communities
+            ->forPage($page, $perPage)
+            ->values();
+
+        $communities = (new LengthAwarePaginator(
+            $items,
+            $total,
+            $perPage,
+            $page,
+            ['path' => route('community.index'), 'pageName' => 'page']
+        ))->withQueryString();
+
         $totalMembers = collect($this->getCommunitiesData())->sum('members');
 
         return view('community.index', [
-            'communities' => $communities->values(),
+            'communities' => $communities,
             'totalMembers' => $totalMembers,
             'totalGroups' => collect($this->getCommunitiesData())->count(),
             'activeSort' => $sort,
