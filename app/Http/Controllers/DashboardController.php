@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Company;
 use App\Models\JobListing;
 use App\Models\School;
@@ -285,6 +286,7 @@ class DashboardController extends Controller
             'school' => 'dashboard.school',
             'university' => 'dashboard.university',
             'company' => 'dashboard.company',
+            'user' => 'dashboard.user',
             default => 'welcome',
         };
 
@@ -313,6 +315,15 @@ class DashboardController extends Controller
                 'url' => route('admin.schools.index'),
             ];
         }
+
+        $schoolArticleCount = Article::where('user_id', auth()->id())->count();
+        $cards[] = [
+            'label' => 'Artikel Saya',
+            'value' => $schoolArticleCount > 0 ? number_format($schoolArticleCount) : '0',
+            'sub' => $schoolArticleCount > 0 ? 'Artikel Terbitan Anda' : 'Belum ada artikel',
+            'action' => 'Kelola',
+            'url' => route('admin.articles.index'),
+        ];
 
         return view('admin.dashboards.institution', [
             'title' => 'Dashboard Sekolah',

@@ -316,9 +316,10 @@
                     <label class="block font-bold text-slate-800 mb-1">Role / Peranan <span class="text-red-500">*</span></label>
                     <select name="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="user">User / Alumni</option>
-                        <option value="school_admin">School Admin</option>
-                        <option value="univ_rep">University Representative</option>
-                        <option value="company_hr">Company HR</option>
+                        <option value="school">Sekolah (School)</option>
+                        <option value="university">Universitas (University)</option>
+                        <option value="company">Perusahaan (Company)</option>
+                        <option value="super_admin">Super Admin</option>
                     </select>
                 </div>
 
@@ -386,9 +387,10 @@
                     <label class="block font-bold text-slate-800 mb-1">Role / Peranan <span class="text-red-500">*</span></label>
                     <select id="edit_role" name="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="user">User / Alumni</option>
-                        <option value="school_admin">School Admin</option>
-                        <option value="univ_rep">University Representative</option>
-                        <option value="company_hr">Company HR</option>
+                        <option value="school">Sekolah (School)</option>
+                        <option value="university">Universitas (University)</option>
+                        <option value="company">Perusahaan (Company)</option>
+                        <option value="super_admin">Super Admin</option>
                     </select>
                 </div>
 
@@ -441,9 +443,10 @@
                 <select name="role" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600">
                     <option value="all" {{ request('role') === 'all' ? 'selected' : '' }}>Semua Role</option>
                     <option value="user" {{ request('role') === 'user' ? 'selected' : '' }}>User / Alumni</option>
-                    <option value="school_admin" {{ request('role') === 'school_admin' ? 'selected' : '' }}>School Admin</option>
-                    <option value="univ_rep" {{ request('role') === 'univ_rep' ? 'selected' : '' }}>University Representative</option>
-                    <option value="company_hr" {{ request('role') === 'company_hr' ? 'selected' : '' }}>Company HR</option>
+                    <option value="school" {{ request('role') === 'school' ? 'selected' : '' }}>Sekolah (School)</option>
+                    <option value="university" {{ request('role') === 'university' ? 'selected' : '' }}>Universitas (University)</option>
+                    <option value="company" {{ request('role') === 'company' ? 'selected' : '' }}>Perusahaan (Company)</option>
+                    <option value="super_admin" {{ request('role') === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
                 </select>
             </div>
 
@@ -476,9 +479,6 @@
         document.getElementById('edit_password').value = '';
         
         let roleVal = (user.role || 'user').toLowerCase();
-        if (roleVal === 'school admin') roleVal = 'school_admin';
-        if (roleVal === 'university representative') roleVal = 'univ_rep';
-        if (roleVal === 'company hr') roleVal = 'company_hr';
         document.getElementById('edit_role').value = roleVal;
 
         let statusVal = (user.status || 'active').toLowerCase();

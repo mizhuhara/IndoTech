@@ -83,7 +83,7 @@
                     'icon' => 'articles',
                     'active' => request()->routeIs('admin.articles.*'),
                     'href' => route('admin.articles.index'),
-                    'roles' => ['super_admin', 'admin'],
+                    'roles' => ['super_admin', 'admin', 'school'],
                 ],
                 [
                     'label' => 'Community',

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AdminArticleController extends Controller
@@ -15,7 +16,8 @@ class AdminArticleController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Article::query();
+        $query = $this->visibleArticles();
+        $user = $request->user();
 
         // Status tab filter
         $tab = $request->query('tab', 'all');
@@ -40,21 +42,23 @@ class AdminArticleController extends Controller
 
         $articles = $query->orderByDesc('id')->paginate(10)->withQueryString();
 
-        $totalArticles  = Article::count();
-        $publishedCount = Article::where('status', 'published')->count();
-        $draftCount     = Article::where('status', 'draft')->count();
-        $totalViews     = Article::sum('views');
+        $visible = $this->visibleArticles();
+
+        $totalArticles = (clone $visible)->count();
+        $publishedCount = (clone $visible)->where('status', 'published')->count();
+        $draftCount = (clone $visible)->where('status', 'draft')->count();
+        $totalViews = (clone $visible)->sum('views');
 
         return view('admin.articles.index', [
-            'articles'       => $articles,
-            'currentTab'     => $tab,
-            'totalArticles'  => number_format($totalArticles),
+            'articles' => $articles,
+            'currentTab' => $tab,
+            'totalArticles' => number_format($totalArticles),
             'publishedCount' => number_format($publishedCount),
-            'draftCount'     => number_format($draftCount),
-            'totalViews'     => $totalViews >= 1000
+            'draftCount' => number_format($draftCount),
+            'totalViews' => $totalViews >= 1000
                 ? number_format($totalViews / 1000, 1).'K'
                 : number_format($totalViews),
-            'search'         => $request->query('search', ''),
+            'search' => $request->query('search', ''),
         ]);
     }
 
@@ -63,6 +67,8 @@ class AdminArticleController extends Controller
      */
     public function create(): View
     {
+        $this->authorizeCreate();
+
         return view('admin.articles.create');
     }
 
@@ -71,20 +77,22 @@ class AdminArticleController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $this->authorizeCreate();
+
         $validated = $request->validate([
-            'title'            => ['required', 'string', 'max:255'],
-            'slug'             => ['nullable', 'string', 'max:255', 'unique:articles,slug'],
-            'excerpt'          => ['nullable', 'string', 'max:500'],
-            'content'          => ['nullable', 'string'],
-            'category'         => ['required', 'string', 'max:100'],
-            'tags'             => ['nullable', 'string'],
-            'author_name'      => ['nullable', 'string', 'max:255'],
-            'author_role'      => ['nullable', 'string', 'max:255'],
-            'author_avatar'    => ['nullable', 'url', 'max:500'],
-            'image'            => ['nullable', 'url', 'max:500'],
-            'image_file'       => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'status'           => ['required', 'in:published,draft,archived'],
-            'read_time'        => ['nullable', 'string', 'max:50'],
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:articles,slug'],
+            'excerpt' => ['nullable', 'string', 'max:500'],
+            'content' => ['nullable', 'string'],
+            'category' => ['required', 'string', 'max:100'],
+            'tags' => ['nullable', 'string'],
+            'author_name' => ['nullable', 'string', 'max:255'],
+            'author_role' => ['nullable', 'string', 'max:255'],
+            'author_avatar' => ['nullable', 'url', 'max:500'],
+            'image' => ['nullable', 'url', 'max:500'],
+            'image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'status' => ['required', 'in:published,draft,archived'],
+            'read_time' => ['nullable', 'string', 'max:50'],
             'meta_description' => ['nullable', 'string', 'max:500'],
         ]);
 
@@ -100,21 +108,24 @@ class AdminArticleController extends Controller
             $imageUrl = $validated['image'] ?? null;
         }
 
+        $user = $request->user();
+
         $article = Article::create([
-            'title'         => $validated['title'],
-            'slug'          => $validated['slug'] ?? null,
-            'excerpt'       => $validated['excerpt'] ?? null,
-            'content'       => $validated['content'] ?? null,
-            'category'      => $validated['category'],
-            'tags'          => $tagsArray,
-            'author_name'   => $validated['author_name'] ?? 'Admin IndoTech',
-            'author_role'   => $validated['author_role'] ?? null,
+            'title' => $validated['title'],
+            'slug' => $validated['slug'] ?? null,
+            'excerpt' => $validated['excerpt'] ?? null,
+            'content' => $validated['content'] ?? null,
+            'category' => $validated['category'],
+            'tags' => $tagsArray,
+            'author_name' => $validated['author_name'] ?? ($user ? $user->name : 'Admin IndoTech'),
+            'author_role' => $validated['author_role'] ?? ($user ? $user->role : null),
             'author_avatar' => $validated['author_avatar'] ?? null,
-            'image'         => $imageUrl,
-            'status'        => $validated['status'],
-            'read_time'     => $validated['read_time'] ?? null,
+            'image' => $imageUrl,
+            'status' => $validated['status'],
+            'read_time' => $validated['read_time'] ?? null,
+            'user_id' => $user ? $user->id : null,
         ]);
-        
+
         return redirect()->route('admin.articles.index')
             ->with('success', "Artikel \"{$article->title}\" berhasil disimpan ke database!");
     }
@@ -124,7 +135,7 @@ class AdminArticleController extends Controller
      */
     public function edit(int $id): View
     {
-        $article = Article::findOrFail($id);
+        $article = $this->findVisibleArticle($id);
 
         return view('admin.articles.edit', compact('article'));
     }
@@ -134,22 +145,22 @@ class AdminArticleController extends Controller
      */
     public function update(Request $request, int $id): RedirectResponse
     {
-        $article = Article::findOrFail($id);
+        $article = $this->findVisibleArticle($id);
 
         $validated = $request->validate([
-            'title'            => ['required', 'string', 'max:255'],
-            'slug'             => ['nullable', 'string', 'max:255', "unique:articles,slug,{$id}"],
-            'excerpt'          => ['nullable', 'string', 'max:500'],
-            'content'          => ['nullable', 'string'],
-            'category'         => ['required', 'string', 'max:100'],
-            'tags'             => ['nullable', 'string'],
-            'author_name'      => ['nullable', 'string', 'max:255'],
-            'author_role'      => ['nullable', 'string', 'max:255'],
-            'author_avatar'    => ['nullable', 'url', 'max:500'],
-            'image'            => ['nullable', 'url', 'max:500'],
-            'image_file'       => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
-            'status'           => ['required', 'in:published,draft,archived'],
-            'read_time'        => ['nullable', 'string', 'max:50'],
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', "unique:articles,slug,{$id}"],
+            'excerpt' => ['nullable', 'string', 'max:500'],
+            'content' => ['nullable', 'string'],
+            'category' => ['required', 'string', 'max:100'],
+            'tags' => ['nullable', 'string'],
+            'author_name' => ['nullable', 'string', 'max:255'],
+            'author_role' => ['nullable', 'string', 'max:255'],
+            'author_avatar' => ['nullable', 'url', 'max:500'],
+            'image' => ['nullable', 'url', 'max:500'],
+            'image_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'status' => ['required', 'in:published,draft,archived'],
+            'read_time' => ['nullable', 'string', 'max:50'],
             'meta_description' => ['nullable', 'string', 'max:500'],
         ]);
 
@@ -166,20 +177,20 @@ class AdminArticleController extends Controller
         }
 
         $article->update([
-            'title'         => $validated['title'],
-            'slug'          => ! empty($validated['slug']) ? $validated['slug'] : $article->slug,
-            'excerpt'       => $validated['excerpt'] ?? null,
-            'content'       => $validated['content'] ?? null,
-            'category'      => $validated['category'],
-            'tags'          => $tagsArray,
-            'author_name'   => $validated['author_name'] ?? $article->author_name,
-            'author_role'   => $validated['author_role'] ?? null,
+            'title' => $validated['title'],
+            'slug' => ! empty($validated['slug']) ? $validated['slug'] : $article->slug,
+            'excerpt' => $validated['excerpt'] ?? null,
+            'content' => $validated['content'] ?? null,
+            'category' => $validated['category'],
+            'tags' => $tagsArray,
+            'author_name' => $validated['author_name'] ?? $article->author_name,
+            'author_role' => $validated['author_role'] ?? null,
             'author_avatar' => $validated['author_avatar'] ?? null,
-            'image'         => $imageUrl,
-            'status'        => $validated['status'],
-            'read_time'     => $validated['read_time'] ?? null,
+            'image' => $imageUrl,
+            'status' => $validated['status'],
+            'read_time' => $validated['read_time'] ?? null,
         ]);
-        
+
         return redirect()->route('admin.articles.index')
             ->with('success', "Artikel \"{$article->title}\" berhasil diperbarui di database.");
     }
@@ -189,11 +200,44 @@ class AdminArticleController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        $article = Article::findOrFail($id);
-        $title   = $article->title;
+        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+
+        $article = $this->findVisibleArticle($id);
+        $title = $article->title;
         $article->delete();
 
         return redirect()->route('admin.articles.index')
             ->with('success', "Artikel \"{$title}\" berhasil dihapus dari database.");
+    }
+
+    /**
+     * Query articles yang boleh dilihat user: super_admin semua, role school hanya miliknya.
+     */
+    private function visibleArticles()
+    {
+        $user = auth()->user();
+
+        if ($user && $user->role === 'school') {
+            return Article::where('user_id', $user->id);
+        }
+
+        return Article::query();
+    }
+
+    /**
+     * Ambil artikel dengan proteksi kepemilikan (404 kalau bukan miliknya).
+     */
+    private function findVisibleArticle(int $id): Article
+    {
+        return $this->visibleArticles()->findOrFail($id);
+    }
+
+    private function authorizeCreate(): void
+    {
+        $user = auth()->user();
+
+        if (in_array($user->role, ['school', 'university', 'company'], true)) {
+            abort(403, 'Akses ditolak. Akun institusi tidak dapat menambah data baru.');
+        }
     }
 }

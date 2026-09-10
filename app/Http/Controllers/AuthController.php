@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\School;
 use App\Models\University;
 use App\Models\User;
+use App\Notifications\InstitutionVerificationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,7 @@ class AuthController extends Controller
         $institutionRoles = ['school', 'university', 'company'];
 
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:users,name'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'in:user,school,university,company'],
@@ -38,7 +39,7 @@ class AuthController extends Controller
 
         if (in_array($role, $institutionRoles, true)) {
             $rules['org_contact'] = ['required', 'string', 'max:255'];
-            $rules['org_phone'] = ['required', 'string', 'max:30'];
+            $rules['org_phone'] = ['required', 'string', 'max:30', 'unique:users,org_phone'];
             $rules['org_address'] = ['required', 'string'];
             $rules['org_doc'] = ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'];
         }
@@ -96,14 +97,34 @@ class AuthController extends Controller
             ]);
         }
 
+        // Notify super admin to verify the institution account
+        $notifyTo = User::where('email', User::ADMIN_EMAIL)->first();
+        if ($notifyTo) {
+            $notifyTo->notify(new InstitutionVerificationNotification($user));
+        }
+
         if ($status === 'active') {
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect()->intended('/');
+            return redirect($this->redirectFor($user));
         }
 
-        return back()->with('status', 'Pendaftaran berhasil. Akun menunggu verifikasi super admin sebelum bisa login.');
+        // Jangan login user pending - arahkan ke halaman sukses registrasi
+        return redirect()->route('register.success')->with('user_id', $user->id);
+
+    }
+
+    public function registerSuccess(Request $request): View
+    {
+        $userId = $request->session()->get('user_id');
+        $user = null;
+
+        if ($userId) {
+            $user = User::find($userId);
+        }
+
+        return view('auth.register-success', ['user' => $user]);
     }
 
     public function login(Request $request): RedirectResponse
@@ -121,7 +142,6 @@ class AuthController extends Controller
 
         if ($user->status === 'pending') {
             Auth::logout();
-            $request->session()->invalidate();
             $request->session()->regenerateToken();
 
             return back()->withErrors(['email' => 'Akun masih menunggu verifikasi super admin.'])->withInput();
@@ -129,7 +149,6 @@ class AuthController extends Controller
 
         if ($user->status === 'rejected') {
             Auth::logout();
-            $request->session()->invalidate();
             $request->session()->regenerateToken();
 
             return back()->withErrors(['email' => 'Pendaftaran ditolak. Hubungi admin untuk informasi.'])->withInput();
@@ -156,6 +175,7 @@ class AuthController extends Controller
             'school' => '/dashboard/school',
             'university' => '/dashboard/university',
             'company' => '/dashboard/company',
+            'user' => '/dashboard/user',
             default => '/',
         };
     }

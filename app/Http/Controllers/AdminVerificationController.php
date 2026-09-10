@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\AccountApprovedNotification;
+use App\Notifications\AccountRejectedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -77,7 +79,10 @@ class AdminVerificationController extends Controller
      */
     public function approve(User $user): RedirectResponse
     {
-        $user->update(['status' => 'active']);
+        $user->status = 'active';
+        $user->save();
+
+        $user->notify(new AccountApprovedNotification);
 
         return back()->with('success', "Akun \"{$user->name}\" berhasil disetujui (Active).");
     }
@@ -87,7 +92,10 @@ class AdminVerificationController extends Controller
      */
     public function reject(User $user): RedirectResponse
     {
-        $user->update(['status' => 'rejected']);
+        $user->status = 'rejected';
+        $user->save();
+
+        $user->notify(new AccountRejectedNotification);
 
         return back()->with('success', "Akun \"{$user->name}\" telah ditolak (Rejected).");
     }

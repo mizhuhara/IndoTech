@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
 use Tests\TestCase;
 
 class AdminUserTest extends TestCase
@@ -37,8 +38,10 @@ class AdminUserTest extends TestCase
             'name' => 'Budi Santoso',
             'email' => 'budi.santoso@example.com',
             'password' => 'secret123',
-            'role' => 'school_admin',
+            'password_confirmation' => 'secret123',
+            'role' => 'school',
             'status' => 'active',
+            '_token' => Session::token(),
         ];
 
         $response = $this->actingAs($this->admin)->post(route('admin.users.store'), $userData);
@@ -47,7 +50,7 @@ class AdminUserTest extends TestCase
         $response->assertSessionHas('success');
         $this->assertDatabaseHas('users', [
             'email' => 'budi.santoso@example.com',
-            'role' => 'school_admin',
+            'role' => 'school',
         ]);
     }
 
@@ -63,9 +66,11 @@ class AdminUserTest extends TestCase
         $updateData = [
             'name' => 'New Name',
             'email' => 'new.email@example.com',
-            'password' => '',
-            'role' => 'company_hr',
+            'password' => 'newpassword123',
+            'password_confirmation' => 'newpassword123',
+            'role' => 'company',
             'status' => 'active',
+            '_token' => Session::token(),
         ];
 
         $response = $this->actingAs($this->admin)->put(route('admin.users.update', $user->id), $updateData);
@@ -76,7 +81,7 @@ class AdminUserTest extends TestCase
             'id' => $user->id,
             'name' => 'New Name',
             'email' => 'new.email@example.com',
-            'role' => 'company_hr',
+            'role' => 'company',
             'status' => 'active',
         ]);
     }
@@ -88,7 +93,9 @@ class AdminUserTest extends TestCase
             'email' => 'delete.me@example.com',
         ]);
 
-        $response = $this->actingAs($this->admin)->delete(route('admin.users.destroy', $user->id));
+        $response = $this->actingAs($this->admin)->delete(route('admin.users.destroy', $user->id), [
+            '_token' => Session::token(),
+        ]);
 
         $response->assertRedirect(route('admin.users.index'));
         $response->assertSessionHas('success');
