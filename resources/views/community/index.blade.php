@@ -56,7 +56,7 @@
 <div class="cmty-page-wrap">
     <div class="cmty-layout">
 
-        {{-- ========== LEFT MAIN COLUMN ========== --}}
+        {{-- ========== MAIN COLUMN (FULL WIDTH) ========== --}}
         <div class="cmty-main-col">
 
             {{-- Komunitas Populer & Unggulan --}}
@@ -66,12 +66,12 @@
                         <h2 class="cmty-section-title">Komunitas Populer &amp; Unggulan</h2>
                         <p class="cmty-section-sub">Bergabunglah dengan grup aktif yang diverifikasi oleh tim IndoTech.</p>
                     </div>
-                    <a href="#" class="cmty-section-link">
-                        Lihat Diskusi
-                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    <button type="button" class="cmty-add-community-btn" id="cmty-add-community-btn" aria-label="Tambah Komunitas">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                         </svg>
-                    </a>
+                        Tambah Komunitas
+                    </button>
                 </div>
 
                 @if($communities->count() > 0)
@@ -181,6 +181,13 @@
                         </svg>
                         <p>Tidak ada komunitas ditemukan.</p>
                         <a href="{{ route('community.index') }}">Reset Filter</a>
+                    </div>
+                @endif
+
+                {{-- Pagination --}}
+                @if($communities->hasPages())
+                    <div class="cmty-pagination">
+                        {{ $communities->links('vendor.pagination.tailwind') }}
                     </div>
                 @endif
             </div>
@@ -296,114 +303,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- ========== RIGHT SIDEBAR ========== --}}
-        <aside class="cmty-sidebar">
-
-            {{-- Meetup Mendatang --}}
-            <div class="cmty-sidebar-box">
-                <div class="cmty-sidebar-box-header">
-                    <h3 class="cmty-sidebar-title">Meetup Mendatang</h3>
-                    <a href="#" class="cmty-sidebar-link">Semua</a>
-                </div>
-
-                @php
-                    $meetups = [
-                        [
-                            'date_day' => '13',
-                            'date_month' => 'Sep',
-                            'time' => '13 Sep, 18:00 - 19:00 WIB',
-                            'title' => 'Tech Talk: Skalabilitas Cloud Native dengan Kubernetes &amp; ...',
-                            'location' => 'DevFest Nusantara • Live via Zoom &amp; YouTube',
-                            'attendees' => 400,
-                            'color' => '#2563eb',
-                        ],
-                        [
-                            'date_day' => '23',
-                            'date_month' => 'Nov',
-                            'time' => '23 Nov 2025',
-                            'title' => 'UI/UX Jam Session: Design System 2026 at...',
-                            'location' => 'Gedung Jakarta • Digital Valley',
-                            'attendees' => null,
-                            'color' => '#7c3aed',
-                        ],
-                    ];
-                @endphp
-
-                @foreach($meetups as $i => $meetup)
-                    <div class="cmty-meetup-item {{ $i === 0 ? 'cmty-meetup-featured' : '' }}">
-                        <div class="cmty-meetup-date-badge" style="background: {{ $i === 0 ? '#eff6ff' : '#f5f3ff' }}; color: {{ $meetup['color'] }}">
-                            <span class="cmty-meetup-day">{{ $meetup['date_day'] }}</span>
-                            <span class="cmty-meetup-month">{{ $meetup['date_month'] }}</span>
-                        </div>
-                        <div class="cmty-meetup-info">
-                            <span class="cmty-meetup-time" style="color: {{ $meetup['color'] }}">{{ $meetup['time'] }}</span>
-                            <p class="cmty-meetup-title">{!! $meetup['title'] !!}</p>
-                            <p class="cmty-meetup-location">{{ $meetup['location'] }}</p>
-                            @if($meetup['attendees'])
-                                <div class="cmty-meetup-attendees">
-                                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    </svg>
-                                    {{ $meetup['attendees'] }}+ orang terdaftar
-                                </div>
-                            @endif
-                        </div>
-                        @if($i === 0)
-                            <div class="cmty-meetup-cta">
-                                <a href="#" class="cmty-meetup-register-btn">Daftar Meetup</a>
-                            </div>
-                        @endif
-                    </div>
-                @endforeach
-            </div>
-
-            {{-- Punya Komunitas Tech? --}}
-            <div class="cmty-sidebar-box cmty-cta-dark-box">
-                <div class="cmty-cta-dark-icon">
-                    <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
-                </div>
-                <h3 class="cmty-cta-dark-title">Punya Komunitas Tech?</h3>
-                <p class="cmty-cta-dark-desc">Daftarkan komunitasmu dan ekspansi jangkauan bersama komunitas pengembang Indonesia.</p>
-                <a href="mailto:community@indotech.id" class="cmty-cta-dark-link">
-                    Pelajari Panduan Pembuatan
-                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
-            </div>
-
-            {{-- Top Kontributor --}}
-            <div class="cmty-sidebar-box">
-                <div class="cmty-sidebar-box-header">
-                    <h3 class="cmty-sidebar-title">Top Kontributor</h3>
-                    <a href="#" class="cmty-sidebar-link">Bulan ini</a>
-                </div>
-                @php
-                    $contributors = [
-                        ['rank' => 1, 'name' => 'Hendra Praboro', 'subtitle' => '14 anggota Terdaftar', 'posts' => '1.400 Pts', 'avatar_color' => '#2563eb', 'initials' => 'HP'],
-                        ['rank' => 2, 'name' => 'Dewi Safitri', 'subtitle' => '7 anggota Bergabung', 'posts' => '1.150 Pts', 'avatar_color' => '#10b981', 'initials' => 'DS'],
-                        ['rank' => 3, 'name' => 'Farhan Ramadan', 'subtitle' => '15 anggota Sementara', 'posts' => '890 Pts', 'avatar_color' => '#f59e0b', 'initials' => 'FR'],
-                    ];
-                    $rankColors = ['#f59e0b', '#94a3b8', '#cd7c3f'];
-                @endphp
-                @foreach($contributors as $contrib)
-                    <div class="cmty-contributor-item">
-                        <span class="cmty-contrib-rank" style="color: {{ $rankColors[$contrib['rank'] - 1] }}">{{ $contrib['rank'] }}</span>
-                        <div class="cmty-contrib-avatar" style="background: {{ $contrib['avatar_color'] }}">{{ $contrib['initials'] }}</div>
-                        <div class="cmty-contrib-info">
-                            <span class="cmty-contrib-name">{{ $contrib['name'] }}</span>
-                            <span class="cmty-contrib-sub">{{ $contrib['subtitle'] }}</span>
-                        </div>
-                        <span class="cmty-contrib-pts">{{ $contrib['posts'] }}</span>
-                    </div>
-                @endforeach
-                <p class="cmty-contrib-note">Poin dihitung dari replies dan nilai wiralaba</p>
-            </div>
-
-        </aside>
     </div>
 </div>
 
@@ -558,13 +457,6 @@
 .cmty-layout {
     max-width: 1200px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 28px;
-    align-items: start;
-}
-@media (max-width: 1024px) {
-    .cmty-layout { grid-template-columns: 1fr; }
 }
 
 /* ----- SECTION WRAPPER ----- */
@@ -577,7 +469,7 @@
 }
 .cmty-section-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 24px;
@@ -604,9 +496,36 @@
     white-space: nowrap;
     transition: color 0.15s;
     flex-shrink: 0;
-    margin-top: 2px;
 }
 .cmty-section-link:hover { color: #1d4ed8; }
+
+/* Add Community Button */
+.cmty-add-community-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2563eb;
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.cmty-add-community-btn:hover {
+    background: #dbeafe;
+    border-color: #93c5fd;
+    color: #1d4ed8;
+    transform: translateY(-1px);
+}
+.cmty-add-community-btn:active {
+    transform: translateY(0);
+}
+.cmty-add-community-btn svg { flex-shrink: 0; }
 
 /* ----- COMMUNITY CARDS GRID ----- */
 .cmty-cards-grid {
@@ -976,6 +895,60 @@
     color: #2563eb;
 }
 
+/* ----- PAGINATION ----- */
+.cmty-pagination {
+    display: flex;
+    justify-content: center;
+    padding: 32px 0 12px;
+}
+.cmty-pagination :where(nav, .flex) {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.cmty-pagination a.inline-flex,
+.cmty-pagination span.inline-flex {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0 10px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+.cmty-pagination [aria-current="page"] {
+    color: #ffffff;
+    background: linear-gradient(135deg, #2563eb, #6366f1);
+    border-color: #2563eb;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, .25);
+}
+.cmty-pagination a.inline-flex:hover {
+    border-color: #bfdbfe;
+    color: #2563eb;
+}
+.cmty-pagination span[aria-disabled="true"] span,
+.cmty-pagination span.cursor-not-allowed {
+    color: #94a3b8;
+    background: #f8fafc;
+    cursor: default;
+}
+.cmty-pagination p.text-sm {
+    font-size: 12.5px;
+    color: #94a3b8;
+}
+.cmty-pagination p.text-sm span.font-medium {
+    color: #0f172a;
+}
+
 /* ----- SIDEBAR ----- */
 .cmty-sidebar { display: flex; flex-direction: column; gap: 20px; }
 .cmty-sidebar-box {
@@ -1216,6 +1189,11 @@ function switchTab(el, tab) {
 document.getElementById('load-more-btn')?.addEventListener('click', function () {
     this.textContent = 'Memuat...';
     setTimeout(() => { this.textContent = 'Muat Lebih Banyak Diskusi'; }, 1200);
+});
+
+// Add Community button — static placeholder for now
+document.getElementById('cmty-add-community-btn')?.addEventListener('click', function () {
+    alert('Fitur Tambah Komunitas sedang dalam pengembangan. Silakan hubungi tim IndoTech.');
 });
 </script>
 
