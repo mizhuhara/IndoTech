@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -11,6 +12,23 @@ class Article extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    protected $fillable = [
+        'title',
+        'slug',
+        'excerpt',
+        'content',
+        'category',
+        'tags',
+        'author_name',
+        'author_role',
+        'author_avatar',
+        'image',
+        'status',
+        'read_time',
+        'meta_description',
+        'user_id',
+    ];
 
     protected $casts = [
         'tags' => 'array',
@@ -58,9 +76,6 @@ class Article extends Model
         return $slug;
     }
 
-    /**
-     * @return string
-     */
     public function getFormattedDateAttribute(): string
     {
         $date = $this->published_at ?? $this->created_at;
@@ -71,11 +86,19 @@ class Article extends Model
     /**
      * Scope to only published articles.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopePublished($query)
     {
         return $query->where('status', 'published');
+    }
+
+    /**
+     * Get the user (owner) that owns the article.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

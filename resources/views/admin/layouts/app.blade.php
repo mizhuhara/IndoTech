@@ -79,6 +79,7 @@
 @include('admin.assets.delete-modal')
 @include('admin.assets.show-modal')
 @include('admin.assets.update-modal')
+@include('admin.assets.verification-pending-modal')
 
 @stack('scripts')
 </body>

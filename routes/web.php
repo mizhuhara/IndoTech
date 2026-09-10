@@ -159,6 +159,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+Route::get('/register/success/{user_id?}', [AuthController::class, 'registerSuccess'])->name('register.success');
 
 // Knowledge Hub Routes
 Route::get('/knowledge-hub', [KnowledgeController::class, 'index'])->name('knowledge.index');

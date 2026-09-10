@@ -111,9 +111,28 @@
                 <span>Akun institusi butuh verifikasi. Setelah daftar, super admin periksa dokumen lalu <b>approve</b> — baru akun bisa login.</span>
             </div>
 
-            <form action="{{ url('/register') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-5">
+            <form id="register-form" action="{{ url('/register') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-5">
                 @csrf
-                <input type="hidden" name="role" id="input-role" value="">
+                <input type="hidden" name="role" id="input-role" value="{{ old('role') }}">
+                
+                {{-- Error Alert --}}
+                <div id="error-alert" class="hidden p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-800">
+                    <div class="font-semibold mb-2">❌ Pendaftaran gagal!</div>
+                    <ul id="error-list" class="space-y-1 list-disc pl-5">
+                        @if($errors->any())
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        @endif
+                    </ul>
+                </div>
+                @if($errors->any())
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.getElementById('error-alert').classList.remove('hidden');
+                        });
+                    </script>
+                @endif
 
                 {{-- Role chips --}}
                 <div>
@@ -134,7 +153,7 @@
                         <label for="org_contact" class="block text-[13.5px] font-semibold text-gray-900">Contact Person &nbsp;<span class="text-gray-400 font-normal">(nama penanggung jawab)</span></label>
                         <div class="relative mt-2">
                             <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>
-                            <input id="org_contact" name="org_contact" type="text" placeholder="Nama contact person"
+                            <input id="org_contact" name="org_contact" type="text" placeholder="Nama contact person" value="{{ old('org_contact') }}"
                                    class="w-full h-[46px] pl-11 pr-4 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
                         </div>
                     </div>
@@ -143,7 +162,7 @@
                         <label for="org_phone" class="block text-[13.5px] font-semibold text-gray-900">Nomor Telepon / WhatsApp</label>
                         <div class="relative mt-2">
                             <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
-                            <input id="org_phone" name="org_phone" type="text" placeholder="+62 ..."
+                            <input id="org_phone" name="org_phone" type="text" placeholder="+62 ..." value="{{ old('org_phone') }}"
                                    class="w-full h-[46px] pl-11 pr-4 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
                         </div>
                     </div>
@@ -153,7 +172,7 @@
                         <div class="relative mt-2">
                             <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
                             <textarea id="org_address" name="org_address" rows="2" placeholder="Alamat lengkap institusi"
-                                      class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"></textarea>
+                                      class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">{{ old('org_address') }}</textarea>
                         </div>
                     </div>
 
@@ -176,7 +195,7 @@
                     <label id="label-name" for="name" class="block text-[13.5px] font-semibold text-gray-900">Full Name</label>
                     <div class="relative mt-2">
                         <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/></svg>
-                        <input id="name" name="name" type="text" required placeholder="Enter your full name"
+                        <input id="name" name="name" type="text" required placeholder="Enter your full name" value="{{ old('name') }}"
                                class="w-full h-[46px] pl-11 pr-4 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
                     </div>
                 </div>
@@ -186,7 +205,7 @@
                     <label for="email" class="block text-[13.5px] font-semibold text-gray-900">Email Address</label>
                     <div class="relative mt-2">
                         <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="m4 7 8 6 8-6"/></svg>
-                        <input id="email" name="email" type="email" required placeholder="Enter your email"
+                        <input id="email" name="email" type="email" required placeholder="Enter your email" value="{{ old('email') }}"
                                class="w-full h-[46px] pl-11 pr-4 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
                     </div>
                 </div>
@@ -254,6 +273,49 @@
                     document.getElementById(id).required = isInst;
                 });
             }
+
+            // Check if we should show step-form (on page load after failed submission)
+            window.addEventListener('DOMContentLoaded', function() {
+                var inputRole = document.getElementById('input-role');
+                var nameInput = document.getElementById('name');
+                var emailInput = document.getElementById('email');
+                var errorAlert = document.getElementById('error-alert');
+                var hasErrors = !errorAlert.classList.contains('hidden');
+                
+                // Show step-form if:
+                // 1. Form has data filled in (failed validation), OR
+                // 2. Error alert is visible (validation errors from backend)
+                var shouldShowForm = (nameInput.value || emailInput.value || hasErrors) && inputRole.value;
+                
+                if (shouldShowForm) {
+                    selected = inputRole.value;
+                    applyRole(selected);
+                    
+                    // Update chips to reflect selected role
+                    document.querySelectorAll('.chip').forEach(function (c) {
+                        var on = c.dataset.rolechip === selected;
+                        c.classList.toggle('bg-blue-50', on);
+                        c.classList.toggle('border-blue-500', on);
+                        c.classList.toggle('text-blue-600', on);
+                        c.classList.toggle('bg-white', !on);
+                        c.classList.toggle('border-gray-200', !on);
+                        c.classList.toggle('text-gray-600', !on);
+                    });
+                    
+                    // Show step-form, hide step-role
+                    document.getElementById('step-role').classList.add('hidden');
+                    document.getElementById('step-form').classList.remove('hidden');
+                    document.body.classList.remove('bg-slate-50');
+                    document.body.classList.add('bg-white');
+                    
+                    // Scroll to error or form
+                    setTimeout(function() {
+                        if (hasErrors) {
+                            window.scrollTo(0, errorAlert.offsetTop - 100);
+                        }
+                    }, 100);
+                }
+            });
 
             // Step 1: select role card
             document.querySelectorAll('.role-card').forEach(function (card) {
@@ -328,7 +390,51 @@
             }
             agree.addEventListener('change', updateBtn);
             ['name', 'email', 'password', 'password_confirmation', 'org_contact', 'org_phone', 'org_address', 'org_doc'].forEach(function (id) {
-                document.getElementById(id).addEventListener('input', updateBtn);
+                var el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', updateBtn);
+                }
+            });
+
+            // Handle form submission with error handling
+            document.getElementById('register-form').addEventListener('submit', function(e) {
+                var errorAlert = document.getElementById('error-alert');
+                var errorList = document.getElementById('error-list');
+                
+                // Clear previous errors
+                errorList.innerHTML = '';
+                errorAlert.classList.add('hidden');
+                
+                // Check role is selected
+                if (!document.getElementById('input-role').value) {
+                    e.preventDefault();
+                    errorList.innerHTML = '<li>Pilih role terlebih dahulu</li>';
+                    errorAlert.classList.remove('hidden');
+                    return false;
+                }
+                
+                // Check institution fields if needed
+                var role = document.getElementById('input-role').value;
+                if (['school', 'university', 'company'].indexOf(role) !== -1) {
+                    var instFields = ['org_contact', 'org_phone', 'org_address', 'org_doc'];
+                    var hasError = false;
+                    
+                    instFields.forEach(function(id) {
+                        var el = document.getElementById(id);
+                        if (!el.value || (el.type === 'file' && !el.files.length)) {
+                            hasError = true;
+                            var label = el.previousElementSibling ? el.previousElementSibling.textContent.trim() : id;
+                            errorList.innerHTML += '<li>' + label + ' wajib diisi</li>';
+                        }
+                    });
+                    
+                    if (hasError) {
+                        e.preventDefault();
+                        errorAlert.classList.remove('hidden');
+                        window.scrollTo(0, document.getElementById('error-alert').offsetTop - 100);
+                        return false;
+                    }
+                }
             });
         })();
     </script>
