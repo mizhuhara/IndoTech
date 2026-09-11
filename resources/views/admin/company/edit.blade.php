@@ -366,11 +366,7 @@
                     @if(!empty($company['map_link']))
                         <div class="mt-4">
                             <label class="block text-[13px] font-semibold text-slate-700 mb-2">Pratinjau Peta</label>
-                            @if(str_contains($company['map_link'], '<iframe'))
-                                {!! $company['map_link'] !!}
-                            @else
-                                <iframe src="{{ $company['map_link'] }}" width="100%" height="300" style="border:0;" allowfullscreen loading="lazy"></iframe>
-                            @endif
+                            <iframe src="{{ $company['map_link'] }}" width="100%" height="300" style="border:0;" allowfullscreen loading="lazy"></iframe>
                         </div>
                     @endif
                 </div>

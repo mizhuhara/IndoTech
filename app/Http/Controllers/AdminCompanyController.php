@@ -6,6 +6,7 @@ use App\Models\Company;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AdminCompanyController extends Controller
@@ -97,7 +98,7 @@ class AdminCompanyController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'npsn' => ['nullable', 'string', 'max:50'],
+            'npsn' => ['nullable', 'string', 'max:50', 'unique:companies,npsn'],
             'type' => ['required', 'string'],
             'industry' => ['required', 'string', 'max:100'],
             'city' => ['nullable', 'string', 'max:100'],
@@ -231,7 +232,7 @@ class AdminCompanyController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'npsn' => ['nullable', 'string', 'max:50'],
+            'npsn' => ['nullable', 'string', 'max:50', Rule::unique('companies', 'npsn')->ignore($company->id)],
             'type' => ['required', 'string'],
             'industry' => ['required', 'string', 'max:100'],
             'city' => ['nullable', 'string', 'max:100'],
@@ -372,22 +373,21 @@ class AdminCompanyController extends Controller
         // If user pastes an <iframe> tag, extract src attribute
         if (str_contains($link, '<iframe')) {
             preg_match('/src="([^"]+)"/', $link, $matches);
-            if (! empty($matches[1])) {
-                return $matches[1];
-            }
+            $link = $matches[1] ?? $link;
         }
 
         // If Google Maps share link, convert query to embed format
         if (str_contains($link, 'maps.google.com') || str_contains($link, 'google.com/maps')) {
             if (! str_contains($link, 'output=embed') && ! str_contains($link, '/embed')) {
-                if (str_contains($link, '?')) {
-                    return $link.'&output=embed';
-                }
-
-                return $link.'?output=embed';
+                $link = str_contains($link, '?')
+                    ? $link.'&output=embed'
+                    : $link.'?output=embed';
             }
+
+            return $link;
         }
 
-        return $link;
+        // Hanya izinkan http/https, mencegah javascript: dkk.
+        return str_starts_with($link, 'http://') || str_starts_with($link, 'https://') ? $link : null;
     }
 }

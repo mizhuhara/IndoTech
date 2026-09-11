@@ -66,12 +66,12 @@ class AdminUserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:6'],
+            'password' => ['required', 'string', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
             'role' => ['required', 'string', 'max:50'],
             'status' => ['required', 'string', 'max:20'],
         ], [
             'email.unique' => 'Email ini sudah terdaftar di sistem.',
-            'password.min' => 'Password minimal harus 6 karakter.',
+            'password.min' => 'Password minimal harus 8 karakter.',
         ]);
 
         $user = User::create([
@@ -96,12 +96,12 @@ class AdminUserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
-            'password' => ['nullable', 'string', 'min:6'],
+            'password' => ['nullable', 'string', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
             'role' => ['required', 'string', 'max:50'],
             'status' => ['required', 'string', 'max:20'],
         ], [
             'email.unique' => 'Email ini sudah digunakan oleh user lain.',
-            'password.min' => 'Password minimal harus 6 karakter.',
+            'password.min' => 'Password minimal harus 8 karakter.',
         ]);
 
         $payload = [

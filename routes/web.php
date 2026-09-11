@@ -35,7 +35,7 @@ Route::get('/industry', [IndustryController::class, 'index'])->name('industry');
 
 Route::get('/career', [CareerController::class, 'index'])->name('career.index');
 Route::get('/career/{id}/apply', [CareerController::class, 'apply'])->name('career.apply');
-Route::post('/career/{id}/apply', [CareerController::class, 'storeApplication'])->name('career.apply.store');
+Route::post('/career/{id}/apply', [CareerController::class, 'storeApplication'])->name('career.apply.store')->middleware('throttle:10,1');
 
 Route::get('/events', [EventController::class, 'index'])->name('event.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('event.show');
@@ -49,7 +49,7 @@ Route::get('/event/{id}', function ($id) {
 Route::get('/community', [CommunityController::class, 'index'])->name('community.index');
 
 // Admin routes — semua butuh login + role admin
-Route::middleware('admin')->group(function () {
+Route::middleware(['admin', 'throttle:120,1'])->group(function () {
 
     // Admin Dashboard
     Route::get('/admin', [DashboardController::class, 'admin'])->name('admin.dashboard');
