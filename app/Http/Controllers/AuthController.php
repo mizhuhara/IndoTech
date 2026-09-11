@@ -171,12 +171,12 @@ class AuthController extends Controller
     private function redirectFor(User $user): string
     {
         return match ($user->role) {
-            'super_admin' => '/admin',
-            'school' => '/dashboard/school',
-            'university' => '/dashboard/university',
-            'company' => '/dashboard/company',
-            'user' => '/dashboard/user',
-            default => '/',
+            'super_admin' => route('admin.dashboard'),
+            'school' => route('dashboard.school'),
+            'university' => route('dashboard.university'),
+            'company' => route('dashboard.company'),
+            'user' => route('welcome'),
+            default => route('welcome'),
         };
     }
 }

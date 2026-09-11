@@ -37,7 +37,7 @@ class AuthTest extends TestCase
         $response->assertRedirect(route('welcome'));
     }
 
-    public function test_normal_user_login_redirects_to_user_dashboard(): void
+    public function test_normal_user_login_redirects_to_welcome_page(): void
     {
         $user = User::factory()->create([
             'email' => 'user@example.com',
@@ -52,10 +52,10 @@ class AuthTest extends TestCase
         ]);
 
         $this->assertAuthenticatedAs($user);
-        $response->assertRedirect('/dashboard/user');
+        $response->assertRedirect(route('welcome'));
     }
 
-    public function test_normal_user_accessing_dashboard_redirects_to_user_dashboard(): void
+    public function test_normal_user_accessing_dashboard_redirects_to_welcome_page(): void
     {
         $user = User::factory()->create([
             'role' => 'user',
@@ -64,7 +64,7 @@ class AuthTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('dashboard'));
 
-        $response->assertRedirect(route('dashboard.user'));
+        $response->assertRedirect(route('welcome'));
     }
 
     public function test_school_login_redirects_to_school_dashboard(): void
