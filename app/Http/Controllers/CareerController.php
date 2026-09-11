@@ -49,16 +49,14 @@ class CareerController extends Controller
                 });
             }
 
-            $jobs = $query->orderByDesc('id')->get();
-
             if ($request->filled('skills')) {
                 $skillFilters = (array) $request->query('skills');
-                $jobs = $jobs->filter(function ($job) use ($skillFilters) {
-                    $jobSkills = (array) ($job->skills ?? []);
-
-                    return count(array_intersect($jobSkills, $skillFilters)) > 0;
-                })->values();
+                foreach ($skillFilters as $skill) {
+                    $query->whereJsonContains('skills', $skill);
+                }
             }
+
+            $jobs = $query->orderByDesc('id')->get();
         }
 
         return view('career.index', [
