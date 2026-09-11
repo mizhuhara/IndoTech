@@ -372,22 +372,21 @@ class AdminCompanyController extends Controller
         // If user pastes an <iframe> tag, extract src attribute
         if (str_contains($link, '<iframe')) {
             preg_match('/src="([^"]+)"/', $link, $matches);
-            if (! empty($matches[1])) {
-                return $matches[1];
-            }
+            $link = $matches[1] ?? $link;
         }
 
         // If Google Maps share link, convert query to embed format
         if (str_contains($link, 'maps.google.com') || str_contains($link, 'google.com/maps')) {
             if (! str_contains($link, 'output=embed') && ! str_contains($link, '/embed')) {
-                if (str_contains($link, '?')) {
-                    return $link.'&output=embed';
-                }
-
-                return $link.'?output=embed';
+                $link = str_contains($link, '?')
+                    ? $link.'&output=embed'
+                    : $link.'?output=embed';
             }
+
+            return $link;
         }
 
-        return $link;
+        // Hanya izinkan http/https, mencegah javascript: dkk.
+        return str_starts_with($link, 'http://') || str_starts_with($link, 'https://') ? $link : null;
     }
 }
