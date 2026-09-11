@@ -6,6 +6,7 @@ use App\Models\Company;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AdminCompanyController extends Controller
@@ -97,7 +98,7 @@ class AdminCompanyController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'npsn' => ['nullable', 'string', 'max:50'],
+            'npsn' => ['nullable', 'string', 'max:50', 'unique:companies,npsn'],
             'type' => ['required', 'string'],
             'industry' => ['required', 'string', 'max:100'],
             'city' => ['nullable', 'string', 'max:100'],
@@ -231,7 +232,7 @@ class AdminCompanyController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'npsn' => ['nullable', 'string', 'max:50'],
+            'npsn' => ['nullable', 'string', 'max:50', Rule::unique('companies', 'npsn')->ignore($company->id)],
             'type' => ['required', 'string'],
             'industry' => ['required', 'string', 'max:100'],
             'city' => ['nullable', 'string', 'max:100'],
