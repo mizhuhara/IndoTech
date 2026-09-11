@@ -286,7 +286,7 @@ class DashboardController extends Controller
             'school' => 'dashboard.school',
             'university' => 'dashboard.university',
             'company' => 'dashboard.company',
-            'user' => 'dashboard.user',
+            'user' => 'welcome',
             default => 'welcome',
         };
 
