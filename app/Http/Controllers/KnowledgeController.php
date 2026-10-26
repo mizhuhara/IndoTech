@@ -28,10 +28,10 @@ class KnowledgeController extends Controller
             });
         }
 
-        $perPage     = 3;
+        $perPage = 3;
         $currentPage = max(1, (int) $request->query('page', 1));
-        $total       = $query->count();
-        $totalPages  = max(1, (int) ceil($total / $perPage));
+        $total = $query->count();
+        $totalPages = max(1, (int) ceil($total / $perPage));
         $currentPage = min($currentPage, $totalPages);
 
         $articles = $query->orderByDesc('published_at')
@@ -49,11 +49,11 @@ class KnowledgeController extends Controller
         ];
 
         return view('knowladge.index', [
-            'articles'       => $articles,
-            'categories'     => $categories,
+            'articles' => $articles,
+            'categories' => $categories,
             'activeCategory' => $category,
-            'currentPage'    => $currentPage,
-            'totalPages'     => $totalPages,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
         ]);
     }
 
@@ -115,20 +115,21 @@ class KnowledgeController extends Controller
 
     public function show($id)
     {
-        $article = Article::findOrFail($id);
+        $article = Article::published()->findOrFail($id);
+        $article->increment('views');
 
         $articleArray = $this->articleToArray($article);
 
         // Ensure rich content structure exists
         if (empty($article->content)) {
             $articleArray['content'] = [
-                'intro'          => $article->excerpt ?? '',
+                'intro' => $article->excerpt ?? '',
                 'section1_title' => 'Perkembangan & Inovasi',
-                'section1_body'  => 'Artikel ini belum memiliki konten lengkap.',
-                'bullets'        => [],
-                'callout'        => '',
+                'section1_body' => 'Artikel ini belum memiliki konten lengkap.',
+                'bullets' => [],
+                'callout' => '',
                 'section2_title' => '',
-                'section2_body'  => '',
+                'section2_body' => '',
             ];
         } else {
             $articleArray['content'] = $article->content;
@@ -143,7 +144,7 @@ class KnowledgeController extends Controller
             ->all();
 
         return view('knowladge.show', [
-            'article'        => $articleArray,
+            'article' => $articleArray,
             'relatedArticles' => $relatedArticles,
         ]);
     }
@@ -156,19 +157,19 @@ class KnowledgeController extends Controller
     private function articleToArray(Article $article): array
     {
         return [
-            'id'            => $article->id,
-            'title'         => $article->title,
-            'category'      => $article->category,
-            'category_tag'  => $article->category,
-            'excerpt'       => $article->excerpt ?? '',
-            'image'         => $article->image ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop',
-            'author_name'   => $article->author_name,
+            'id' => $article->id,
+            'title' => $article->title,
+            'category' => $article->category,
+            'category_tag' => $article->category,
+            'excerpt' => $article->excerpt ?? '',
+            'image' => $article->image ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop',
+            'author_name' => $article->author_name,
             'author_avatar' => $article->author_avatar ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
-            'author_role'   => $article->author_role ?? '',
-            'date'          => $article->formatted_date,
-            'read_time'     => $article->read_time ?? '5 min read',
-            'tags'          => $article->tags ?? [],
-            'content'       => $article->content ?? '',
+            'author_role' => $article->author_role ?? '',
+            'date' => $article->formatted_date,
+            'read_time' => $article->read_time ?? '5 min read',
+            'tags' => $article->tags ?? [],
+            'content' => $article->content ?? '',
         ];
     }
 

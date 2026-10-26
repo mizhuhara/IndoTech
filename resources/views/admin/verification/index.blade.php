@@ -438,7 +438,7 @@
             const docNameEl = document.getElementById('detail_doc_name');
             if (docNameEl) docNameEl.textContent = req.org_doc.split('/').pop();
             const docLinkEl = document.getElementById('detail_doc_link');
-            if (docLinkEl) docLinkEl.href = `{{ asset('storage') }}/${req.org_doc}`;
+            if (docLinkEl) docLinkEl.href = `{{ url('/admin/verification') }}/${req.id}/document`;
         } else {
             if (docContainer) docContainer.classList.add('hidden');
             if (noDocContainer) noDocContainer.classList.remove('hidden');

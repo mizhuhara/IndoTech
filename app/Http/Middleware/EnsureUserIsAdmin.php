@@ -24,16 +24,18 @@ class EnsureUserIsAdmin
         }
 
         $manageable = [
-            'school' => '/admin/schools',
-            'university' => '/admin/univ',
-            'company' => '/admin/company',
+            'school' => ['/admin/schools', '/admin/articles'],
+            'university' => ['/admin/univ'],
+            'company' => ['/admin/company'],
         ];
 
-        $path = (string) $request->path();
-        $prefix = $manageable[$user->role] ?? null;
+        $path = '/'.$request->path();
+        $prefixes = $manageable[$user->role] ?? [];
 
-        if ($prefix && str_starts_with('/'.$path, $prefix)) {
-            return $next($request);
+        foreach ($prefixes as $prefix) {
+            if (str_starts_with($path, $prefix)) {
+                return $next($request);
+            }
         }
 
         abort(403, 'Akses ditolak. Halaman ini khusus admin.');

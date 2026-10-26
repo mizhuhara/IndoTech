@@ -3,7 +3,7 @@
 @section('title', 'Add New Community — IndoTech')
 
 @section('content')
-<form method="POST" action="{{ route('admin.community.store') }}" class="space-y-6 max-w-7xl mx-auto">
+<form method="POST" action="{{ route('admin.community.store') }}" enctype="multipart/form-data" class="space-y-6 max-w-7xl mx-auto">
     @csrf
 
     {{-- Top Back Link & Breadcrumb --}}

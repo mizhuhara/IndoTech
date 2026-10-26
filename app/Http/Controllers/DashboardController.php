@@ -282,7 +282,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $route = match ($request->user()->role) {
-            'super_admin' => 'admin.dashboard',
+            'super_admin', 'admin' => 'admin.dashboard',
             'school' => 'dashboard.school',
             'university' => 'dashboard.university',
             'company' => 'dashboard.company',
@@ -374,7 +374,13 @@ class DashboardController extends Controller
                     'label' => 'Profil',
                     'value' => auth()->user()->name,
                     'action' => 'Lihat profil',
-                    'url' => '#',
+                    'url' => route('profile.edit'),
+                ],
+                [
+                    'label' => 'Lamaran Saya',
+                    'value' => 'Pantau status lamaran',
+                    'action' => 'Buka',
+                    'url' => route('applications.index'),
                 ],
                 [
                     'label' => 'Karir',

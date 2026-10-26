@@ -167,8 +167,8 @@
                                         @endfor
                                         <span class="cmty-avatar-more">{{ number_format($community['members'] / 1000, 0) }}k anggota</span>
                                     </div>
-                                    <a href="{{ $community['website'] }}" target="_blank" rel="noopener noreferrer" class="cmty-join-btn">
-                                        Gabung
+                                    <a href="{{ route('community.show', $community['id']) }}" class="cmty-join-btn">
+                                        Lihat
                                     </a>
                                 </div>
                             </div>

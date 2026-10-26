@@ -59,6 +59,6 @@
 
     <div class="cr-card-bottom">
         <span class="it-status"><span class="it-status-dot"></span> {{ $job['status'] }}</span>
-        <a href="{{ route('career.apply', $job['id']) }}" class="cr-apply" id="apply-btn-{{ $job['id'] }}">Apply Now</a>
+        <a href="{{ route('career.apply', ['type' => $job['apply_type'], 'id' => $job['id']]) }}" class="cr-apply" id="apply-btn-{{ $job['id'] }}">Apply Now</a>
     </div>
 </article>

@@ -43,6 +43,12 @@
         <h1 class="mt-8 text-center text-[28px] font-bold text-gray-900">Welcome Back</h1>
         <p class="mt-2 text-center text-[15px] text-gray-500">Please enter your details to sign in.</p>
 
+        @if (session('status'))
+            <div class="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+                {{ session('status') }}
+            </div>
+        @endif
+
         {{-- Form --}}
         <form action="{{ url('/login') }}" method="POST" class="mt-9 space-y-5">
             @csrf
@@ -65,7 +71,7 @@
             <div>
                 <div class="flex items-center justify-between">
                     <label for="password" class="block text-[13.5px] font-semibold text-gray-900">Password</label>
-                    <a href="#" class="text-[13px] font-medium text-blue-600 hover:text-blue-700">Forgot Password?</a>
+                    <a href="{{ route('password.request') }}" class="text-[13px] font-medium text-blue-600 hover:text-blue-700">Forgot Password?</a>
                 </div>
                 <div class="relative mt-2">
                     <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

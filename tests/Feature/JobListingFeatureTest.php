@@ -220,7 +220,7 @@ class JobListingFeatureTest extends TestCase
         $job = $this->createSampleJob();
         $initialApplicants = $job->applicants_count;
 
-        $response = $this->post(route('career.apply.store', $job->id), [
+        $response = $this->post(route('career.apply.store', ['type' => 'job', 'id' => $job->id]), [
             'full_name' => 'Budi Santoso',
             'email' => 'budi.santoso@example.com',
             'phone' => '081234567890',

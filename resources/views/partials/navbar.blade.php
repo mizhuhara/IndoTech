@@ -39,6 +39,7 @@
                                 @endif
                             </span>
                         </div>
+                        <a href="{{ route('profile.edit') }}" class="it-user-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21a8 8 0 0 1 16 0"/></svg> Profil Saya</a>
                         @if (in_array(Auth::user()->role, ['super_admin', 'school', 'university', 'company']))
                             <a href="{{ route('dashboard') }}" class="it-user-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Dashboard</a>
                         @endif
@@ -72,6 +73,7 @@
         <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">Knowledge Hub</a>
         <div class="it-mobile-btns">
             @auth
+                <a href="{{ route('profile.edit') }}" style="color:#2563eb;border:1.5px solid #2563eb;">Profil Saya</a>
                 @if (in_array(Auth::user()->role, ['super_admin', 'school', 'university', 'company']))
                     <a href="/admin" style="color:#fff;background:#2563eb;">Dashboard</a>
                 @endif

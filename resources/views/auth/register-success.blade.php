@@ -175,8 +175,9 @@
 
         <!-- Verification Info -->
         <div class="info-box">
-            <p>Proses verifikasi biasanya memakan waktu 1–3 hari kerja.</p>
+            <p>Proses verifikasi biasanya memakan waktu 1�?"3 hari kerja.</p>
             <p>Anda akan menerima notifikasi email ketika akun telah disetujui.</p>
+            <p>Setelah disetujui, kami akan mengirim tautan verifikasi alamat email. Buka tautan itu sebelum login.</p>
         </div>
 
         <!-- Email -->
@@ -207,7 +208,7 @@
         <!-- Success Message -->
         <div class="info-box">
             <p>Akun Anda sudah aktif dan siap dipakai.</p>
-            <p>Anda dapat langsung login ke platform.</p>
+            <p>Kami sudah mengirim tautan verifikasi email. Buka tautan itu sebelum login.</p>
         </div>
 
         <!-- Email -->
