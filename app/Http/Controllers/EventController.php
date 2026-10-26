@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class EventController extends Controller
@@ -79,7 +81,7 @@ class EventController extends Controller
     /**
      * Display a single event's details (only if approved/verified).
      */
-    public function show(int $id): View
+    public function show(Request $request, int $id): View
     {
         $event = Event::where('status', 'Approved')
             ->where('is_verified', true)
@@ -87,8 +89,57 @@ class EventController extends Controller
 
         $event->loadLearningAndSpeakers();
 
+        $registeredCount = $event->registrations()->count();
+        $isRegistered = $request->user()
+            && $event->registrations()->where('user_id', $request->user()->id)->exists();
+        $isFull = $event->total_quota > 0 && $registeredCount >= $event->total_quota;
+
         return view('event.show', [
             'event' => $event,
+            'registeredCount' => $registeredCount,
+            'isRegistered' => $isRegistered,
+            'isFull' => $isFull,
         ]);
+    }
+
+    public function register(Request $request, Event $event): RedirectResponse
+    {
+        if ($event->status !== 'Approved' || ! $event->is_verified) {
+            abort(404);
+        }
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:30'],
+        ]);
+
+        $result = DB::transaction(function () use ($event, $request, $validated) {
+            $lockedEvent = Event::whereKey($event->id)->lockForUpdate()->firstOrFail();
+
+            if ($lockedEvent->registrations()->where('user_id', $request->user()->id)->exists()) {
+                return 'duplicate';
+            }
+
+            if ($lockedEvent->total_quota > 0
+                && $lockedEvent->registrations()->count() >= $lockedEvent->total_quota) {
+                return 'full';
+            }
+
+            $lockedEvent->registrations()->create([
+                'user_id' => $request->user()->id,
+                ...$validated,
+            ]);
+
+            return 'registered';
+        });
+
+        if ($result === 'registered') {
+            return back()->with('success', "Pendaftaran event \"{$event->title}\" berhasil.");
+        }
+
+        return back()->with('error', $result === 'duplicate'
+            ? 'Anda sudah terdaftar di event ini.'
+            : 'Kuota event sudah penuh.');
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminCompanyController;
 use App\Http\Controllers\AdminEventController;
 use App\Http\Controllers\AdminInternshipController;
 use App\Http\Controllers\AdminJobController;
+use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AdminSchoolController;
 use App\Http\Controllers\AdminUnivController;
 use App\Http\Controllers\AdminUserController;
@@ -45,6 +46,9 @@ Route::post('/career/{type}/{id}/apply', [CareerController::class, 'storeApplica
 
 Route::get('/events', [EventController::class, 'index'])->name('event.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('event.show');
+Route::post('/events/{event}/register', [EventController::class, 'register'])
+    ->middleware(['auth', 'throttle:10,1'])
+    ->name('event.register');
 Route::get('/event', function () {
     return redirect()->route('event.index');
 });
@@ -141,10 +145,9 @@ Route::middleware(['admin', 'throttle:120,1'])->group(function () {
     Route::delete('/admin/events/{id}', [AdminEventController::class, 'destroy'])->name('admin.events.destroy');
 
     // Admin Reports
-    Route::view('/admin/reports', 'admin.reports.index')->name('admin.reports.index');
-    Route::get('/admin/reports/{id}', function ($id) {
-        return view('admin.reports.show', compact('id'));
-    })->name('admin.reports.show');
+    Route::get('/admin/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
+    Route::get('/admin/reports/{type}/export', [AdminReportController::class, 'export'])->name('admin.reports.export');
+    Route::get('/admin/reports/{type}', [AdminReportController::class, 'show'])->name('admin.reports.show');
 
     // Admin Articles
     Route::get('/admin/articles', [AdminArticleController::class, 'index'])->name('admin.articles.index');

@@ -65,7 +65,9 @@ class AdminEventController extends Controller
                 ->with('error', 'Event tidak ditemukan.');
         }
 
-        return view('admin.events.show', compact('event'));
+        $registrations = $event->registrations()->with('user')->latest()->get();
+
+        return view('admin.events.show', compact('event', 'registrations'));
     }
 
     /**

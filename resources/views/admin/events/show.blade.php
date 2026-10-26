@@ -144,6 +144,43 @@
                 </div>
             </div>
 
+            {{-- Registered Participants --}}
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+                        Peserta Terdaftar
+                    </h3>
+                    <span class="text-xs font-bold text-slate-500">{{ $registrations->count() }} peserta</span>
+                </div>
+
+                <div class="overflow-x-auto rounded-2xl border border-slate-200/90">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 text-slate-500 uppercase">
+                            <tr>
+                                <th class="px-4 py-3 font-extrabold">Nama</th>
+                                <th class="px-4 py-3 font-extrabold">Email</th>
+                                <th class="px-4 py-3 font-extrabold">Telepon</th>
+                                <th class="px-4 py-3 font-extrabold">Terdaftar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @forelse ($registrations as $registration)
+                                <tr>
+                                    <td class="px-4 py-3 font-semibold text-slate-800">{{ $registration->name }}</td>
+                                    <td class="px-4 py-3 text-slate-600">{{ $registration->email }}</td>
+                                    <td class="px-4 py-3 text-slate-600">{{ $registration->phone ?: '-' }}</td>
+                                    <td class="px-4 py-3 text-slate-600">{{ $registration->created_at->format('d M Y H:i') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="px-4 py-8 text-center text-slate-500">Belum ada peserta terdaftar.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
 
     </div>

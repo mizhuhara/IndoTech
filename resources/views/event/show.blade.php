@@ -17,6 +17,18 @@
             </a>
         </div>
 
+        @if (session('success'))
+            <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                {{ session('error') }}
+            </div>
+        @endif
+
         {{-- Hero Banner Image --}}
         <div class="w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-sm bg-slate-200 relative">
             <img src="{{ $event['image'] }}" 
@@ -201,39 +213,73 @@
 
                     {{-- Registration Quota Progress Bar --}}
                     @php
-                        $quota = (int) ($event['quota'] ?? 0);
-                        $total = (int) ($event['total_quota'] ?? 100);
-                        $percent = min(100, max(0, round(($quota / $total) * 100)));
+                        $total = (int) ($event['total_quota'] ?? 0);
+                        $percent = $total > 0 ? min(100, max(0, round(($registeredCount / $total) * 100))) : 0;
                     @endphp
                     <div class="space-y-2">
                         <div class="flex items-center justify-between text-xs font-bold">
                             <span class="text-slate-900">Registration Quota</span>
-                            <span class="text-slate-700">{{ $quota }} / {{ $total }} Spots</span>
+                            <span class="text-slate-700">
+                                {{ $registeredCount }} / {{ $total > 0 ? $total : 'Unlimited' }} Spots
+                            </span>
                         </div>
 
-                        {{-- Progress bar container --}}
                         <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                             <div class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: {{ $percent }}%"></div>
                         </div>
-
-                        <p class="text-[11px] text-slate-500 font-medium text-center pt-0.5">
-                            Hurry, spots are almost full!
-                        </p>
                     </div>
 
-                    {{-- Action Button --}}
+                    {{-- Registration Action --}}
                     <div>
-                        <button type="button" 
-                                onclick="alert('Successfully registered for {{ addslashes($event['title']) }}! We have sent a confirmation email with event details.')"
-                                class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition shadow-sm">
-                            Register for Event
-                        </button>
+                        @if ($isRegistered)
+                            <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 text-center">
+                                Anda sudah terdaftar di event ini.
+                            </div>
+                        @elseif ($isFull)
+                            <button type="button" disabled
+                                    class="w-full bg-slate-300 text-slate-600 font-bold py-3 px-4 rounded-xl text-sm cursor-not-allowed">
+                                Event Full
+                            </button>
+                        @elseif (auth()->check())
+                            <form action="{{ route('event.register', $event['id']) }}" method="POST" class="space-y-3">
+                                @csrf
+                                <div>
+                                    <input name="name" type="text" required value="{{ old('name', auth()->user()->name) }}"
+                                           placeholder="Nama lengkap"
+                                           class="w-full h-11 px-4 rounded-xl border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                                    @error('name') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <input name="email" type="email" required value="{{ old('email', auth()->user()->email) }}"
+                                           placeholder="Email"
+                                           class="w-full h-11 px-4 rounded-xl border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                                    @error('email') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <input name="phone" type="text" value="{{ old('phone', auth()->user()->org_phone) }}"
+                                           placeholder="Nomor telepon (opsional)"
+                                           class="w-full h-11 px-4 rounded-xl border border-slate-300 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+                                    @error('phone') <p class="mt-1 text-xs text-red-600">{{ $message }}</p> @enderror
+                                </div>
+                                <button type="submit"
+                                        class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition shadow-sm">
+                                    Register for Event
+                                </button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}"
+                               class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition shadow-sm">
+                                Login to Register
+                            </a>
+                        @endif
                     </div>
 
                     {{-- Footnote --}}
-                    <p class="text-[11px] text-slate-400 text-center">
-                        Requires a TechLink.id account to register.
-                    </p>
+                    @guest
+                        <p class="text-[11px] text-slate-400 text-center">
+                            Requires an IndoTech account to register.
+                        </p>
+                    @endguest
 
                 </div>
             </div>
