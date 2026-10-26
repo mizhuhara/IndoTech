@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Company;
+use App\Models\School;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -41,6 +43,13 @@ class AdminVerificationTest extends TestCase
             'org_phone' => '081234567890',
         ]);
 
+        School::create([
+            'user_id' => $user->id,
+            'npsn' => 'BF-TEST-1',
+            'name' => $user->name,
+            'status' => 'Pending',
+        ]);
+
         $response = $this->actingAs($this->admin)->post(route('admin.verification.approve', $user->id));
 
         $response->assertRedirect();
@@ -48,6 +57,10 @@ class AdminVerificationTest extends TestCase
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'status' => 'active',
+        ]);
+        $this->assertDatabaseHas('schools', [
+            'user_id' => $user->id,
+            'status' => 'Active',
         ]);
     }
 
@@ -60,6 +73,12 @@ class AdminVerificationTest extends TestCase
             'org_contact' => 'Budi Sudarsono',
         ]);
 
+        Company::create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'status' => 'Pending',
+        ]);
+
         $response = $this->actingAs($this->admin)->post(route('admin.verification.reject', $user->id));
 
         $response->assertRedirect();
@@ -67,6 +86,10 @@ class AdminVerificationTest extends TestCase
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
             'status' => 'rejected',
+        ]);
+        $this->assertDatabaseHas('companies', [
+            'user_id' => $user->id,
+            'status' => 'Inactive',
         ]);
     }
 

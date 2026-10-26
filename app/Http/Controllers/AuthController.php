@@ -10,7 +10,10 @@ use App\Notifications\InstitutionVerificationNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AuthController extends Controller
@@ -48,54 +51,58 @@ class AuthController extends Controller
 
         $orgDocPath = null;
         if (in_array($role, $institutionRoles, true) && $request->hasFile('org_doc')) {
-            $orgDocPath = $request->file('org_doc')->store('org-docs', 'public');
+            $orgDocPath = $request->file('org_doc')->store('org-docs', 'local');
         }
 
         $status = $role === 'user' ? 'active' : 'pending';
 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role' => $role,
-            'status' => $status,
-            'org_contact' => $data['org_contact'] ?? null,
-            'org_phone' => $data['org_phone'] ?? null,
-            'org_address' => $data['org_address'] ?? null,
-            'org_doc' => $orgDocPath,
-        ]);
+        $user = DB::transaction(function () use ($data, $role, $status, $orgDocPath) {
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'role' => $role,
+                'status' => $status,
+                'org_contact' => $data['org_contact'] ?? null,
+                'org_phone' => $data['org_phone'] ?? null,
+                'org_address' => $data['org_address'] ?? null,
+                'org_doc' => $orgDocPath,
+            ]);
 
-        // Auto-create data institusi dari data registrasi (1 akun = 1 data).
-        // User login nanti tinggal melengkapi data yang kurang, bukan menambah baru.
-        if ($role === 'school') {
-            School::create([
-                'user_id' => $user->id,
-                'npsn' => 'BF-'.$user->id,
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['org_phone'] ?? null,
-                'address' => $data['org_address'] ?? null,
-                'status' => 'Pending',
-            ]);
-        } elseif ($role === 'university') {
-            University::create([
-                'user_id' => $user->id,
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['org_phone'] ?? null,
-                'address' => $data['org_address'] ?? null,
-                'status' => 'Pending',
-            ]);
-        } elseif ($role === 'company') {
-            Company::create([
-                'user_id' => $user->id,
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['org_phone'] ?? null,
-                'address' => $data['org_address'] ?? null,
-                'status' => 'Pending',
-            ]);
-        }
+            // Auto-create data institusi dari data registrasi (1 akun = 1 data).
+            // User login nanti tinggal melengkapi data yang kurang, bukan menambah baru.
+            if ($role === 'school') {
+                School::create([
+                    'user_id' => $user->id,
+                    'npsn' => 'BF-'.$user->id,
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'phone' => $data['org_phone'] ?? null,
+                    'address' => $data['org_address'] ?? null,
+                    'status' => 'Pending',
+                ]);
+            } elseif ($role === 'university') {
+                University::create([
+                    'user_id' => $user->id,
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'phone' => $data['org_phone'] ?? null,
+                    'address' => $data['org_address'] ?? null,
+                    'status' => 'Pending',
+                ]);
+            } elseif ($role === 'company') {
+                Company::create([
+                    'user_id' => $user->id,
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'phone' => $data['org_phone'] ?? null,
+                    'address' => $data['org_address'] ?? null,
+                    'status' => 'Pending',
+                ]);
+            }
+
+            return $user;
+        });
 
         // Notify super admin to verify the institution account
         $notifyTo = User::where('email', User::ADMIN_EMAIL)->first();
@@ -168,10 +175,75 @@ class AuthController extends Controller
         return redirect()->route('welcome');
     }
 
+    public function showForgotPassword(): View
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function sendResetLink(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with('status', 'Tautan reset password sudah dikirim ke email Anda.');
+        }
+
+        $message = match ($status) {
+            Password::INVALID_USER => 'Email tidak terdaftar.',
+            Password::RESET_THROTTLED => 'Tunggu sebentar sebelum meminta tautan reset lagi.',
+            default => 'Gagal mengirim tautan reset password.',
+        };
+
+        return back()->withInput($request->only('email'))->withErrors(['email' => $message]);
+    }
+
+    public function showResetPassword(Request $request, string $token): View
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email'),
+        ]);
+    }
+
+    public function resetPassword(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'token' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => $password,
+                    'remember_token' => Str::random(60),
+                ])->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', 'Password berhasil diubah. Silakan login.');
+        }
+
+        $message = match ($status) {
+            Password::INVALID_USER => 'Email tidak terdaftar.',
+            Password::INVALID_TOKEN => 'Tautan reset tidak valid atau sudah kedaluwarsa.',
+            default => 'Gagal mereset password.',
+        };
+
+        return back()->withInput($request->only('email'))->withErrors(['email' => $message]);
+    }
+
     private function redirectFor(User $user): string
     {
         return match ($user->role) {
-            'super_admin' => route('admin.dashboard'),
+            'super_admin', 'admin' => route('admin.dashboard'),
             'school' => route('dashboard.school'),
             'university' => route('dashboard.university'),
             'company' => route('dashboard.company'),

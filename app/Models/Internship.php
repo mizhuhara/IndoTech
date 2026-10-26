@@ -39,6 +39,16 @@ class Internship extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    public function getApplyTypeAttribute(): string
+    {
+        return 'internship';
+    }
+
     // Compatibility methods for job card template
     public function getCategoryAttribute(): string
     {

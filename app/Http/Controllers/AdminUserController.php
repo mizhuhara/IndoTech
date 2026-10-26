@@ -67,8 +67,8 @@ class AdminUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
-            'role' => ['required', 'string', 'max:50'],
-            'status' => ['required', 'string', 'max:20'],
+            'role' => ['required', 'in:super_admin,admin,school,university,company,user'],
+            'status' => ['required', 'in:active,pending,rejected,inactive'],
         ], [
             'email.unique' => 'Email ini sudah terdaftar di sistem.',
             'password.min' => 'Password minimal harus 8 karakter.',
@@ -97,8 +97,8 @@ class AdminUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'password' => ['nullable', 'string', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
-            'role' => ['required', 'string', 'max:50'],
-            'status' => ['required', 'string', 'max:20'],
+            'role' => ['required', 'in:super_admin,admin,school,university,company,user'],
+            'status' => ['required', 'in:active,pending,rejected,inactive'],
         ], [
             'email.unique' => 'Email ini sudah digunakan oleh user lain.',
             'password.min' => 'Password minimal harus 8 karakter.',

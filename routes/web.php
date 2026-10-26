@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminApplicationController;
 use App\Http\Controllers\AdminArticleController;
 use App\Http\Controllers\AdminCommunityController;
 use App\Http\Controllers\AdminCompanyController;
@@ -34,8 +35,13 @@ Route::get('/campus/{id}', [CampusController::class, 'show'])->name('campus.show
 Route::get('/industry', [IndustryController::class, 'index'])->name('industry');
 
 Route::get('/career', [CareerController::class, 'index'])->name('career.index');
-Route::get('/career/{id}/apply', [CareerController::class, 'apply'])->name('career.apply');
-Route::post('/career/{id}/apply', [CareerController::class, 'storeApplication'])->name('career.apply.store')->middleware('throttle:10,1');
+Route::get('/career/{type}/{id}/apply', [CareerController::class, 'apply'])
+    ->whereIn('type', ['job', 'internship'])
+    ->name('career.apply');
+Route::post('/career/{type}/{id}/apply', [CareerController::class, 'storeApplication'])
+    ->whereIn('type', ['job', 'internship'])
+    ->name('career.apply.store')
+    ->middleware('throttle:10,1');
 
 Route::get('/events', [EventController::class, 'index'])->name('event.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('event.show');
@@ -53,6 +59,12 @@ Route::middleware(['admin', 'throttle:120,1'])->group(function () {
 
     // Admin Dashboard
     Route::get('/admin', [DashboardController::class, 'admin'])->name('admin.dashboard');
+
+    // Admin Job Applications
+    Route::get('/admin/applications', [AdminApplicationController::class, 'index'])->name('admin.applications.index');
+    Route::patch('/admin/applications/{application}', [AdminApplicationController::class, 'update'])->name('admin.applications.update');
+    Route::get('/admin/applications/{application}/resume', [AdminApplicationController::class, 'resume'])->name('admin.applications.resume');
+    Route::delete('/admin/applications/{application}', [AdminApplicationController::class, 'destroy'])->name('admin.applications.destroy');
 
     // Admin School Management
     Route::get('/admin/schools', [AdminSchoolController::class, 'index'])->name('admin.schools.index');
@@ -113,6 +125,7 @@ Route::middleware(['admin', 'throttle:120,1'])->group(function () {
     Route::put('/admin/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
     Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
+    Route::get('/admin/verification/{user}/document', [AdminVerificationController::class, 'document'])->name('admin.verification.document');
     Route::post('/admin/verification/{user}/approve', [AdminVerificationController::class, 'approve'])->name('admin.verification.approve');
     Route::post('/admin/verification/{user}/reject', [AdminVerificationController::class, 'reject'])->name('admin.verification.reject');
     Route::delete('/admin/verification/{user}', [AdminVerificationController::class, 'destroy'])->name('admin.verification.destroy');
@@ -160,6 +173,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 Route::get('/register/success/{user_id?}', [AuthController::class, 'registerSuccess'])->name('register.success');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->middleware('throttle:6,1')->name('password.email');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:6,1')->name('password.store');
+});
 
 // Knowledge Hub Routes
 Route::get('/knowledge-hub', [KnowledgeController::class, 'index'])->name('knowledge.index');

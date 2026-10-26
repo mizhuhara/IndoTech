@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Models\School;
+use App\Models\University;
 use App\Models\User;
 use App\Notifications\AccountApprovedNotification;
 use App\Notifications\AccountRejectedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminVerificationController extends Controller
 {
@@ -79,8 +85,12 @@ class AdminVerificationController extends Controller
      */
     public function approve(User $user): RedirectResponse
     {
-        $user->status = 'active';
-        $user->save();
+        DB::transaction(function () use ($user) {
+            $user->status = 'active';
+            $user->save();
+
+            $this->syncInstitutionStatus($user, 'Active');
+        });
 
         $user->notify(new AccountApprovedNotification);
 
@@ -92,8 +102,12 @@ class AdminVerificationController extends Controller
      */
     public function reject(User $user): RedirectResponse
     {
-        $user->status = 'rejected';
-        $user->save();
+        DB::transaction(function () use ($user) {
+            $user->status = 'rejected';
+            $user->save();
+
+            $this->syncInstitutionStatus($user, 'Inactive');
+        });
 
         $user->notify(new AccountRejectedNotification);
 
@@ -109,5 +123,29 @@ class AdminVerificationController extends Controller
         $user->delete();
 
         return back()->with('success', "Data verifikasi \"{$name}\" berhasil dihapus.");
+    }
+
+    public function document(User $user): StreamedResponse
+    {
+        abort_if(empty($user->org_doc), 404);
+
+        $disk = Storage::disk('local')->exists($user->org_doc) ? 'local' : 'public';
+        abort_unless(Storage::disk($disk)->exists($user->org_doc), 404);
+
+        return Storage::disk($disk)->download($user->org_doc, basename($user->org_doc));
+    }
+
+    private function syncInstitutionStatus(User $user, string $status): void
+    {
+        $model = match ($user->role) {
+            'school' => School::class,
+            'university' => University::class,
+            'company' => Company::class,
+            default => null,
+        };
+
+        if ($model) {
+            $model::where('user_id', $user->id)->update(['status' => $status]);
+        }
     }
 }

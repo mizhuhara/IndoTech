@@ -92,6 +92,16 @@ class JobListing extends Model
         });
     }
 
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class);
+    }
+
+    public function getApplyTypeAttribute(): string
+    {
+        return 'job';
+    }
+
     public function getDatePostedAttribute(): string
     {
         return $this->created_at ? $this->created_at->format('M d, Y') : date('M d, Y');

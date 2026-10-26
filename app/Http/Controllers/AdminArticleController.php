@@ -102,8 +102,8 @@ class AdminArticleController extends Controller
 
         // Determine image URL: either uploaded file or provided URL
         if ($request->hasFile('image_file')) {
-            $path = $request->file('image_file')->store('public/articles');
-            $imageUrl = Storage::url($path);
+            $path = $request->file('image_file')->store('articles', 'public');
+            $imageUrl = Storage::disk('public')->url($path);
         } else {
             $imageUrl = $validated['image'] ?? null;
         }
@@ -123,6 +123,7 @@ class AdminArticleController extends Controller
             'image' => $imageUrl,
             'status' => $validated['status'],
             'read_time' => $validated['read_time'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
             'user_id' => $user ? $user->id : null,
         ]);
 
@@ -170,8 +171,8 @@ class AdminArticleController extends Controller
 
         // Determine image URL: uploaded file overrides URL if present
         if ($request->hasFile('image_file')) {
-            $path = $request->file('image_file')->store('public/articles');
-            $imageUrl = Storage::url($path);
+            $path = $request->file('image_file')->store('articles', 'public');
+            $imageUrl = Storage::disk('public')->url($path);
         } else {
             $imageUrl = $validated['image'] ?? $article->image;
         }
@@ -189,6 +190,7 @@ class AdminArticleController extends Controller
             'image' => $imageUrl,
             'status' => $validated['status'],
             'read_time' => $validated['read_time'] ?? null,
+            'meta_description' => $validated['meta_description'] ?? null,
         ]);
 
         return redirect()->route('admin.articles.index')
@@ -236,8 +238,8 @@ class AdminArticleController extends Controller
     {
         $user = auth()->user();
 
-        if (in_array($user->role, ['school', 'university', 'company'], true)) {
-            abort(403, 'Akses ditolak. Akun institusi tidak dapat menambah data baru.');
+        if (! in_array($user->role, ['super_admin', 'admin', 'school'], true)) {
+            abort(403, 'Akses ditolak. Akun ini tidak dapat menambah artikel.');
         }
     }
 }

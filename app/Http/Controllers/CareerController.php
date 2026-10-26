@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Internship;
+use App\Models\JobApplication;
 use App\Models\JobListing;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CareerController extends Controller
@@ -98,33 +101,23 @@ class CareerController extends Controller
         return $query->orderByDesc('id')->get();
     }
 
-    public function apply(int $id): View
+    public function apply(string $type, int $id): View
     {
-        // Try to find in Internship model first
-        $job = Internship::find($id);
+        $job = $this->resolveJob($type, $id);
 
-        // If not found, try JobListing model
-        if (! $job) {
-            $job = JobListing::findOrFail($id);
-        }
-
-        // Only increment views if JobListing (Internship doesn't track views)
         if ($job instanceof JobListing) {
             $job->increment('total_views');
         }
 
-        return view('career.apply', compact('job'));
+        return view('career.apply', [
+            'job' => $job,
+            'applyType' => $type,
+        ]);
     }
 
-    public function storeApplication(Request $request, int $id): RedirectResponse
+    public function storeApplication(Request $request, string $type, int $id): RedirectResponse
     {
-        // Try to find in Internship model first
-        $job = Internship::find($id);
-
-        // If not found, try JobListing model
-        if (! $job) {
-            $job = JobListing::findOrFail($id);
-        }
+        $job = $this->resolveJob($type, $id);
 
         $validated = $request->validate([
             'full_name' => ['required', 'string', 'max:100'],
@@ -136,13 +129,49 @@ class CareerController extends Controller
             'resume' => ['required', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
         ]);
 
-        // Only increment applicants if JobListing
-        if ($job instanceof JobListing) {
-            $job->increment('applicants_count');
+        $resumePath = $request->file('resume')->store('resumes', 'local');
+
+        try {
+            DB::transaction(function () use ($job, $validated, $resumePath) {
+                JobApplication::create([
+                    'job_listing_id' => $job instanceof JobListing ? $job->id : null,
+                    'internship_id' => $job instanceof Internship ? $job->id : null,
+                    'full_name' => $validated['full_name'],
+                    'email' => $validated['email'],
+                    'phone' => $validated['phone'],
+                    'linkedin' => $validated['linkedin'] ?? null,
+                    'portfolio' => $validated['portfolio'] ?? null,
+                    'cover_letter' => $validated['cover_letter'],
+                    'resume_path' => $resumePath,
+                ]);
+
+                if ($job instanceof JobListing) {
+                    $job->increment('applicants_count');
+                }
+            });
+        } catch (\Throwable $exception) {
+            Storage::disk('local')->delete($resumePath);
+
+            throw $exception;
         }
 
         return redirect()
             ->route('career.index', ['type' => $job->category])
             ->with('apply_success', "Lamaran kamu untuk \"{$job->title}\" di {$job->company} berhasil dikirim!");
+    }
+
+    private function resolveJob(string $type, int $id): Internship|JobListing
+    {
+        if ($type === 'internship') {
+            return Internship::where('status', 'active')->findOrFail($id);
+        }
+
+        if ($type === 'job') {
+            return JobListing::where('is_active', true)
+                ->where('status', '!=', 'Draft')
+                ->findOrFail($id);
+        }
+
+        abort(404);
     }
 }

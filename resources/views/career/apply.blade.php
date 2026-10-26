@@ -475,7 +475,7 @@
 
                     <form
                         method="POST"
-                        action="{{ route('career.apply.store', $job['id']) }}"
+                        action="{{ route('career.apply.store', ['type' => $applyType, 'id' => $job['id']]) }}"
                         enctype="multipart/form-data"
                         id="ap-form"
                         novalidate
