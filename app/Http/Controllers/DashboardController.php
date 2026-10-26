@@ -374,7 +374,7 @@ class DashboardController extends Controller
                     'label' => 'Profil',
                     'value' => auth()->user()->name,
                     'action' => 'Lihat profil',
-                    'url' => '#',
+                    'url' => route('profile.edit'),
                 ],
                 [
                     'label' => 'Lamaran Saya',

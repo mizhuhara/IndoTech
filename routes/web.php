@@ -23,6 +23,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\KnowledgeController;
 use App\Http\Controllers\MyApplicationController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -179,6 +180,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/company', [DashboardController::class, 'company'])->name('dashboard.company');
     Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
     Route::get('/dashboard/applications', [MyApplicationController::class, 'index'])->name('applications.index');
+    Route::get('/dashboard/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/dashboard/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/dashboard/password', [ProfileController::class, 'updatePassword'])
+        ->middleware('throttle:6,1')
+        ->name('profile.password');
 });
 
 // Auth Routes
