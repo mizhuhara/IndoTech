@@ -109,4 +109,26 @@ class AdminVerificationTest extends TestCase
             'id' => $user->id,
         ]);
     }
+
+    public function test_admin_accounts_cannot_be_processed_from_verification_page(): void
+    {
+        $otherAdmin = User::factory()->create([
+            'email' => 'other-admin@indotech.id',
+            'role' => 'admin',
+            'status' => 'active',
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post(route('admin.verification.reject', $otherAdmin->id))
+            ->assertForbidden();
+
+        $this->actingAs($this->admin)
+            ->delete(route('admin.verification.destroy', $otherAdmin->id))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('users', [
+            'id' => $otherAdmin->id,
+            'status' => 'active',
+        ]);
+    }
 }

@@ -96,6 +96,8 @@ class AdminCompanyController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        abort_if(! in_array($request->user()->role, ['super_admin', 'admin'], true), 403, 'Akses ditolak. Hanya admin.');
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'npsn' => ['nullable', 'string', 'max:50', 'unique:companies,npsn'],

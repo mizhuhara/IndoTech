@@ -59,6 +59,17 @@ class AdminReportTest extends TestCase
         ]);
     }
 
+    public function test_csv_export_neutralizes_formula_injection(): void
+    {
+        $admin = $this->admin();
+        User::factory()->create(['name' => '=SUM(1,1)', 'email' => 'formula@example.com']);
+
+        $response = $this->actingAs($admin)->get(route('admin.reports.export', 'users'));
+
+        $response->assertOk();
+        $this->assertStringContainsString("'=SUM(1,1)", $response->streamedContent());
+    }
+
     public function test_admin_can_view_export_history(): void
     {
         $admin = $this->admin();

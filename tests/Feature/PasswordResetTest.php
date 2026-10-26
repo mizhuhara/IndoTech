@@ -44,7 +44,8 @@ class PasswordResetTest extends TestCase
         Notification::fake();
 
         $this->post(route('password.email'), ['email' => 'unknown@example.com'])
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasNoErrors()
+            ->assertSessionHas('status');
 
         Notification::assertNothingSent();
     }

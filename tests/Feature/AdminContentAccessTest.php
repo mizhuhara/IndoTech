@@ -63,6 +63,20 @@ class AdminContentAccessTest extends TestCase
             ->assertNotFound();
     }
 
+    public function test_company_user_cannot_create_company_via_direct_post(): void
+    {
+        $companyUser = User::factory()->create(['role' => 'company', 'status' => 'active']);
+
+        $this->actingAs($companyUser)->post(route('admin.company.store'), [
+            'name' => 'PT Baru',
+            'type' => 'Swasta',
+            'industry' => 'Technology',
+            'status' => 'Active',
+        ])->assertForbidden();
+
+        $this->assertDatabaseMissing('companies', ['name' => 'PT Baru']);
+    }
+
     public function test_school_article_editor_only_sees_own_articles(): void
     {
         $schoolUser = User::factory()->create(['role' => 'school', 'status' => 'active']);
