@@ -61,6 +61,13 @@ Route::get('/event/{id}', function ($id) {
 });
 
 Route::get('/community', [CommunityController::class, 'index'])->name('community.index');
+Route::get('/community/{community}', [CommunityController::class, 'show'])->name('community.show');
+Route::post('/community/{community}/join', [CommunityController::class, 'join'])
+    ->middleware(['auth', 'verified', 'throttle:10,1'])
+    ->name('community.join');
+Route::delete('/community/{community}/leave', [CommunityController::class, 'leave'])
+    ->middleware(['auth', 'verified', 'throttle:10,1'])
+    ->name('community.leave');
 
 // Admin routes — semua butuh login + role admin
 Route::middleware(['admin', 'verified', 'throttle:120,1'])->group(function () {
