@@ -235,6 +235,17 @@
                             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 text-center">
                                 Anda sudah terdaftar di event ini.
                             </div>
+                            @if ($registration)
+                                <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center">
+                                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Kode Tiket</p>
+                                    <p class="text-lg font-extrabold tracking-widest text-slate-900 mt-1">{{ $registration->ticket_code }}</p>
+                                    <p class="text-xs mt-1 {{ $registration->checked_in_at ? 'text-emerald-600 font-semibold' : 'text-slate-500' }}">
+                                        {{ $registration->checked_in_at
+                                            ? 'Sudah check-in '.$registration->checked_in_at->format('d M Y, H:i')
+                                            : 'Belum check-in' }}
+                                    </p>
+                                </div>
+                            @endif
                             <form action="{{ route('event.unregister', $event['id']) }}" method="POST" class="mt-3"
                                   onsubmit="return confirm('Batalkan pendaftaran event ini?')">
                                 @csrf

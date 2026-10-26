@@ -83,6 +83,68 @@ class EventRegistrationTest extends TestCase
         $this->assertDatabaseCount('event_registrations', 1);
     }
 
+    public function test_registration_creates_ticket_code_and_shows_it_on_event_page(): void
+    {
+        $user = User::factory()->create();
+        $event = $this->createEvent();
+
+        $this->actingAs($user)->post(route('event.register', $event), [
+            'name' => $user->name,
+            'email' => $user->email,
+        ])->assertSessionHas('success');
+
+        $registration = $event->registrations()->firstOrFail();
+
+        $this->assertStringStartsWith('EVT-', $registration->ticket_code);
+
+        $this->actingAs($user)->get(route('event.show', $event->id))
+            ->assertOk()
+            ->assertSee($registration->ticket_code);
+    }
+
+    public function test_admin_can_toggle_participant_attendance(): void
+    {
+        $admin = User::factory()->create(['role' => 'super_admin', 'status' => 'active']);
+        $user = User::factory()->create();
+        $event = $this->createEvent();
+        $registration = $event->registrations()->create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('admin.events.registrations.check-in', [$event, $registration]))
+            ->assertSessionHas('success');
+
+        $this->assertNotNull($registration->refresh()->checked_in_at);
+
+        $this->actingAs($admin)
+            ->post(route('admin.events.registrations.check-in', [$event, $registration]))
+            ->assertSessionHas('success');
+
+        $this->assertNull($registration->refresh()->checked_in_at);
+    }
+
+    public function test_admin_cannot_check_in_registration_from_another_event(): void
+    {
+        $admin = User::factory()->create(['role' => 'super_admin', 'status' => 'active']);
+        $user = User::factory()->create();
+        $event = $this->createEvent();
+        $otherEvent = $this->createEvent(['title' => 'Other Event']);
+        $registration = $otherEvent->registrations()->create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('admin.events.registrations.check-in', [$event, $registration]))
+            ->assertNotFound();
+
+        $this->assertNull($registration->refresh()->checked_in_at);
+    }
+
     public function test_user_can_cancel_event_registration(): void
     {
         $user = User::factory()->create();

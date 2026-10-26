@@ -90,13 +90,16 @@ class EventController extends Controller
         $event->loadLearningAndSpeakers();
 
         $registeredCount = $event->registrations()->count();
-        $isRegistered = $request->user()
-            && $event->registrations()->where('user_id', $request->user()->id)->exists();
+        $registration = $request->user()
+            ? $event->registrations()->where('user_id', $request->user()->id)->first()
+            : null;
+        $isRegistered = $registration !== null;
         $isFull = $event->total_quota > 0 && $registeredCount >= $event->total_quota;
 
         return view('event.show', [
             'event' => $event,
             'registeredCount' => $registeredCount,
+            'registration' => $registration,
             'isRegistered' => $isRegistered,
             'isFull' => $isFull,
         ]);

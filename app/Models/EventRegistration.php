@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class EventRegistration extends Model
 {
@@ -13,7 +14,23 @@ class EventRegistration extends Model
         'name',
         'email',
         'phone',
+        'ticket_code',
+        'checked_in_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'checked_in_at' => 'datetime',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $registration) {
+            $registration->ticket_code ??= 'EVT-'.Str::upper(Str::random(8));
+        });
+    }
 
     public function event(): BelongsTo
     {

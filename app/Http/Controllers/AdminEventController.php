@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventRegistration;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -56,7 +57,7 @@ class AdminEventController extends Controller
     /**
      * Display details of a specific event.
      */
-    public function show(int $id): View|RedirectResponse
+    public function show(Request $request, int $id): View|RedirectResponse
     {
         $event = Event::find($id);
 
@@ -65,9 +66,39 @@ class AdminEventController extends Controller
                 ->with('error', 'Event tidak ditemukan.');
         }
 
-        $registrations = $event->registrations()->with('user')->latest()->get();
+        $query = $event->registrations()->with('user');
 
-        return view('admin.events.show', compact('event', 'registrations'));
+        if ($request->filled('q')) {
+            $search = trim($request->query('q'));
+            $query->where(function ($sub) use ($search) {
+                $sub->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('ticket_code', 'like', "%{$search}%");
+            });
+        }
+
+        $registrations = $query->latest()->get();
+
+        return view('admin.events.show', [
+            'event' => $event,
+            'registrations' => $registrations,
+            'searchQuery' => $request->query('q', ''),
+        ]);
+    }
+
+    public function toggleAttendance(Event $event, EventRegistration $registration): RedirectResponse
+    {
+        abort_unless($registration->event_id === $event->id, 404);
+
+        $checkedIn = $registration->checked_in_at === null;
+
+        $registration->update([
+            'checked_in_at' => $checkedIn ? now() : null,
+        ]);
+
+        return back()->with('success', $checkedIn
+            ? "Check-in {$registration->name} berhasil."
+            : "Check-in {$registration->name} dibatalkan.");
     }
 
     /**
