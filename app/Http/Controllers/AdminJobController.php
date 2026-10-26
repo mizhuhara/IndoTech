@@ -148,7 +148,7 @@ class AdminJobController extends Controller
             ]);
 
             foreach ($jobs as $job) {
-                fputcsv($output, [
+                fputcsv($output, array_map(fn ($value) => $this->csvSafe($value), [
                     $job->code ?? ('JOB-'.$job->id),
                     $job->title,
                     $job->company,
@@ -162,7 +162,7 @@ class AdminJobController extends Controller
                     $job->total_views ?? 0,
                     $job->date_posted,
                     $job->created_at ? $job->created_at->format('Y-m-d H:i:s') : '-',
-                ]);
+                ]));
             }
 
             fclose($output);

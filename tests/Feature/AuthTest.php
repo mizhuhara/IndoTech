@@ -121,6 +121,21 @@ class AuthTest extends TestCase
         $response->assertRedirect('/dashboard/company');
     }
 
+    public function test_login_is_rate_limited(): void
+    {
+        for ($i = 0; $i < 6; $i++) {
+            $this->post(route('login.submit'), [
+                'email' => 'nobody@example.com',
+                'password' => 'wrong-password',
+            ]);
+        }
+
+        $this->post(route('login.submit'), [
+            'email' => 'nobody@example.com',
+            'password' => 'wrong-password',
+        ])->assertStatus(429);
+    }
+
     public function test_pending_user_cannot_login(): void
     {
         $user = User::factory()->create([

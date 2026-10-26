@@ -115,7 +115,7 @@ class AdminReportController extends Controller
 
             foreach ($report['rows'] as $row) {
                 fputcsv($stream, array_map(
-                    fn (string $column) => $row[$column] ?? '',
+                    fn (string $column) => $this->csvSafe($row[$column] ?? ''),
                     array_keys($report['columns'])
                 ));
             }

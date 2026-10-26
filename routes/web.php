@@ -193,11 +193,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Auth Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1')->name('login.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:6,1')->name('register.submit');
 Route::get('/register/success/{user_id?}', [AuthController::class, 'registerSuccess'])->name('register.success');
 
 Route::middleware('auth')->group(function () {

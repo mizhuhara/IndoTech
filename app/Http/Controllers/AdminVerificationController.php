@@ -85,6 +85,8 @@ class AdminVerificationController extends Controller
      */
     public function approve(User $user): RedirectResponse
     {
+        $this->ensureVerifiable($user);
+
         DB::transaction(function () use ($user) {
             $user->status = 'active';
             $user->save();
@@ -106,6 +108,8 @@ class AdminVerificationController extends Controller
      */
     public function reject(User $user): RedirectResponse
     {
+        $this->ensureVerifiable($user);
+
         DB::transaction(function () use ($user) {
             $user->status = 'rejected';
             $user->save();
@@ -123,10 +127,18 @@ class AdminVerificationController extends Controller
      */
     public function destroy(User $user): RedirectResponse
     {
+        $this->ensureVerifiable($user);
+
         $name = $user->name;
         $user->delete();
 
         return back()->with('success', "Data verifikasi \"{$name}\" berhasil dihapus.");
+    }
+
+    private function ensureVerifiable(User $user): void
+    {
+        abort_if(in_array($user->role, ['super_admin', 'admin'], true), 403, 'Akun admin tidak dapat diproses dari halaman verifikasi.');
+        abort_if(auth()->id() === $user->id, 403, 'Anda tidak dapat memproses akun sendiri.');
     }
 
     public function document(User $user): StreamedResponse
