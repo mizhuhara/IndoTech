@@ -7,10 +7,17 @@ use App\Models\Internship;
 use App\Models\JobListing;
 use App\Models\School;
 use App\Models\User;
+use Dompdf\Dompdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminReportController extends Controller
@@ -110,6 +117,76 @@ class AdminReportController extends Controller
 
             fclose($stream);
         }, $report['filename'].'.csv', ['Content-Type' => 'text/csv']);
+    }
+
+    public function exportPdf(Request $request, string $type): Response
+    {
+        $report = $this->buildReport($type, $request);
+
+        $dompdf = new Dompdf;
+        $dompdf->loadHtml(view('admin.reports.pdf', ['report' => $report])->render());
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        return response($dompdf->output(), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$report['filename'].'.pdf"',
+        ]);
+    }
+
+    public function exportXlsx(Request $request, string $type): StreamedResponse
+    {
+        $report = $this->buildReport($type, $request);
+        $spreadsheet = new Spreadsheet;
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Report');
+
+        $lastColumn = Coordinate::stringFromColumnIndex(count($report['columns']));
+        $sheet->mergeCells("A1:{$lastColumn}1");
+        $sheet->setCellValueExplicit('A1', $report['title'], DataType::TYPE_STRING);
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->setCellValueExplicit('A2', $report['period'].' · '.$report['id'], DataType::TYPE_STRING);
+        $sheet->getStyle('A2')->getFont()->setItalic(true)->setSize(10);
+
+        $headerRow = 4;
+        foreach (array_values($report['columns']) as $index => $label) {
+            $sheet->setCellValueExplicit(
+                Coordinate::stringFromColumnIndex($index + 1).$headerRow,
+                $label,
+                DataType::TYPE_STRING
+            );
+        }
+
+        $sheet->getStyle("A{$headerRow}:{$lastColumn}{$headerRow}")->getFont()->setBold(true);
+        $sheet->getStyle("A{$headerRow}:{$lastColumn}{$headerRow}")->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getStartColor()->setARGB('FFE2E8F0');
+
+        $rowNumber = $headerRow + 1;
+        foreach ($report['rows'] as $row) {
+            foreach (array_keys($report['columns']) as $index => $column) {
+                $sheet->setCellValueExplicit(
+                    Coordinate::stringFromColumnIndex($index + 1).$rowNumber,
+                    (string) ($row[$column] ?? ''),
+                    DataType::TYPE_STRING
+                );
+            }
+            $rowNumber++;
+        }
+
+        $sheet->freezePane('A'.($headerRow + 1));
+        $sheet->setAutoFilter("A{$headerRow}:{$lastColumn}".($rowNumber - 1));
+        foreach (range(1, count($report['columns'])) as $index) {
+            $sheet->getColumnDimension(Coordinate::stringFromColumnIndex($index))->setWidth(22);
+        }
+
+        $writer = new Xlsx($spreadsheet);
+
+        return response()->streamDownload(
+            fn () => $writer->save('php://output'),
+            $report['filename'].'.xlsx',
+            ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+        );
     }
 
     /**

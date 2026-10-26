@@ -162,6 +162,8 @@ Route::middleware(['admin', 'verified', 'throttle:120,1'])->group(function () {
     // Admin Reports
     Route::get('/admin/reports', [AdminReportController::class, 'index'])->name('admin.reports.index');
     Route::get('/admin/reports/{type}/export', [AdminReportController::class, 'export'])->name('admin.reports.export');
+    Route::get('/admin/reports/{type}/export/pdf', [AdminReportController::class, 'exportPdf'])->name('admin.reports.export.pdf');
+    Route::get('/admin/reports/{type}/export/xlsx', [AdminReportController::class, 'exportXlsx'])->name('admin.reports.export.xlsx');
     Route::get('/admin/reports/{type}', [AdminReportController::class, 'show'])->name('admin.reports.show');
 
     // Admin Articles

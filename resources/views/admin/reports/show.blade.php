@@ -10,11 +10,23 @@
             Kembali ke Daftar Laporan
         </a>
 
-        <a href="{{ route('admin.reports.export', ['type' => $report['slug'], 'from' => $from, 'to' => $to]) }}"
-           class="h-9 px-4 inline-flex items-center gap-2 rounded-xl bg-[#0b57d0] text-white text-[13px] font-semibold hover:bg-blue-700 transition shadow-xs">
-            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
-            Export CSV
-        </a>
+        <div class="flex flex-wrap items-center gap-2">
+            <a href="{{ route('admin.reports.export.pdf', ['type' => $report['slug'], 'from' => $from, 'to' => $to]) }}"
+               class="h-9 px-4 inline-flex items-center gap-2 rounded-xl bg-rose-600 text-white text-[13px] font-semibold hover:bg-rose-700 transition shadow-xs">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h7a4 4 0 0 0 4-4V9l-6-6H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 3v6h6"/></svg>
+                PDF
+            </a>
+            <a href="{{ route('admin.reports.export.xlsx', ['type' => $report['slug'], 'from' => $from, 'to' => $to]) }}"
+               class="h-9 px-4 inline-flex items-center gap-2 rounded-xl bg-emerald-600 text-white text-[13px] font-semibold hover:bg-emerald-700 transition shadow-xs">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4h16v16H4z"/><path stroke-linecap="round" stroke-linejoin="round" d="m8 8 8 8m0-8-8 8"/></svg>
+                XLSX
+            </a>
+            <a href="{{ route('admin.reports.export', ['type' => $report['slug'], 'from' => $from, 'to' => $to]) }}"
+               class="h-9 px-4 inline-flex items-center gap-2 rounded-xl bg-[#0b57d0] text-white text-[13px] font-semibold hover:bg-blue-700 transition shadow-xs">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+                CSV
+            </a>
+        </div>
     </div>
 
     <section class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">

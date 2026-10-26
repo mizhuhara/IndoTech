@@ -45,6 +45,31 @@ class AdminReportTest extends TestCase
         $this->assertStringContainsString('"CSV User",csv@example.com', $response->streamedContent());
     }
 
+    public function test_admin_can_export_report_as_pdf(): void
+    {
+        $admin = $this->admin();
+        User::factory()->create(['name' => 'PDF User']);
+
+        $response = $this->actingAs($admin)->get(route('admin.reports.export.pdf', 'users'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+        $this->assertStringStartsWith('%PDF', $response->getContent());
+    }
+
+    public function test_admin_can_export_report_as_xlsx(): void
+    {
+        $admin = $this->admin();
+        User::factory()->create(['name' => 'XLSX User']);
+
+        $response = $this->actingAs($admin)->get(route('admin.reports.export.xlsx', 'users'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $this->assertStringContainsString('.xlsx', $response->headers->get('content-disposition'));
+        $this->assertStringStartsWith('PK', $response->streamedContent());
+    }
+
     public function test_unknown_report_type_returns_not_found(): void
     {
         $this->actingAs($this->admin())
