@@ -94,6 +94,10 @@ class AdminVerificationController extends Controller
 
         $user->notify(new AccountApprovedNotification);
 
+        if (! $user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
+        }
+
         return back()->with('success', "Akun \"{$user->name}\" berhasil disetujui (Active).");
     }
 

@@ -235,6 +235,15 @@
                             <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 text-center">
                                 Anda sudah terdaftar di event ini.
                             </div>
+                            <form action="{{ route('event.unregister', $event['id']) }}" method="POST" class="mt-3"
+                                  onsubmit="return confirm('Batalkan pendaftaran event ini?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="w-full border border-red-200 bg-white text-red-600 hover:bg-red-50 font-semibold py-2.5 px-4 rounded-xl text-sm transition">
+                                    Batalkan Pendaftaran
+                                </button>
+                            </form>
                         @elseif ($isFull)
                             <button type="button" disabled
                                     class="w-full bg-slate-300 text-slate-600 font-bold py-3 px-4 rounded-xl text-sm cursor-not-allowed">

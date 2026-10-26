@@ -142,4 +142,17 @@ class EventController extends Controller
             ? 'Anda sudah terdaftar di event ini.'
             : 'Kuota event sudah penuh.');
     }
+
+    public function cancel(Request $request, Event $event): RedirectResponse
+    {
+        $deleted = $event->registrations()
+            ->where('user_id', $request->user()->id)
+            ->delete();
+
+        if ($deleted === 0) {
+            return back()->with('error', 'Anda belum terdaftar di event ini.');
+        }
+
+        return back()->with('success', "Pendaftaran event \"{$event->title}\" dibatalkan.");
+    }
 }

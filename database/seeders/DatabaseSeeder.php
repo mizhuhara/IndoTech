@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         User::updateOrCreate(
             ['email' => 'test@example.com'],
-            ['name' => 'Test User', 'password' => Hash::make('password')]
+            ['name' => 'Test User', 'password' => Hash::make('password'), 'email_verified_at' => now()]
         );
 
         // Super admin bersama (proyek tim). Password dari .env; generate jika kosong.
@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make($adminPassword),
                 'role' => 'super_admin',
                 'status' => 'active',
+                'email_verified_at' => now(),
             ]
         );
 

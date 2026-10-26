@@ -83,6 +83,47 @@ class EventRegistrationTest extends TestCase
         $this->assertDatabaseCount('event_registrations', 1);
     }
 
+    public function test_user_can_cancel_event_registration(): void
+    {
+        $user = User::factory()->create();
+        $event = $this->createEvent();
+
+        $event->registrations()->create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+
+        $this->actingAs($user)->delete(route('event.unregister', $event))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('event_registrations', [
+            'event_id' => $event->id,
+            'user_id' => $user->id,
+        ]);
+    }
+
+    public function test_user_cannot_cancel_another_user_registration(): void
+    {
+        $registeredUser = User::factory()->create();
+        $otherUser = User::factory()->create();
+        $event = $this->createEvent();
+
+        $event->registrations()->create([
+            'user_id' => $registeredUser->id,
+            'name' => $registeredUser->name,
+            'email' => $registeredUser->email,
+        ]);
+
+        $this->actingAs($otherUser)->delete(route('event.unregister', $event))
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseHas('event_registrations', [
+            'event_id' => $event->id,
+            'user_id' => $registeredUser->id,
+        ]);
+    }
+
     public function test_unapproved_event_cannot_be_registered(): void
     {
         $user = User::factory()->create();

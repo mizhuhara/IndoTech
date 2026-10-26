@@ -80,6 +80,7 @@ class AdminUserController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => strtolower($validated['role']),
             'status' => strtolower($validated['status']),
+            'email_verified_at' => now(),
         ]);
 
         return redirect()->route('admin.users.index')

@@ -18,6 +18,7 @@ use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EducationController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\KnowledgeController;
@@ -47,8 +48,11 @@ Route::post('/career/{type}/{id}/apply', [CareerController::class, 'storeApplica
 Route::get('/events', [EventController::class, 'index'])->name('event.index');
 Route::get('/events/{id}', [EventController::class, 'show'])->name('event.show');
 Route::post('/events/{event}/register', [EventController::class, 'register'])
-    ->middleware(['auth', 'throttle:10,1'])
+    ->middleware(['auth', 'verified', 'throttle:10,1'])
     ->name('event.register');
+Route::delete('/events/{event}/register', [EventController::class, 'cancel'])
+    ->middleware(['auth', 'verified', 'throttle:10,1'])
+    ->name('event.unregister');
 Route::get('/event', function () {
     return redirect()->route('event.index');
 });
@@ -59,7 +63,7 @@ Route::get('/event/{id}', function ($id) {
 Route::get('/community', [CommunityController::class, 'index'])->name('community.index');
 
 // Admin routes — semua butuh login + role admin
-Route::middleware(['admin', 'throttle:120,1'])->group(function () {
+Route::middleware(['admin', 'verified', 'throttle:120,1'])->group(function () {
 
     // Admin Dashboard
     Route::get('/admin', [DashboardController::class, 'admin'])->name('admin.dashboard');
@@ -160,7 +164,7 @@ Route::middleware(['admin', 'throttle:120,1'])->group(function () {
 }); // end admin group
 
 // Role dashboards (semua user login)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/school', [DashboardController::class, 'school'])->name('dashboard.school');
     Route::get('/dashboard/university', [DashboardController::class, 'university'])->name('dashboard.university');
@@ -176,6 +180,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 Route::get('/register/success/{user_id?}', [AuthController::class, 'registerSuccess'])->name('register.success');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+    Route::post('/email/verification-notification', [EmailVerificationController::class, 'send'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');

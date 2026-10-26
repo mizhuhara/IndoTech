@@ -104,6 +104,10 @@ class AuthController extends Controller
             return $user;
         });
 
+        if ($status === 'active') {
+            $user->sendEmailVerificationNotification();
+        }
+
         // Notify super admin to verify the institution account
         $notifyTo = User::where('email', User::ADMIN_EMAIL)->first();
         if ($notifyTo) {
@@ -114,7 +118,7 @@ class AuthController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect($this->redirectFor($user));
+            return redirect()->route('verification.notice');
         }
 
         // Jangan login user pending - arahkan ke halaman sukses registrasi
@@ -162,6 +166,10 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
+
+        if (! $user->hasVerifiedEmail()) {
+            return redirect()->intended(route('verification.notice'));
+        }
 
         return redirect()->intended($this->redirectFor($user));
     }
