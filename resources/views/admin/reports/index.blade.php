@@ -71,6 +71,76 @@
         </div>
     </section>
 
+    {{-- Export History --}}
+    <section class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+            <div>
+                <h2 class="text-[15px] font-bold text-slate-900">Export History</h2>
+                <p class="text-[12px] text-slate-500">Arsip laporan yang sudah diunduh admin</p>
+            </div>
+            <span class="inline-flex px-2.5 py-1 rounded-full text-[12px] font-semibold bg-slate-100 text-slate-600">{{ number_format($exports->total()) }} total</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-slate-50 text-[12px] uppercase tracking-wide text-slate-500">
+                        <th class="px-6 py-3.5 font-semibold">Waktu</th>
+                        <th class="px-6 py-3.5 font-semibold">Laporan</th>
+                        <th class="px-6 py-3.5 font-semibold">Periode</th>
+                        <th class="px-6 py-3.5 font-semibold">Format</th>
+                        <th class="px-6 py-3.5 font-semibold">Baris</th>
+                        <th class="px-6 py-3.5 font-semibold">Oleh</th>
+                        <th class="px-6 py-3.5 font-semibold text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-[13.5px]">
+                    @forelse ($exports as $export)
+                        @php
+                            $definition = collect($reports)->firstWhere('slug', $export->type);
+                            $formatClass = match ($export->format) {
+                                'pdf' => 'bg-rose-50 text-rose-600',
+                                'xlsx' => 'bg-emerald-50 text-emerald-600',
+                                default => 'bg-blue-50 text-blue-600',
+                            };
+                            $exportQuery = array_filter([
+                                'type' => $export->type,
+                                'from' => $export->period_from?->toDateString(),
+                                'to' => $export->period_to?->toDateString(),
+                            ]);
+                        @endphp
+                        <tr class="hover:bg-slate-50/70 transition">
+                            <td class="px-6 py-3.5 text-slate-500 whitespace-nowrap">{{ $export->created_at->format('d M Y H:i') }}</td>
+                            <td class="px-6 py-3.5">
+                                <div class="font-semibold text-slate-900">{{ $definition['title'] ?? strtoupper($export->type) }}</div>
+                                <div class="text-[12px] text-slate-400">{{ $export->file_name }}</div>
+                            </td>
+                            <td class="px-6 py-3.5 text-slate-500 whitespace-nowrap">
+                                {{ $export->period_from?->format('d M Y') ?? 'Beginning' }} - {{ $export->period_to?->format('d M Y') ?? 'Now' }}
+                            </td>
+                            <td class="px-6 py-3.5">
+                                <span class="inline-flex px-2.5 py-1 rounded-full text-[12px] font-semibold uppercase {{ $formatClass }}">{{ $export->format }}</span>
+                            </td>
+                            <td class="px-6 py-3.5 text-slate-600">{{ number_format($export->rows_count) }}</td>
+                            <td class="px-6 py-3.5 text-slate-600">{{ $export->user?->name ?? 'System' }}</td>
+                            <td class="px-6 py-3.5 text-right">
+                                <a href="{{ route('admin.reports.show', $exportQuery) }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">Buka</a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="px-6 py-10 text-center text-slate-500">Belum ada riwayat export.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        @if ($exports->hasPages())
+            <div class="px-6 py-4 border-t border-slate-100">
+                {{ $exports->links() }}
+            </div>
+        @endif
+    </section>
+
     {{-- View Reports --}}
     <section class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
