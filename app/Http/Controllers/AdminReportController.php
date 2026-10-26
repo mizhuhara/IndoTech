@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Models\Internship;
 use App\Models\JobListing;
+use App\Models\ReportExport;
 use App\Models\School;
 use App\Models\User;
 use Dompdf\Dompdf;
@@ -75,6 +76,10 @@ class AdminReportController extends Controller
         return view('admin.reports.index', [
             'reports' => $reports,
             'recent' => array_slice($reports, 0, 4),
+            'exports' => ReportExport::with('user')
+                ->latest()
+                ->paginate(10, ['*'], 'exports_page')
+                ->withQueryString(),
             'activeType' => $request->query('type', ''),
             'from' => $request->query('from'),
             'to' => $request->query('to'),
@@ -103,7 +108,7 @@ class AdminReportController extends Controller
     {
         $report = $this->buildReport($type, $request);
 
-        return response()->streamDownload(function () use ($report) {
+        return response()->streamDownload(function () use ($report, $request) {
             $stream = fopen('php://output', 'w');
 
             fputcsv($stream, array_values($report['columns']));
@@ -116,6 +121,7 @@ class AdminReportController extends Controller
             }
 
             fclose($stream);
+            $this->recordExport($request, $report, 'csv');
         }, $report['filename'].'.csv', ['Content-Type' => 'text/csv']);
     }
 
@@ -127,6 +133,7 @@ class AdminReportController extends Controller
         $dompdf->loadHtml(view('admin.reports.pdf', ['report' => $report])->render());
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
+        $this->recordExport($request, $report, 'pdf');
 
         return response($dompdf->output(), 200, [
             'Content-Type' => 'application/pdf',
@@ -183,7 +190,10 @@ class AdminReportController extends Controller
         $writer = new Xlsx($spreadsheet);
 
         return response()->streamDownload(
-            fn () => $writer->save('php://output'),
+            function () use ($writer, $report, $request) {
+                $writer->save('php://output');
+                $this->recordExport($request, $report, 'xlsx');
+            },
             $report['filename'].'.xlsx',
             ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
         );
@@ -257,8 +267,26 @@ class AdminReportController extends Controller
             'rows' => $rows,
             'totalRows' => count($rows),
             'period' => $this->periodLabel($from, $to),
+            'from' => $from?->toDateString(),
+            'to' => $to?->toDateString(),
             'filename' => strtolower($definition['title']).'-'.now()->format('Ymd-His'),
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $report
+     */
+    private function recordExport(Request $request, array $report, string $format): void
+    {
+        ReportExport::create([
+            'user_id' => $request->user()?->id,
+            'type' => $report['slug'],
+            'format' => $format,
+            'period_from' => $report['from'],
+            'period_to' => $report['to'],
+            'rows_count' => $report['totalRows'],
+            'file_name' => $report['filename'].'.'.$format,
+        ]);
     }
 
     /**
