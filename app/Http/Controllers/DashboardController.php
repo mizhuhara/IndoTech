@@ -377,6 +377,12 @@ class DashboardController extends Controller
                     'url' => '#',
                 ],
                 [
+                    'label' => 'Lamaran Saya',
+                    'value' => 'Pantau status lamaran',
+                    'action' => 'Buka',
+                    'url' => route('applications.index'),
+                ],
+                [
                     'label' => 'Karir',
                     'value' => 'Cari lowongan',
                     'action' => 'Buka',

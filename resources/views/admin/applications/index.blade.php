@@ -62,15 +62,21 @@
                                 <div class="text-xs text-slate-500 mt-1">{{ $application->phone }}</div>
                             </td>
                             <td class="px-5 py-4">
-                                <form method="POST" action="{{ route('admin.applications.update', $application) }}">
+                                <form method="POST" action="{{ route('admin.applications.update', $application) }}" class="space-y-2 min-w-48">
                                     @csrf
                                     @method('PATCH')
-                                    <select name="status" onchange="this.form.submit()"
-                                            class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs focus:border-[#0b57d0] focus:outline-none">
+                                    <select name="status"
+                                            class="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs focus:border-[#0b57d0] focus:outline-none">
                                         @foreach (['pending', 'reviewed', 'shortlisted', 'rejected'] as $status)
                                             <option value="{{ $status }}" @selected($application->status === $status)>{{ ucfirst($status) }}</option>
                                         @endforeach
                                     </select>
+                                    <input type="text" name="note" maxlength="1000" placeholder="Catatan (opsional)"
+                                           class="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs focus:border-[#0b57d0] focus:outline-none">
+                                    <button type="submit"
+                                            class="w-full rounded-lg bg-[#0b57d0] px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700">
+                                        Simpan
+                                    </button>
                                 </form>
                             </td>
                             <td class="px-5 py-4">

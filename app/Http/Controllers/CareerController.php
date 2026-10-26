@@ -130,12 +130,14 @@ class CareerController extends Controller
         ]);
 
         $resumePath = $request->file('resume')->store('resumes', 'local');
+        $userId = $request->user()?->id;
 
         try {
-            DB::transaction(function () use ($job, $validated, $resumePath) {
-                JobApplication::create([
+            DB::transaction(function () use ($job, $validated, $resumePath, $userId) {
+                $application = JobApplication::create([
                     'job_listing_id' => $job instanceof JobListing ? $job->id : null,
                     'internship_id' => $job instanceof Internship ? $job->id : null,
+                    'user_id' => $userId,
                     'full_name' => $validated['full_name'],
                     'email' => $validated['email'],
                     'phone' => $validated['phone'],
@@ -143,6 +145,11 @@ class CareerController extends Controller
                     'portfolio' => $validated['portfolio'] ?? null,
                     'cover_letter' => $validated['cover_letter'],
                     'resume_path' => $resumePath,
+                ]);
+
+                $application->statusHistories()->create([
+                    'status' => 'pending',
+                    'note' => 'Lamaran dikirim.',
                 ]);
 
                 if ($job instanceof JobListing) {

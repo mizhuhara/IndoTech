@@ -22,6 +22,7 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\KnowledgeController;
+use App\Http\Controllers\MyApplicationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -177,6 +178,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard/university', [DashboardController::class, 'university'])->name('dashboard.university');
     Route::get('/dashboard/company', [DashboardController::class, 'company'])->name('dashboard.company');
     Route::get('/dashboard/user', [DashboardController::class, 'user'])->name('dashboard.user');
+    Route::get('/dashboard/applications', [MyApplicationController::class, 'index'])->name('applications.index');
 });
 
 // Auth Routes

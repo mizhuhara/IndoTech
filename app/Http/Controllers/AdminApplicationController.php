@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobApplication;
+use App\Notifications\ApplicationStatusUpdated;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -44,9 +46,32 @@ class AdminApplicationController extends Controller
     {
         $validated = $request->validate([
             'status' => ['required', 'in:pending,reviewed,shortlisted,rejected'],
+            'note' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        $application->update(['status' => $validated['status']]);
+        $previousStatus = $application->status;
+        $note = filled($validated['note'] ?? null) ? trim($validated['note']) : null;
+        $statusChanged = $previousStatus !== $validated['status'];
+
+        if (! $statusChanged && $note === null) {
+            return back()->with('success', "Tidak ada perubahan pada lamaran {$application->full_name}.");
+        }
+
+        DB::transaction(function () use ($application, $validated, $note) {
+            $application->update(['status' => $validated['status']]);
+
+            $application->statusHistories()->create([
+                'status' => $validated['status'],
+                'note' => $note,
+                'changed_by' => auth()->id(),
+            ]);
+        });
+
+        $application->user?->notify(new ApplicationStatusUpdated(
+            $application->fresh(),
+            $previousStatus,
+            $note
+        ));
 
         return back()->with('success', "Status lamaran {$application->full_name} diperbarui.");
     }
