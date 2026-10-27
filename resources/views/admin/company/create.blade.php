@@ -25,7 +25,7 @@
             {{-- Card 1: Basic Information --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="4" y="3" width="16" height="18" rx="2"/>
                         <path stroke-linecap="round" d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
                     </svg>
@@ -128,7 +128,7 @@
             {{-- Card 2: Company Description --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
                     <h2 class="text-[17px] font-bold text-slate-900">Deskripsi & Profil Perusahaan</h2>
@@ -146,7 +146,7 @@
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2.5 text-slate-900">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                             <rect x="3" y="3" width="18" height="18" rx="3"/>
                             <circle cx="8.5" cy="8.5" r="1.5"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
@@ -157,7 +157,7 @@
                         </div>
                     </div>
 
-                    <label class="cursor-pointer inline-flex items-center gap-1.5 text-[13.5px] font-bold text-[#0b57d0] hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
+                    <label class="cursor-pointer inline-flex items-center gap-1.5 text-[13.5px] font-bold text-brand-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
                         <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                         </svg>
@@ -178,7 +178,7 @@
             {{-- Card 4: Address & Google Maps Integration --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
                     </svg>
@@ -229,7 +229,7 @@
                 <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Logo Perusahaan</h2>
 
                 <div class="w-full aspect-[4/3] rounded-2xl bg-[#f0f4f9] border border-slate-200/70 flex items-center justify-center p-4 mb-4 relative overflow-hidden">
-                    <div id="logoPreviewWrapper" class="w-20 h-20 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b57d0] font-extrabold text-xl overflow-hidden shadow-sm">
+                    <div id="logoPreviewWrapper" class="w-20 h-20 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-brand-600 font-extrabold text-xl overflow-hidden shadow-sm">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="4" y="3" width="16" height="18" rx="2"/>
                             <path stroke-linecap="round" d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>

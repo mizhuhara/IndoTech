@@ -27,7 +27,7 @@
         </a>
 
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.univ.edit', $univ['id']) }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-sm transition">
+            <a href="{{ route('admin.univ.edit', $univ['id']) }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-sm transition">
                 <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -43,7 +43,7 @@
             {{-- Overview Card --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-6">
                 <div class="flex items-center gap-4">
-                    <div class="w-20 h-20 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b57d0] font-bold text-lg shrink-0 overflow-hidden shadow-xs p-2">
+                    <div class="w-20 h-20 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-brand-600 font-bold text-lg shrink-0 overflow-hidden shadow-xs p-2">
                         @if(!empty($univ['logo_url']))
                             <img src="{{ $univ['logo_url'] }}" alt="{{ $univ['name'] }}" class="w-full h-full object-contain">
                         @else
@@ -57,7 +57,7 @@
                         <div class="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-slate-500">
                             <span class="font-semibold text-slate-700">NPSN: {{ $univ['npsn'] ?? '-' }}</span>
                             <span>•</span>
-                            <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0b57d0] font-semibold">{{ $univ['type'] }}</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-brand-600 font-semibold">{{ $univ['type'] }}</span>
                             <span>•</span>
                             <span>{{ $univ['location'] }}</span>
                         </div>
@@ -75,7 +75,7 @@
             {{-- Campus Gallery Card --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-4 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="3" y="3" width="18" height="18" rx="3"/>
                         <circle cx="8.5" cy="8.5" r="1.5"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
@@ -98,7 +98,7 @@
                 @else
                     <div class="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                         <p class="text-sm font-medium text-slate-500">Belum ada foto galeri kampus yang diunggah.</p>
-                        <a href="{{ route('admin.univ.edit', $univ['id']) }}" class="inline-block mt-3 text-xs font-bold text-[#0b57d0] hover:underline">
+                        <a href="{{ route('admin.univ.edit', $univ['id']) }}" class="inline-block mt-3 text-xs font-bold text-brand-600 hover:underline">
                             + Tambah Foto Galeri Sekarang
                         </a>
                     </div>
@@ -131,7 +131,7 @@
                     <div class="flex justify-between py-1 border-b border-slate-50">
                         <span class="text-slate-500">Website</span>
                         @if(!empty($univ['website']))
-                            <a href="{{ $univ['website'] }}" target="_blank" class="font-medium text-[#0b57d0] hover:underline truncate max-w-[180px]">{{ $univ['website'] }}</a>
+                            <a href="{{ $univ['website'] }}" target="_blank" class="font-medium text-brand-600 hover:underline truncate max-w-[180px]">{{ $univ['website'] }}</a>
                         @else
                             <span class="font-medium text-slate-800">-</span>
                         @endif
@@ -152,7 +152,7 @@
                             ? "{$univ['latitude']},{$univ['longitude']}" 
                             : ($univ['address'] ?? $univ['name']);
                     @endphp
-                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($mapQuery) }}" target="_blank" class="text-xs font-bold text-[#0b57d0] hover:underline flex items-center gap-1">
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($mapQuery) }}" target="_blank" class="text-xs font-bold text-brand-600 hover:underline flex items-center gap-1">
                         Google Maps
                         <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
                     </a>

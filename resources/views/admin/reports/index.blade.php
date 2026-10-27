@@ -11,7 +11,7 @@
                 <h2 class="text-[16px] font-bold text-slate-900">Report Generation</h2>
                 <p class="text-[12.5px] text-slate-500">Filter dan buat laporan analitik platform dari data terbaru</p>
             </div>
-            <button id="generate-report" type="button" class="inline-flex items-center gap-2 h-9 px-4 rounded-xl bg-[#0b57d0] text-white text-[13px] font-semibold hover:bg-blue-700 shadow-xs transition">
+            <button id="generate-report" type="button" class="inline-flex items-center gap-2 h-9 px-4 rounded-xl bg-brand-600 text-white text-[13px] font-semibold hover:bg-blue-700 shadow-xs transition">
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
                 Generate Report
             </button>
@@ -123,7 +123,7 @@
                             <td class="px-6 py-3.5 text-slate-600">{{ number_format($export->rows_count) }}</td>
                             <td class="px-6 py-3.5 text-slate-600">{{ $export->user?->name ?? 'System' }}</td>
                             <td class="px-6 py-3.5 text-right">
-                                <a href="{{ route('admin.reports.show', $exportQuery) }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">Buka</a>
+                                <a href="{{ route('admin.reports.show', $exportQuery) }}" class="text-[13px] font-semibold text-brand-600 hover:underline">Buka</a>
                             </td>
                         </tr>
                     @empty
@@ -174,7 +174,7 @@
                                 <span class="inline-flex px-2.5 py-1 rounded-full text-[12px] font-semibold bg-emerald-50 text-emerald-600">Ready</span>
                             </td>
                             <td class="px-6 py-3.5 text-right">
-                                <a href="{{ route('admin.reports.show', ['type' => $r['slug'], 'from' => $from, 'to' => $to]) }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">View Detail →</a>
+                                <a href="{{ route('admin.reports.show', ['type' => $r['slug'], 'from' => $from, 'to' => $to]) }}" class="text-[13px] font-semibold text-brand-600 hover:underline">View Detail →</a>
                             </td>
                         </tr>
                     @endforeach

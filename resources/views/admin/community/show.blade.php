@@ -52,7 +52,7 @@
             {{-- Card 1: Basic Information --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="4" y="3" width="16" height="18" rx="2"/>
                         <path stroke-linecap="round" d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
                     </svg>
@@ -63,7 +63,7 @@
                     <div>
                         <div class="text-[13px] font-semibold text-slate-500 mb-1">Category</div>
                         <div class="text-[15px] font-bold text-slate-900">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-bold bg-blue-50 text-[#0b57d0]">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-bold bg-blue-50 text-brand-600">
                                 {{ $community['category'] ?? '-' }}
                             </span>
                         </div>
@@ -98,7 +98,7 @@
             {{-- Card 2: Community Description --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
                     <h2 class="text-[17px] font-bold text-slate-900">Description</h2>
@@ -112,7 +112,7 @@
             {{-- Card 3: Gallery --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="3" y="3" width="18" height="18" rx="3"/>
                         <circle cx="8.5" cy="8.5" r="1.5"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
@@ -142,7 +142,7 @@
                 <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Community Logo</h2>
                 
                 <div class="w-full aspect-[4/3] rounded-2xl bg-[#f0f4f9] border border-slate-200/70 flex items-center justify-center p-6 mb-4 relative overflow-hidden">
-                    <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center shadow-sm border border-white text-[#0b57d0] font-extrabold text-3xl overflow-hidden">
+                    <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center shadow-sm border border-white text-brand-600 font-extrabold text-3xl overflow-hidden">
                         @if(!empty($community['logo_url']))
                             <img src="{{ $community['logo_url'] }}" alt="Logo" class="w-full h-full object-cover">
                         @else

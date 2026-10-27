@@ -22,7 +22,7 @@
             </h1>
             {{-- Category / Location / Type Badges --}}
             <div class="flex flex-wrap items-center gap-2.5 mt-3">
-                <span class="inline-block bg-[#d9e6ff] text-[#0842a0] text-[12px] font-bold px-3.5 py-1 rounded-full">
+                <span class="inline-block bg-[#d9e6ff] text-brand-700 text-[12px] font-bold px-3.5 py-1 rounded-full">
                     {{ $internship['category'] ?? 'Engineering' }}
                 </span>
                 <span class="inline-block bg-slate-200/80 text-slate-700 text-[12px] font-bold px-3.5 py-1 rounded-full">
@@ -75,7 +75,7 @@
                                 @php $cleanLine = ltrim($line, "-* "); @endphp
                                 @if (trim($cleanLine))
                                     <li class="flex items-start gap-3">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-[#0b57d0] mt-2 shrink-0"></span>
+                                        <span class="w-1.5 h-1.5 rounded-full bg-brand-600 mt-2 shrink-0"></span>
                                         <span>{{ $cleanLine }}</span>
                                     </li>
                                 @endif
@@ -137,26 +137,26 @@
 
                 {{-- Views Stat --}}
                 <div class="bg-blue-50/60 border border-blue-100 rounded-xl p-4 flex items-center justify-between">
-                    <span class="text-[11px] uppercase tracking-wider font-extrabold text-[#0b57d0]">
+                    <span class="text-[11px] uppercase tracking-wider font-extrabold text-brand-600">
                         TOTAL VIEWS
                     </span>
-                    <span class="text-[28px] font-extrabold text-[#0842a0] leading-none">
+                    <span class="text-[28px] font-extrabold text-brand-700 leading-none">
                         {{ $internship['total_views'] ?? 124 }}
                     </span>
                 </div>
 
                 {{-- Applicants Stat --}}
                 <div class="bg-blue-50/60 border border-blue-100 rounded-xl p-4 flex items-center justify-between">
-                    <span class="text-[11px] uppercase tracking-wider font-extrabold text-[#0b57d0]">
+                    <span class="text-[11px] uppercase tracking-wider font-extrabold text-brand-600">
                         APPLICANTS
                     </span>
-                    <span class="text-[28px] font-extrabold text-[#0842a0] leading-none">
+                    <span class="text-[28px] font-extrabold text-brand-700 leading-none">
                         {{ $internship['applicants_count'] ?? 38 }}
                     </span>
                 </div>
 
                 {{-- View Applicants Button --}}
-                <a href="#" class="inline-flex items-center justify-center w-full bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13.5px] py-3 rounded-xl shadow-2xs transition">
+                <a href="#" class="inline-flex items-center justify-center w-full bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13.5px] py-3 rounded-xl shadow-2xs transition">
                     View Applicants
                 </a>
             </div>

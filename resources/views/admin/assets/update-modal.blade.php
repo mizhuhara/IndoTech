@@ -13,7 +13,7 @@
         {{-- Header --}}
         <div class="px-6 py-4.5 border-b border-slate-100 flex items-start justify-between gap-3 shrink-0 bg-slate-50/50">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0 border border-blue-100 font-bold text-sm">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0 border border-blue-100 font-bold text-sm">
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                     </svg>
@@ -51,7 +51,7 @@
                 </button>
                 <button type="submit" 
                         id="global-update-submit-btn" 
-                        class="px-4.5 py-2 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer flex items-center gap-1.5">
+                        class="px-4.5 py-2 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer flex items-center gap-1.5">
                     <span>Simpan Perubahan</span>
                 </button>
             </div>

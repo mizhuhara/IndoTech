@@ -33,7 +33,7 @@
 
     {{-- Action Button --}}
     <div class="flex items-center justify-end">
-        <a href="{{ route('admin.jobs.create') }}" class="inline-flex items-center justify-center gap-2 bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg shadow-xs transition">
+        <a href="{{ route('admin.jobs.create') }}" class="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg shadow-xs transition">
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.8"><path d="M12 5v14M5 12h14"/></svg>
             <span>POST NEW JOB</span>
         </a>
@@ -79,19 +79,19 @@
             {{-- Nav Tabs --}}
             <div class="flex items-center gap-6 text-[13px] font-bold">
                 <a href="{{ route('admin.jobs.index', ['tab' => 'all']) }}" 
-                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'all' ? 'border-[#0b57d0] text-[#0b57d0]' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
+                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'all' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
                     ALL JOBS
                 </a>
                 <a href="{{ route('admin.jobs.index', ['tab' => 'active']) }}" 
-                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'active' ? 'border-[#0b57d0] text-[#0b57d0]' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
+                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'active' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
                     ACTIVE
                 </a>
                 <a href="{{ route('admin.jobs.index', ['tab' => 'drafts']) }}" 
-                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'drafts' ? 'border-[#0b57d0] text-[#0b57d0]' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
+                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'drafts' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
                     DRAFTS
                 </a>
                 <a href="{{ route('admin.jobs.index', ['tab' => 'closed']) }}" 
-                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'closed' ? 'border-[#0b57d0] text-[#0b57d0]' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
+                   class="py-3.5 border-b-2 transition relative {{ $currentTab === 'closed' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
                     CLOSED
                 </a>
             </div>
@@ -157,7 +157,7 @@
                     @forelse ($jobs as $job)
                         <tr class="hover:bg-slate-50/80 transition group">
                             <td class="py-4 pl-6 pr-4">
-                                <a href="{{ route('admin.jobs.show', $job['id']) }}" class="font-bold text-slate-900 hover:text-[#0b57d0] transition block leading-tight">
+                                <a href="{{ route('admin.jobs.show', $job['id']) }}" class="font-bold text-slate-900 hover:text-brand-600 transition block leading-tight">
                                     {{ $job['title'] }}
                                 </a>
                                 <span class="text-[11.5px] text-slate-400 font-medium block mt-0.5">
@@ -293,7 +293,7 @@
 
             <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
                 <a href="{{ route('admin.jobs.index', ['tab' => $currentTab]) }}" class="px-3.5 py-2 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition cursor-pointer">Reset</a>
-                <button type="submit" class="px-4 py-2 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold shadow-xs transition cursor-pointer">Terapkan Filter</button>
+                <button type="submit" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold shadow-xs transition cursor-pointer">Terapkan Filter</button>
             </div>
         </form>
     </div>

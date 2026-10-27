@@ -25,13 +25,13 @@
 
     <form method="GET" action="{{ route('admin.applications.index') }}" class="bg-white rounded-2xl border border-slate-200/80 p-4 flex flex-wrap items-center gap-3">
         <input type="text" name="q" value="{{ $searchQuery }}" placeholder="Cari nama, email, atau telepon"
-               class="flex-1 min-w-52 rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-[#0b57d0] focus:outline-none">
-        <select name="status" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-[#0b57d0] focus:outline-none">
+               class="flex-1 min-w-52 rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-600 focus:outline-none">
+        <select name="status" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-600 focus:outline-none">
             @foreach (['all' => 'Semua Status', 'pending' => 'Pending', 'reviewed' => 'Reviewed', 'shortlisted' => 'Shortlisted', 'rejected' => 'Rejected'] as $value => $label)
                 <option value="{{ $value }}" @selected($activeStatus === $value)>{{ $label }}</option>
             @endforeach
         </select>
-        <button type="submit" class="rounded-xl bg-[#0b57d0] px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Filter</button>
+        <button type="submit" class="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Filter</button>
     </form>
 
     <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
@@ -66,22 +66,22 @@
                                     @csrf
                                     @method('PATCH')
                                     <select name="status"
-                                            class="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs focus:border-[#0b57d0] focus:outline-none">
+                                            class="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs focus:border-brand-600 focus:outline-none">
                                         @foreach (['pending', 'reviewed', 'shortlisted', 'rejected'] as $status)
                                             <option value="{{ $status }}" @selected($application->status === $status)>{{ ucfirst($status) }}</option>
                                         @endforeach
                                     </select>
                                     <input type="text" name="note" maxlength="1000" placeholder="Catatan (opsional)"
-                                           class="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs focus:border-[#0b57d0] focus:outline-none">
+                                           class="w-full rounded-lg border border-slate-200 px-3 py-1.5 text-xs focus:border-brand-600 focus:outline-none">
                                     <button type="submit"
-                                            class="w-full rounded-lg bg-[#0b57d0] px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700">
+                                            class="w-full rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700">
                                         Simpan
                                     </button>
                                 </form>
                             </td>
                             <td class="px-5 py-4">
                                 <div class="flex items-center gap-3">
-                                    <a href="{{ route('admin.applications.resume', $application) }}" class="text-[#0b57d0] font-semibold hover:underline">Resume</a>
+                                    <a href="{{ route('admin.applications.resume', $application) }}" class="text-brand-600 font-semibold hover:underline">Resume</a>
                                     <form method="POST" action="{{ route('admin.applications.destroy', $application) }}" onsubmit="return confirm('Hapus lamaran ini?')">
                                         @csrf
                                         @method('DELETE')
