@@ -24,7 +24,7 @@
         <div class="lg:col-span-8 space-y-6">
 
             {{-- Card 1: Basic Information --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
@@ -38,38 +38,38 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {{-- School Name --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">School Name</label>
+                        <label class="form-label">School Name</label>
                         <input type="text" 
                                name="name" 
                                value="{{ old('name', $school['name']) }}" 
                                required
                                placeholder="SMK Telkom Jakarta"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('name')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- NPSN --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">NPSN</label>
+                        <label class="form-label">NPSN</label>
                         <input type="text" 
                                name="npsn" 
                                value="{{ old('npsn', $school['npsn']) }}" 
                                required
                                placeholder="20109988"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('npsn')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Institution Type --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Institution Type</label>
+                        <label class="form-label">Institution Type</label>
                         <div class="relative">
                             <select name="institution_type" 
-                                    class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
+                                    class="input appearance-none cursor-pointer pr-10">
                                 <option value="SMK IT" {{ old('institution_type', $school['institution_type'] ?? '') == 'SMK IT' ? 'selected' : '' }}>SMK IT</option>
                                 <option value="SMK" {{ old('institution_type', $school['institution_type'] ?? '') == 'SMK' ? 'selected' : '' }}>SMK</option>
                                 <option value="SMA IT" {{ old('institution_type', $school['institution_type'] ?? '') == 'SMA IT' ? 'selected' : '' }}>SMA IT</option>
@@ -83,22 +83,22 @@
 
                     {{-- Location --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Location</label>
+                        <label class="form-label">Location</label>
                         <input type="text" 
                                name="location" 
                                value="{{ old('location', $school['location']) }}" 
                                required
                                placeholder="Jakarta Barat, DKI Jakarta"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('location')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
             {{-- Card 2: School Description --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
@@ -108,13 +108,13 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Profile & Curriculum Details</label>
+                    <label class="form-label">Profile & Curriculum Details</label>
                     <textarea name="description" 
                               id="schoolDescription"
                               rows="5"
                               maxlength="1000"
                               oninput="document.getElementById('charCount').textContent = this.value.length + ' / 1000 characters'"
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-4 text-[14px] text-slate-800 outline-none transition font-medium leading-relaxed resize-none">{{ old('description', $school['description'] ?? 'SMK Telkom Jakarta is a premier vocational high school focusing on Information Technology and Telecommunications. We prepare students for the modern tech workforce with a specialized curriculum in Network Engineering, Software Development, and Multimedia.') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('description', $school['description'] ?? 'SMK Telkom Jakarta is a premier vocational high school focusing on Information Technology and Telecommunications. We prepare students for the modern tech workforce with a specialized curriculum in Network Engineering, Software Development, and Multimedia.') }}</textarea>
                     
                     <div class="flex justify-end mt-2">
                         <span id="charCount" class="text-[12.5px] font-medium text-slate-500">
@@ -125,7 +125,7 @@
             </div>
 
             {{-- Card 3: Campus Gallery --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Action --}}
                 <div class="flex items-center justify-between mb-5">
                     <div class="flex items-center gap-2.5 text-slate-900">
@@ -168,7 +168,7 @@
         <div class="lg:col-span-4 space-y-6">
 
             {{-- Card 1: Logo & Branding --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col items-center text-center">
+            <div class="card flex flex-col items-center text-center">
                 <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Logo & Branding</h2>
 
                 {{-- Logo Preview Box --}}
@@ -204,7 +204,7 @@
             </div>
 
             {{-- Card 2: Map Location --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <h2 class="text-[17px] font-bold text-slate-900 mb-4">Map Location</h2>
 
                 {{-- Visual Map Graphic --}}

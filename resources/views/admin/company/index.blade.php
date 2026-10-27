@@ -138,11 +138,11 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/75 text-[11.5px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">
-                        <th class="px-6 py-4">NAMA PERUSAHAAN</th>
-                        <th class="px-6 py-4">TIPE</th>
-                        <th class="px-6 py-4">INDUSTRI</th>
-                        <th class="px-6 py-4">LOKASI & MAPS</th>
-                        <th class="px-6 py-4">STATUS</th>
+                        <th class="cell">NAMA PERUSAHAAN</th>
+                        <th class="cell">TIPE</th>
+                        <th class="cell">INDUSTRI</th>
+                        <th class="cell">LOKASI & MAPS</th>
+                        <th class="cell">STATUS</th>
                         <th class="px-6 py-4 text-center">AKSI</th>
                     </tr>
                 </thead>
@@ -150,7 +150,7 @@
                     @forelse ($companies as $company)
                         <tr class="hover:bg-slate-50/70 transition group">
                             {{-- Company Name & Logo --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <div class="flex items-center gap-3.5">
                                     <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-slate-800 to-slate-900 text-white font-extrabold flex items-center justify-center text-xs shrink-0 overflow-hidden shadow-sm">
                                         @if(!empty($company->logo_url))
@@ -171,7 +171,7 @@
                             </td>
 
                             {{-- Type Badge --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 @if(strtoupper($company->type) === 'BUMN')
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200">{{ $company->type }}</span>
                                 @else
@@ -185,7 +185,7 @@
                             </td>
 
                             {{-- Location & Maps Icon --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <div class="flex items-center gap-1.5 font-semibold text-slate-800 leading-tight">
                                     <span>{{ $company->location }}</span>
                                     @if($company->map_link)
@@ -203,7 +203,7 @@
                             </td>
 
                             {{-- Status --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 @if(strtolower($company->status) === 'active')
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>

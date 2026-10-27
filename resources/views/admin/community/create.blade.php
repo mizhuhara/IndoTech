@@ -23,7 +23,7 @@
         <div class="lg:col-span-8 space-y-6">
 
             {{-- Card 1: Basic Information --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
@@ -37,24 +37,24 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {{-- Community Name --}}
                     <div class="sm:col-span-2">
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Community Name <span class="text-red-500">*</span></label>
+                        <label class="form-label">Community Name <span class="text-red-500">*</span></label>
                         <input type="text" 
                                name="name" 
                                value="{{ old('name') }}" 
                                required
                                placeholder="Contoh: Web Developer Indonesia"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('name')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Category --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Category <span class="text-red-500">*</span></label>
+                        <label class="form-label">Category <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <select name="category" 
-                                    class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
+                                    class="input appearance-none cursor-pointer pr-10">
                                 <option value="Technology" {{ old('category') == 'Technology' ? 'selected' : '' }}>Technology</option>
                                 <option value="Design" {{ old('category') == 'Design' ? 'selected' : '' }}>Design</option>
                                 <option value="Business" {{ old('category') == 'Business' ? 'selected' : '' }}>Business</option>
@@ -68,7 +68,7 @@
 
                     {{-- Status --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Status <span class="text-red-500">*</span></label>
+                        <label class="form-label">Status <span class="text-red-500">*</span></label>
                         <div class="flex items-center gap-6 h-12">
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="radio" name="status" value="active" {{ old('status', 'active') === 'active' ? 'checked' : '' }}
@@ -82,14 +82,14 @@
                             </label>
                         </div>
                         @error('status')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
             {{-- Card 2: Description --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
@@ -98,14 +98,14 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Community Profile</label>
+                    <label class="form-label">Community Profile</label>
                     <textarea name="description" 
                               id="communityDescription"
                               rows="5"
                               maxlength="1000"
                               oninput="document.getElementById('charCount').textContent = this.value.length + ' / 1000 characters'"
                               placeholder="Tuliskan deskripsi singkat komunitas..."
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-4 text-[14px] text-slate-800 outline-none transition font-medium leading-relaxed resize-none">{{ old('description') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('description') }}</textarea>
                     
                     <div class="flex justify-end mt-2">
                         <span id="charCount" class="text-[12.5px] font-medium text-slate-500">
@@ -121,7 +121,7 @@
         <div class="lg:col-span-4 space-y-6">
 
             {{-- Card 1: Logo / Avatar --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col items-center text-center">
+            <div class="card flex flex-col items-center text-center">
                 <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Community Logo</h2>
 
                 {{-- Logo Preview Box --}}
@@ -151,26 +151,26 @@
             </div>
 
             {{-- Card 2: Contact Info --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <h2 class="text-[17px] font-bold text-slate-900 mb-4">Contact & Socials</h2>
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Email</label>
+                        <label class="form-label">Email</label>
                         <input type="email" 
                                name="email" 
                                value="{{ old('email') }}" 
                                placeholder="hello@community.org"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Website</label>
+                        <label class="form-label">Website</label>
                         <input type="url" 
                                name="website" 
                                value="{{ old('website') }}" 
                                placeholder="https://www.community.org"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
                 </div>
             </div>

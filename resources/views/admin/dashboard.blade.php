@@ -108,10 +108,10 @@
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-slate-50 text-[12px] uppercase tracking-wide text-slate-500">
-                        <th class="px-6 py-3.5 font-semibold">Entity Name</th>
-                        <th class="px-6 py-3.5 font-semibold">Type</th>
-                        <th class="px-6 py-3.5 font-semibold">Registration Date</th>
-                        <th class="px-6 py-3.5 font-semibold">Status</th>
+                        <th class="table-head">Entity Name</th>
+                        <th class="table-head">Type</th>
+                        <th class="table-head">Registration Date</th>
+                        <th class="table-head">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-[13.5px]">
@@ -120,7 +120,7 @@
                             <td class="px-6 py-4 font-semibold text-slate-900">{{ $r['name'] }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $r['type'] }}</td>
                             <td class="px-6 py-4 text-slate-500">{{ $r['date'] }}</td>
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <span class="inline-flex px-3 py-1 rounded-full text-[12px] font-semibold {{ $r['badge'] }}">{{ $r['status'] }}</span>
                             </td>
                         </tr>

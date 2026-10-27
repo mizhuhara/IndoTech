@@ -44,7 +44,7 @@
         <div class="lg:col-span-8 space-y-6">
 
             {{-- Card 1: Basic Information --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
@@ -58,33 +58,33 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {{-- Company Name --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Company Name <span class="text-red-500">*</span></label>
+                        <label class="form-label">Company Name <span class="text-red-500">*</span></label>
                         <input type="text" 
                                name="name" 
                                value="{{ old('name', $company['name'] ?? '') }}" 
                                required
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('name')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Company Code --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Company Code / NPSN</label>
+                        <label class="form-label">Company Code / NPSN</label>
                         <input type="text" 
                                name="npsn" 
                                value="{{ old('npsn', $company['npsn'] ?? '') }}" 
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     {{-- Company Type --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Company Type <span class="text-red-500">*</span></label>
+                        <label class="form-label">Company Type <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <select name="type" 
                                     required
-                                    class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
+                                    class="input appearance-none cursor-pointer pr-10">
                                 <option value="Swasta" {{ old('type', $company['type'] ?? '') == 'Swasta' ? 'selected' : '' }}>Swasta</option>
                                 <option value="BUMN" {{ old('type', $company['type'] ?? '') == 'BUMN' ? 'selected' : '' }}>BUMN</option>
                                 <option value="Multinasional" {{ old('type', $company['type'] ?? '') == 'Multinasional' ? 'selected' : '' }}>Multinasional</option>
@@ -98,67 +98,67 @@
 
                     {{-- Industry --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Industry <span class="text-red-500">*</span></label>
+                        <label class="form-label">Industry <span class="text-red-500">*</span></label>
                         <input type="text" 
                                name="industry" 
                                value="{{ old('industry', $company['industry'] ?? '') }}" 
                                required
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('industry')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- City --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">City / Kota</label>
+                        <label class="form-label">City / Kota</label>
                         <input type="text" 
                                name="city" 
                                value="{{ old('city', $company['city'] ?? '') }}" 
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     {{-- Province --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Province / Provinsi</label>
+                        <label class="form-label">Province / Provinsi</label>
                         <input type="text" 
                                name="province" 
                                value="{{ old('province', $company['province'] ?? '') }}" 
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     {{-- Location Summary --}}
                     <div class="sm:col-span-2">
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Ringkasan Lokasi (Location)</label>
+                        <label class="form-label">Ringkasan Lokasi (Location)</label>
                         <input type="text" 
                                name="location" 
                                value="{{ old('location', $company['location'] ?? '') }}" 
                                placeholder="Contoh: Denpasar, Bali atau Jakarta Selatan"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     {{-- Employees & Founded --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Jumlah Karyawan</label>
+                        <label class="form-label">Jumlah Karyawan</label>
                         <input type="number" 
                                name="total_employees" 
                                value="{{ old('total_employees', $company['total_employees'] ?? '') }}" 
                                placeholder="Contoh: 100"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Tahun Berdiri</label>
+                        <label class="form-label">Tahun Berdiri</label>
                         <input type="number" 
                                name="founded" 
                                value="{{ old('founded', $company['founded'] ?? '') }}" 
                                placeholder="Contoh: 2018"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     {{-- Status --}}
                     <div class="sm:col-span-2">
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Status Kemitraan</label>
+                        <label class="form-label">Status Kemitraan</label>
                         <div class="flex items-center gap-6">
                             @php
                                 $currentStatus = strtolower($company['status'] ?? 'active');
@@ -182,7 +182,7 @@
             </div>
 
             {{-- Card 2: Company Description --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
@@ -192,13 +192,13 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Profile & Business Details</label>
+                    <label class="form-label">Profile & Business Details</label>
                     <textarea name="description" 
                               id="companyDescription"
                               rows="5"
                               maxlength="1000"
                               oninput="document.getElementById('charCount').textContent = this.value.length + ' / 1000 characters'"
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-4 text-[14px] text-slate-800 outline-none transition font-medium leading-relaxed resize-none">{{ old('description', $company['description'] ?? '') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('description', $company['description'] ?? '') }}</textarea>
                     
                     <div class="flex justify-end mt-2">
                         <span id="charCount" class="text-[12.5px] font-medium text-slate-500">
@@ -209,7 +209,7 @@
             </div>
 
             {{-- Card 3: Company Gallery --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Action --}}
                 <div class="flex items-center justify-between mb-5">
                     <div class="flex items-center gap-2.5 text-slate-900">
@@ -282,7 +282,7 @@
         <div class="lg:col-span-4 space-y-6">
 
             {{-- Card 1: Logo & Branding --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col items-center text-center">
+            <div class="card flex flex-col items-center text-center">
     <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Logo & Branding</h2>
 
     {{-- Logo Preview Box --}}
@@ -314,58 +314,58 @@
 </div>
 
             {{-- Card 2: Contact Information --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <h2 class="text-[17px] font-bold text-slate-900 mb-4">Contact Information</h2>
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Email</label>
+                        <label class="form-label">Email</label>
                         <input type="email" 
                                name="email" 
                                value="{{ old('email', $company['email'] ?? '') }}" 
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Website</label>
+                        <label class="form-label">Website</label>
                         <input type="url" 
                                name="website" 
                                value="{{ old('website', $company['website'] ?? '') }}" 
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Phone</label>
+                        <label class="form-label">Phone</label>
                         <input type="text" 
                                name="phone" 
                                value="{{ old('phone', $company['phone'] ?? '') }}" 
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
                 </div>
             </div>
 
             {{-- Card 3: Address --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <h2 class="text-[17px] font-bold text-slate-900 mb-4">Full Address</h2>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Alamat Lengkap</label>
+                    <label class="form-label">Alamat Lengkap</label>
                     <textarea name="address" 
                               rows="3"
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-3 text-[13.5px] text-slate-800 outline-none transition font-medium">{{ old('address', $company['address'] ?? '') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('address', $company['address'] ?? '') }}</textarea>
                 </div>
 
                 <!-- Map Link Input -->
                 <div class="mt-4">
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Link Google Maps (embed or iframe)</label>
+                    <label class="form-label">Link Google Maps (embed or iframe)</label>
                     <input type="text" name="map_link" value="{{ old('map_link', $company['map_link'] ?? '') }}"
-                           class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium" placeholder="https://www.google.com/maps/...">
+                           class="input" placeholder="https://www.google.com/maps/...">
                     @error('map_link')
                         <p class="mt-1.5 text-xs font-semibold text-red-500">{{ $message }}</p>
                     @enderror
                     @if(!empty($company['map_link']))
                         <div class="mt-4">
-                            <label class="block text-[13px] font-semibold text-slate-700 mb-2">Pratinjau Peta</label>
+                            <label class="form-label">Pratinjau Peta</label>
                             <iframe src="{{ $company['map_link'] }}" width="100%" height="300" style="border:0;" allowfullscreen loading="lazy"></iframe>
                         </div>
                     @endif

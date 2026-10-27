@@ -136,10 +136,10 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/75 text-[11.5px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">
-                        <th class="px-6 py-4">NAMA & EMAIL</th>
-                        <th class="px-6 py-4">ROLE / TIPE</th>
-                        <th class="px-6 py-4">PENANGGUNG JAWAB & NO. HP</th>
-                        <th class="px-6 py-4">STATUS</th>
+                        <th class="cell">NAMA & EMAIL</th>
+                        <th class="cell">ROLE / TIPE</th>
+                        <th class="cell">PENANGGUNG JAWAB & NO. HP</th>
+                        <th class="cell">STATUS</th>
                         <th class="px-6 py-4 text-center">AKSI / DETAIL</th>
                     </tr>
                 </thead>
@@ -169,7 +169,7 @@
                         @endphp
                         <tr class="hover:bg-slate-50/70 transition group">
                             {{-- Entity Name & Email --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <div class="flex items-center gap-3.5">
                                     <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-slate-800 to-slate-900 text-white font-extrabold flex items-center justify-center text-xs shrink-0 shadow-sm">
                                         @if(in_array($roleLower, ['school', 'school_admin']))
@@ -190,14 +190,14 @@
                             </td>
 
                             {{-- Tipe / Role --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border capitalize {{ $roleBadge }}">
                                     {{ $roleDisplayName }}
                                 </span>
                             </td>
 
                             {{-- Penanggung Jawab & HP --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <div class="font-semibold text-slate-800 leading-tight">
                                     {{ $req->org_contact ?? 'Pengguna Individu' }}
                                 </div>
@@ -207,7 +207,7 @@
                             </td>
 
                             {{-- Status --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 @if($statusLower === 'active' || $statusLower === 'approved')
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>

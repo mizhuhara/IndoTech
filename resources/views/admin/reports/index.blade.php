@@ -84,12 +84,12 @@
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-slate-50 text-[12px] uppercase tracking-wide text-slate-500">
-                        <th class="px-6 py-3.5 font-semibold">Waktu</th>
-                        <th class="px-6 py-3.5 font-semibold">Laporan</th>
-                        <th class="px-6 py-3.5 font-semibold">Periode</th>
-                        <th class="px-6 py-3.5 font-semibold">Format</th>
-                        <th class="px-6 py-3.5 font-semibold">Baris</th>
-                        <th class="px-6 py-3.5 font-semibold">Oleh</th>
+                        <th class="table-head">Waktu</th>
+                        <th class="table-head">Laporan</th>
+                        <th class="table-head">Periode</th>
+                        <th class="table-head">Format</th>
+                        <th class="table-head">Baris</th>
+                        <th class="table-head">Oleh</th>
                         <th class="px-6 py-3.5 font-semibold text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -153,12 +153,12 @@
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-slate-50 text-[12px] uppercase tracking-wide text-slate-500">
-                        <th class="px-6 py-3.5 font-semibold">ID</th>
-                        <th class="px-6 py-3.5 font-semibold">Title</th>
-                        <th class="px-6 py-3.5 font-semibold">Type</th>
-                        <th class="px-6 py-3.5 font-semibold">Period</th>
-                        <th class="px-6 py-3.5 font-semibold">Records</th>
-                        <th class="px-6 py-3.5 font-semibold">Status</th>
+                        <th class="table-head">ID</th>
+                        <th class="table-head">Title</th>
+                        <th class="table-head">Type</th>
+                        <th class="table-head">Period</th>
+                        <th class="table-head">Records</th>
+                        <th class="table-head">Status</th>
                         <th class="px-6 py-3.5 font-semibold text-right">Action</th>
                     </tr>
                 </thead>

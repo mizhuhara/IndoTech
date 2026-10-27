@@ -111,7 +111,7 @@
                             <td class="px-6 py-4 text-slate-600">{{ $internship->company }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $internship->user->name ?? '-' }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $internship->location ?? '-' }}</td>
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 @if ($internship->status === 'active')
                                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 font-medium text-xs">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
@@ -231,7 +231,7 @@
             @method('PUT')
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">User <span class="text-red-500">*</span></label>
+                <label class="form-label-strong">User <span class="text-red-500">*</span></label>
                 <select id="edit_user_id" name="user_id" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
                     <option value="">Pilih User</option>
                     @foreach (\App\Models\User::all() as $user)
@@ -241,28 +241,28 @@
             </div>
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Judul <span class="text-red-500">*</span></label>
+                <label class="form-label-strong">Judul <span class="text-red-500">*</span></label>
                 <input type="text" id="edit_title" name="title" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
             </div>
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Perusahaan <span class="text-red-500">*</span></label>
+                <label class="form-label-strong">Perusahaan <span class="text-red-500">*</span></label>
                 <input type="text" id="edit_company" name="company" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
             </div>
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Deskripsi</label>
+                <label class="form-label-strong">Deskripsi</label>
                 <textarea id="edit_description" name="description" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition resize-none"></textarea>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block font-bold text-slate-800 mb-1">Lokasi</label>
+                    <label class="form-label-strong">Lokasi</label>
                     <input type="text" id="edit_location" name="location" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-800 mb-1">Status <span class="text-red-500">*</span></label>
+                    <label class="form-label-strong">Status <span class="text-red-500">*</span></label>
                     <select id="edit_status" name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
                         <option value="active">Active</option>
                         <option value="inactive">Inactive</option>
@@ -273,18 +273,18 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block font-bold text-slate-800 mb-1">Tanggal Mulai</label>
+                    <label class="form-label-strong">Tanggal Mulai</label>
                     <input type="date" id="edit_start_date" name="start_date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-800 mb-1">Tanggal Selesai</label>
+                    <label class="form-label-strong">Tanggal Selesai</label>
                     <input type="date" id="edit_end_date" name="end_date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition">
                 </div>
             </div>
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Foto Profil <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                <label class="form-label-strong">Foto Profil <span class="text-slate-400 font-normal">(Opsional)</span></label>
                 <input type="file" id="edit_profile_picture" name="profile_picture" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-xs">
                 <p class="text-[11px] text-slate-500 mt-1">Format: JPG, PNG, GIF (Max 2MB). Biarkan kosong untuk tidak mengubah.</p>
                 <div id="current_profile" class="mt-2"></div>

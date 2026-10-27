@@ -41,7 +41,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-8 space-y-6">
             {{-- Overview Card --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-6">
+            <div class="card space-y-6">
                 <div class="flex items-center gap-4">
                     <div class="w-20 h-20 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-brand-600 font-bold text-lg shrink-0 overflow-hidden shadow-xs p-2">
                         @if(!empty($univ['logo_url']))
@@ -73,7 +73,7 @@
             </div>
 
             {{-- Campus Gallery Card --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <div class="flex items-center gap-2.5 mb-4 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="3" y="3" width="18" height="18" rx="3"/>
@@ -108,7 +108,7 @@
 
         <div class="lg:col-span-4 space-y-6">
             {{-- Quick Info Card --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div class="card space-y-4">
                 <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Informasi Tambahan</h3>
 
                 <div class="space-y-3 text-sm">
@@ -144,7 +144,7 @@
             </div>
 
             {{-- Map Location Card --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-3">
+            <div class="card space-y-3">
                 <div class="flex items-center justify-between">
                     <h3 class="text-base font-bold text-slate-900">Peta Lokasi</h3>
                     @php
