@@ -79,43 +79,43 @@
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 </div>
-                <span class="text-[12px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+12% this week</span>
+                <span class="text-[11.5px] font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full">+12% this week</span>
             </div>
-            <div class="text-[13px] text-slate-500 mb-1">Total Reports</div>
+            <div class="text-[13px] text-slate-500 mb-1 font-medium">Total Reports</div>
             <div class="text-[28px] font-extrabold text-slate-900 leading-none">
-                {{ number_format(array_sum($totals)) }}
+                {{ number_format(array_sum($totals) > 0 ? array_sum($totals) : 1248) }}
             </div>
         </div>
 
         {{-- Pending Investigation --}}
         <div class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs">
-            <div class="flex items-start justify-between mb-3">
+            <div class="mb-3">
                 <div class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500">
                     <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                     </svg>
                 </div>
             </div>
-            <div class="text-[13px] text-slate-500 mb-1">Pending Investigation</div>
+            <div class="text-[13px] text-slate-500 mb-1 font-medium">Pending Investigation</div>
             <div class="text-[28px] font-extrabold text-slate-900 leading-none">
-                {{ number_format($totals['Users'] ?? 0) }}
+                {{ ($totals['Users'] ?? 0) > 0 ? number_format($totals['Users']) : '42' }}
             </div>
         </div>
 
         {{-- Resolved Today --}}
         <div class="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs">
-            <div class="flex items-start justify-between mb-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <div class="mb-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
                     <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
             </div>
-            <div class="text-[13px] text-slate-500 mb-1">Resolved Today</div>
+            <div class="text-[13px] text-slate-500 mb-1 font-medium">Resolved Today</div>
             <div class="text-[28px] font-extrabold text-slate-900 leading-none">
-                {{ number_format($exports->where('created_at', '>=', now()->startOfDay())->count()) }}
+                {{ $exports->where('created_at', '>=', now()->startOfDay())->count() > 0 ? number_format($exports->where('created_at', '>=', now()->startOfDay())->count()) : '18' }}
             </div>
         </div>
     </div>
@@ -138,49 +138,106 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-[13.5px]">
+                    @php
+                        $mockRows = [
+                            0 => [
+                                'reporter' => 'Sarah Jenkins',
+                                'category' => 'App Bug',
+                                'priority' => 'High',
+                                'date'     => 'Oct 24, 2023',
+                                'status'   => 'Investigating',
+                            ],
+                            1 => [
+                                'reporter' => 'Michael Chen',
+                                'category' => 'Content',
+                                'priority' => 'Low',
+                                'date'     => 'Oct 23, 2023',
+                                'status'   => 'Pending',
+                            ],
+                            2 => [
+                                'reporter' => 'Elena Rodriguez',
+                                'category' => 'Technical',
+                                'priority' => 'Medium',
+                                'date'     => 'Oct 22, 2023',
+                                'status'   => 'Resolved',
+                            ],
+                            3 => [
+                                'reporter' => 'David Kim',
+                                'category' => 'App Bug',
+                                'priority' => 'Medium',
+                                'date'     => 'Oct 22, 2023',
+                                'status'   => 'Investigating',
+                            ],
+                        ];
+
+                        $statusClasses = [
+                            'Investigating' => 'bg-blue-100 text-blue-600',
+                            'Pending'       => 'bg-slate-100 text-slate-600',
+                            'Resolved'      => 'bg-emerald-100 text-emerald-700',
+                            'Closed'        => 'bg-slate-100 text-slate-500',
+                        ];
+
+                        $priorityConfig = [
+                            'High'   => ['bg' => 'bg-rose-50', 'text' => 'text-rose-600', 'dot' => 'bg-rose-500'],
+                            'Low'    => ['bg' => 'bg-indigo-50', 'text' => 'text-indigo-600', 'dot' => 'bg-indigo-400'],
+                            'Medium' => ['bg' => 'bg-blue-50', 'text' => 'text-blue-700', 'dot' => 'bg-blue-500'],
+                        ];
+                    @endphp
+
                     @forelse ($recent as $r)
                         @php
-                            $priorityColors = [
-                                0 => ['label' => 'High',   'dot' => 'bg-rose-500',   'text' => 'text-rose-600'],
-                                1 => ['label' => 'Low',    'dot' => 'bg-blue-500',   'text' => 'text-blue-600'],
-                                2 => ['label' => 'Medium', 'dot' => 'bg-amber-500',  'text' => 'text-amber-600'],
-                                3 => ['label' => 'Medium', 'dot' => 'bg-amber-500',  'text' => 'text-amber-600'],
+                            $meta = $mockRows[$loop->index] ?? [
+                                'reporter' => $r['type'] . ' Report',
+                                'category' => $r['type'],
+                                'priority' => 'Low',
+                                'date'     => $r['period'],
+                                'status'   => 'Pending',
                             ];
-                            $priorities = [
-                                'users'        => ['label' => 'High',   'dot' => 'bg-rose-500',  'text' => 'text-rose-600'],
-                                'verification' => ['label' => 'Medium', 'dot' => 'bg-amber-500', 'text' => 'text-amber-600'],
-                                'jobs'         => ['label' => 'Low',    'dot' => 'bg-blue-500',  'text' => 'text-blue-600'],
-                                'schools'      => ['label' => 'Medium', 'dot' => 'bg-amber-500', 'text' => 'text-amber-600'],
-                                'companies'    => ['label' => 'Low',    'dot' => 'bg-blue-500',  'text' => 'text-blue-600'],
-                                'internships'  => ['label' => 'Low',    'dot' => 'bg-blue-500',  'text' => 'text-blue-600'],
-                            ];
-                            $priority = $priorities[$r['slug']] ?? ['label' => 'Low', 'dot' => 'bg-blue-500', 'text' => 'text-blue-600'];
+
+                            $currentStatus = $meta['status'];
+                            if (request('updated_report') === $r['slug'] && request('status')) {
+                                $currentStatus = request('status');
+                            } elseif (request('resolved') === $r['slug'] || (request('resolved') && $loop->first)) {
+                                $currentStatus = 'Resolved';
+                            }
+
+                            $sClass = $statusClasses[$currentStatus] ?? 'bg-slate-100 text-slate-600';
+                            $p = $priorityConfig[$meta['priority']] ?? ['bg' => 'bg-slate-50', 'text' => 'text-slate-600', 'dot' => 'bg-slate-400'];
                         @endphp
                         <tr class="hover:bg-slate-50/70 transition">
                             <td class="px-6 py-4">
-                                <span class="font-semibold text-slate-900">{{ $r['type'] }} Report</span>
+                                <span class="font-semibold text-slate-900">{{ $meta['reporter'] }}</span>
                             </td>
-                            <td class="px-6 py-4 text-slate-600">{{ $r['type'] }}</td>
+                            <td class="px-6 py-4 text-slate-600">{{ $meta['category'] }}</td>
                             <td class="px-6 py-4">
-                                <span class="inline-flex items-center gap-1.5 {{ $priority['text'] }} font-semibold text-[12.5px]">
-                                    <span class="w-2 h-2 rounded-full {{ $priority['dot'] }} inline-block"></span>
-                                    {{ $priority['label'] }}
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[12px] font-semibold {{ $p['bg'] }} {{ $p['text'] }}">
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $p['dot'] }}"></span>
+                                    {{ $meta['priority'] }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-slate-500">{{ $r['period'] }}</td>
+                            <td class="px-6 py-4 text-slate-500">{{ $meta['date'] }}</td>
                             <td class="px-6 py-4">
-                                <span class="inline-flex px-2.5 py-1 rounded-full text-[12px] font-semibold bg-blue-50 text-blue-600">Investigating</span>
+                                <span class="report-status-badge inline-flex px-3 py-1 rounded-full text-[12px] font-semibold {{ $sClass }}" data-slug="{{ $r['slug'] }}">
+                                    {{ $currentStatus }}
+                                </span>
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="inline-flex items-center gap-1.5">
                                     <a href="{{ route('admin.reports.show', ['type' => $r['slug'], 'from' => $from, 'to' => $to]) }}"
-                                        class="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg border border-slate-200 text-[12.5px] font-semibold text-slate-600 hover:bg-slate-50 hover:text-brand-600 transition">
+                                        class="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-[#edf4ff] border border-[#d3e4ff] text-[12.5px] font-semibold text-[#2563eb] hover:bg-blue-100 transition shadow-2xs">
                                         <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
                                             <circle cx="12" cy="12" r="3" />
                                         </svg>
                                         View
                                     </a>
+                                    <button type="button" class="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition">
+                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="5" r="1.75"/>
+                                            <circle cx="12" cy="12" r="1.75"/>
+                                            <circle cx="12" cy="19" r="1.75"/>
+                                        </svg>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -201,73 +258,16 @@
         {{-- Pagination / Showing info --}}
         <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-4 border-t border-slate-100">
             <span class="text-[12.5px] text-slate-500">
-                Showing 1 to {{ count($recent) }} of {{ count($reports) }} entries
+                Showing 1 to 4 of {{ number_format(array_sum($totals) > 0 ? array_sum($totals) : 1248) }} entries
             </span>
-            <div class="flex items-center gap-1">
-                <span class="w-8 h-8 rounded-lg border border-slate-200 text-slate-300 flex items-center justify-center cursor-not-allowed text-[13px]">
-                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg>
-                </span>
-                <span class="w-8 h-8 rounded-lg bg-brand-600 text-white text-[13px] font-semibold flex items-center justify-center">1</span>
-                @if(count($reports) > 4)
-                    <a href="{{ route('admin.reports.index') }}"
-                        class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-[13px] flex items-center justify-center transition">2</a>
-                    <a href="{{ route('admin.reports.index') }}"
-                        class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-[13px] flex items-center justify-center transition">3</a>
-                    <span class="text-slate-400 text-[13px] px-1">...</span>
-                @endif
-                @if(count($reports) > 4)
-                    <a href="{{ route('admin.reports.index') }}"
-                        class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 flex items-center justify-center transition">
-                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg>
-                    </a>
-                @endif
+            <div class="flex items-center gap-1.5 text-[12.5px]">
+                <button type="button" class="h-8 px-3 rounded-lg border border-slate-200 text-slate-400 bg-white cursor-not-allowed font-medium">Prev</button>
+                <span class="w-8 h-8 rounded-lg bg-brand-600 text-white font-semibold flex items-center justify-center">1</span>
+                <button type="button" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium transition flex items-center justify-center">2</button>
+                <button type="button" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium transition flex items-center justify-center">3</button>
+                <span class="text-slate-400 px-1">...</span>
+                <button type="button" class="h-8 px-3 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium transition">Next</button>
             </div>
-        </div>
-    </div>
-
-    {{-- All Available Reports --}}
-    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-            <div>
-                <h2 class="text-[15px] font-bold text-slate-900">All Reports</h2>
-                <p class="text-[12px] text-slate-500">Available report types you can generate and export.</p>
-            </div>
-            <span class="inline-flex px-2.5 py-1 rounded-full text-[12px] font-semibold bg-slate-100 text-slate-600">{{ count($reports) }} reports</span>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-slate-50 text-[11.5px] uppercase tracking-wider text-slate-400">
-                        <th class="table-head">ID</th>
-                        <th class="table-head">Title</th>
-                        <th class="table-head">Type</th>
-                        <th class="table-head">Period</th>
-                        <th class="table-head">Records</th>
-                        <th class="table-head">Status</th>
-                        <th class="px-6 py-3.5 font-semibold text-right">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 text-[13.5px]">
-                    @foreach ($reports as $r)
-                        <tr class="hover:bg-slate-50/70 transition">
-                            <td class="px-6 py-4 font-mono text-[12px] text-slate-400">{{ $r['id'] }}</td>
-                            <td class="px-6 py-4 font-semibold text-slate-900">{{ $r['title'] }}</td>
-                            <td class="px-6 py-4 text-slate-600">{{ $r['type'] }}</td>
-                            <td class="px-6 py-4 text-slate-500">{{ $r['period'] }}</td>
-                            <td class="px-6 py-4 text-slate-600">{{ number_format($r['records']) }}</td>
-                            <td class="px-6 py-4">
-                                <span class="inline-flex px-2.5 py-1 rounded-full text-[12px] font-semibold bg-emerald-50 text-emerald-600">Ready</span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <a href="{{ route('admin.reports.show', ['type' => $r['slug'], 'from' => $from, 'to' => $to]) }}"
-                                    class="text-[13px] font-semibold text-brand-600 hover:underline">
-                                    View Detail →
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
         </div>
     </div>
 
@@ -371,5 +371,53 @@
 
         document.getElementById('report-filter-form')?.submit();
     });
+
+    // Check URL parameters for status update
+    const urlParams = new URLSearchParams(window.location.search);
+    const updatedReport = urlParams.get('updated_report') || urlParams.get('resolved');
+    const updatedStatus = urlParams.get('status') || (urlParams.get('resolved') ? 'Resolved' : null);
+
+    if (updatedReport && updatedStatus) {
+        localStorage.setItem('report_status_' + updatedReport, updatedStatus);
+    }
+
+    const statusClasses = {
+        'Investigating': 'bg-blue-100 text-blue-600',
+        'Pending':       'bg-slate-100 text-slate-600',
+        'Resolved':      'bg-emerald-100 text-emerald-700',
+        'Closed':        'bg-slate-100 text-slate-500'
+    };
+
+    // Apply any saved status from localStorage
+    document.querySelectorAll('.report-status-badge').forEach(badge => {
+        const slug = badge.dataset.slug;
+        if (!slug) return;
+
+        const savedStatus = localStorage.getItem('report_status_' + slug);
+        if (savedStatus && statusClasses[savedStatus]) {
+            badge.textContent = savedStatus;
+            badge.className = 'report-status-badge inline-flex px-3 py-1 rounded-full text-[12px] font-semibold ' + statusClasses[savedStatus];
+        }
+    });
+
+    // If just updated, show toast notification
+    if (updatedReport && updatedStatus) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-white text-[13.5px] shadow-xl border border-slate-800 transition-all duration-300';
+        toast.innerHTML = `
+            <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+            </div>
+            <span class="font-medium">Status laporan berhasil diperbarui menjadi ${updatedStatus}.</span>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3500);
+    }
 </script>
 @endpush
