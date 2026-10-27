@@ -195,7 +195,9 @@
                             ];
 
                             $currentStatus = $meta['status'];
-                            if (request('resolved') === $r['slug'] || (request('resolved') && $loop->first)) {
+                            if (request('updated_report') === $r['slug'] && request('status')) {
+                                $currentStatus = request('status');
+                            } elseif (request('resolved') === $r['slug'] || (request('resolved') && $loop->first)) {
                                 $currentStatus = 'Resolved';
                             }
 
@@ -215,7 +217,7 @@
                             </td>
                             <td class="px-6 py-4 text-slate-500">{{ $meta['date'] }}</td>
                             <td class="px-6 py-4">
-                                <span class="inline-flex px-3 py-1 rounded-full text-[12px] font-semibold {{ $sClass }}">
+                                <span class="report-status-badge inline-flex px-3 py-1 rounded-full text-[12px] font-semibold {{ $sClass }}" data-slug="{{ $r['slug'] }}">
                                     {{ $currentStatus }}
                                 </span>
                             </td>
@@ -369,5 +371,53 @@
 
         document.getElementById('report-filter-form')?.submit();
     });
+
+    // Check URL parameters for status update
+    const urlParams = new URLSearchParams(window.location.search);
+    const updatedReport = urlParams.get('updated_report') || urlParams.get('resolved');
+    const updatedStatus = urlParams.get('status') || (urlParams.get('resolved') ? 'Resolved' : null);
+
+    if (updatedReport && updatedStatus) {
+        localStorage.setItem('report_status_' + updatedReport, updatedStatus);
+    }
+
+    const statusClasses = {
+        'Investigating': 'bg-blue-100 text-blue-600',
+        'Pending':       'bg-slate-100 text-slate-600',
+        'Resolved':      'bg-emerald-100 text-emerald-700',
+        'Closed':        'bg-slate-100 text-slate-500'
+    };
+
+    // Apply any saved status from localStorage
+    document.querySelectorAll('.report-status-badge').forEach(badge => {
+        const slug = badge.dataset.slug;
+        if (!slug) return;
+
+        const savedStatus = localStorage.getItem('report_status_' + slug);
+        if (savedStatus && statusClasses[savedStatus]) {
+            badge.textContent = savedStatus;
+            badge.className = 'report-status-badge inline-flex px-3 py-1 rounded-full text-[12px] font-semibold ' + statusClasses[savedStatus];
+        }
+    });
+
+    // If just updated, show toast notification
+    if (updatedReport && updatedStatus) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 text-white text-[13.5px] shadow-xl border border-slate-800 transition-all duration-300';
+        toast.innerHTML = `
+            <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+            </div>
+            <span class="font-medium">Status laporan berhasil diperbarui menjadi ${updatedStatus}.</span>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3500);
+    }
 </script>
 @endpush

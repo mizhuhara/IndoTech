@@ -302,12 +302,27 @@ document.addEventListener('DOMContentLoaded', function () {
         timelineContainer.insertBefore(newItem, timelineContainer.firstChild);
     }
 
-    const returnUrl = "{{ route('admin.reports.index', array_filter(['from' => $from, 'to' => $to, 'resolved' => $report['slug'] ?? 'users'])) }}";
+    const reportSlug = "{{ $report['slug'] ?? 'users' }}";
+    const baseReturnUrl = "{{ route('admin.reports.index', array_filter(['from' => $from, 'to' => $to])) }}";
+
+    // Load any previously saved status on init
+    const initialSaved = localStorage.getItem('report_status_' + reportSlug);
+    if (initialSaved) {
+        statusSelect.value = initialSaved;
+        updateBadge(initialSaved);
+        if (initialSaved === 'Resolved') {
+            btnMarkResolved.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            btnMarkResolved.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+            btnMarkResolved.disabled = true;
+            resolveText.textContent = 'Resolved ✓';
+        }
+    }
 
     // Click "Mark as Resolved"
     btnMarkResolved?.addEventListener('click', function () {
         statusSelect.value = 'Resolved';
         updateBadge('Resolved');
+        localStorage.setItem('report_status_' + reportSlug, 'Resolved');
 
         btnMarkResolved.classList.remove('bg-blue-600', 'hover:bg-blue-700');
         btnMarkResolved.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
@@ -317,8 +332,9 @@ document.addEventListener('DOMContentLoaded', function () {
         addTimelineItem('Just now', 'Report marked as Resolved by Admin', true);
         showToast('Report marked as Resolved. Mengalihkan...');
 
+        const targetUrl = baseReturnUrl + (baseReturnUrl.includes('?') ? '&' : '?') + 'updated_report=' + encodeURIComponent(reportSlug) + '&status=Resolved';
         setTimeout(function () {
-            window.location.href = returnUrl;
+            window.location.href = targetUrl;
         }, 500);
     });
 
@@ -326,19 +342,22 @@ document.addEventListener('DOMContentLoaded', function () {
     statusSelect?.addEventListener('change', function () {
         const val = this.value;
         updateBadge(val);
+        localStorage.setItem('report_status_' + reportSlug, val);
 
         if (val === 'Resolved') {
             btnMarkResolved.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             btnMarkResolved.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+            btnMarkResolved.disabled = true;
             resolveText.textContent = 'Resolved ✓';
             addTimelineItem('Just now', 'Status updated to Resolved by Admin', true);
-            showToast('Status updated to Resolved.');
+            showToast('Status updated to Resolved. Tersimpan!');
         } else {
             btnMarkResolved.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
             btnMarkResolved.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            btnMarkResolved.disabled = false;
             resolveText.textContent = 'Mark as Resolved';
             addTimelineItem('Just now', `Status updated to ${val} by Admin`);
-            showToast(`Status updated to ${val}.`);
+            showToast(`Status updated to ${val}. Tersimpan!`);
         }
     });
 
