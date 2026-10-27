@@ -14,28 +14,6 @@
     @else
         <script src="https://cdn.tailwindcss.com"></script>
     @endif
-    <script>
-        if (window.tailwind) {
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            brand: {
-                                50: '#eef4ff',
-                                100: '#d9e6ff',
-                                500: '#1a73e8',
-                                600: '#0b57d0',
-                                700: '#0842a0',
-                            }
-                        },
-                        fontFamily: {
-                            sans: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        },
-                    },
-                },
-            };
-        }
-    </script>
     <style>
         body { 
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
