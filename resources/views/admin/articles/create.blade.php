@@ -122,19 +122,19 @@
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
                 <h3 class="text-[14px] font-bold text-slate-800">Author Info</h3>
                 <div>
-                    <label for="author_name" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Author Name</label>
+                    <label for="author_name" class="form-label-sm">Author Name</label>
                     <input id="author_name" name="author_name" type="text" value="{{ old('author_name') }}"
                            placeholder="e.g. Budi Santoso"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
                 </div>
                 <div>
-                    <label for="author_role" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Author Role</label>
+                    <label for="author_role" class="form-label-sm">Author Role</label>
                     <input id="author_role" name="author_role" type="text" value="{{ old('author_role') }}"
                            placeholder="e.g. Senior Software Engineer"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
                 </div>
                 <div>
-                    <label for="read_time" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Read Time</label>
+                    <label for="read_time" class="form-label-sm">Read Time</label>
                     <input id="read_time" name="read_time" type="text" value="{{ old('read_time') }}"
                            placeholder="e.g. 5 min read"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
@@ -184,13 +184,13 @@
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
                 <h3 class="text-[14px] font-bold text-slate-800">Meta & SEO</h3>
                 <div>
-                    <label for="tags" class="block text-[13px] font-semibold text-slate-700 mb-2">Tags (comma separated)</label>
+                    <label for="tags" class="form-label">Tags (comma separated)</label>
                     <input id="tags" name="tags" type="text" value="{{ old('tags') }}"
                            placeholder="e.g. AI, Technology, Laravel"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
                 </div>
                 <div>
-                    <label for="meta_description" class="block text-[13px] font-semibold text-slate-700 mb-2">Meta Description</label>
+                    <label for="meta_description" class="form-label">Meta Description</label>
                     <textarea id="meta_description" name="meta_description" rows="3" placeholder="Short meta description for SEO"
                               class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20 resize-none">{{ old('meta_description') }}</textarea>
                 </div>

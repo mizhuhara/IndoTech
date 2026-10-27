@@ -68,7 +68,7 @@
                 <thead>
                     <tr class="bg-slate-50 text-[12px] uppercase tracking-wide text-slate-500">
                         @foreach ($report['columns'] as $label)
-                            <th class="px-6 py-3.5 font-semibold">{{ $label }}</th>
+                            <th class="table-head">{{ $label }}</th>
                         @endforeach
                     </tr>
                 </thead>

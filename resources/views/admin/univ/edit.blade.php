@@ -34,7 +34,7 @@
         <div class="lg:col-span-8 space-y-6">
 
             {{-- Card 1: Basic Information --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
@@ -47,39 +47,39 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {{-- University Name --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Nama Universitas</label>
+                        <label class="form-label">Nama Universitas</label>
                         <input type="text" 
                                name="name" 
                                id="univNameInput"
                                value="{{ old('name', $univ['name']) }}" 
                                required
                                placeholder="Universitas Indonesia"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('name')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- NPSN --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">NPSN</label>
+                        <label class="form-label">NPSN</label>
                         <input type="text" 
                                name="npsn" 
                                value="{{ old('npsn', $univ['npsn'] ?? '') }}" 
                                required
                                placeholder="20109988"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('npsn')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- University Type --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Tipe Institusi</label>
+                        <label class="form-label">Tipe Institusi</label>
                         <div class="relative">
                             <select name="type" 
-                                    class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
+                                    class="input appearance-none cursor-pointer pr-10">
                                 <option value="Negeri" {{ old('type', $univ['type'] ?? '') == 'Negeri' ? 'selected' : '' }}>Negeri (PTN)</option>
                                 <option value="Swasta" {{ old('type', $univ['type'] ?? '') == 'Swasta' ? 'selected' : '' }}>Swasta (PTS)</option>
                             </select>
@@ -102,22 +102,22 @@
                                required
                                autocomplete="off"
                                placeholder="Contoh: Depok, Jawa Barat"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         
                         {{-- Location suggestions dropdown --}}
                         <div id="locationSuggestions" class="hidden absolute top-full left-0 right-0 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl mt-1.5 max-h-56 overflow-y-auto divide-y divide-slate-100"></div>
 
                         @error('location')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Accreditation --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Akreditasi</label>
+                        <label class="form-label">Akreditasi</label>
                         <div class="relative">
                             <select name="accreditation" 
-                                    class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
+                                    class="input appearance-none cursor-pointer pr-10">
                                 <option value="A" {{ old('accreditation', $univ['accreditation'] ?? '') == 'A' ? 'selected' : '' }}>A (Unggul)</option>
                                 <option value="B" {{ old('accreditation', $univ['accreditation'] ?? '') == 'B' ? 'selected' : '' }}>B (Baik)</option>
                                 <option value="C" {{ old('accreditation', $univ['accreditation'] ?? '') == 'C' ? 'selected' : '' }}>C (Cukup)</option>
@@ -131,21 +131,21 @@
 
                     {{-- Website --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Website</label>
+                        <label class="form-label">Website</label>
                         <input type="url" 
                                name="website" 
                                value="{{ old('website', $univ['website'] ?? '') }}" 
                                placeholder="https://www.ui.ac.id"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('website')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
             {{-- Card 2: University Description --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
@@ -154,13 +154,13 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Profil, Fakultas & Keunggulan</label>
+                    <label class="form-label">Profil, Fakultas & Keunggulan</label>
                     <textarea name="description" 
                               id="univDescription"
                               rows="5"
                               maxlength="1000"
                               oninput="document.getElementById('charCount').textContent = this.value.length + ' / 1000 characters'"
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-4 text-[14px] text-slate-800 outline-none transition font-medium leading-relaxed resize-none">{{ old('description', $univ['description'] ?? '') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('description', $univ['description'] ?? '') }}</textarea>
                     
                     <div class="flex justify-end mt-2">
                         <span id="charCount" class="text-[12.5px] font-medium text-slate-500">
@@ -171,7 +171,7 @@
             </div>
 
             {{-- Card 3: Campus Gallery --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-2.5 text-slate-900">
                         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
@@ -234,7 +234,7 @@
         <div class="lg:col-span-4 space-y-6">
 
             {{-- Card 1: Logo & Branding --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col items-center text-center">
+            <div class="card flex flex-col items-center text-center">
                 <div class="w-full flex items-center justify-between mb-4">
                     <h2 class="text-[17px] font-bold text-slate-900">Logo & Profil</h2>
                     <span class="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">Format Gambar</span>
@@ -287,7 +287,7 @@
             </div>
 
             {{-- Card 2: Interactive Real-time Map Location (Strictly Indonesia) --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div class="card space-y-4">
                 <div class="flex items-center justify-between">
                     <h2 class="text-[17px] font-bold text-slate-900">Peta Lokasi Kampus</h2>
                     <span class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full flex items-center gap-1 border border-emerald-200/60">
@@ -307,7 +307,7 @@
                               rows="2"
                               autocomplete="off"
                               placeholder="Ketik alamat jalan di Indonesia..."
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-3 text-[13px] text-slate-800 outline-none transition font-medium leading-relaxed resize-none">{{ old('address', $univ['address'] ?? '') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('address', $univ['address'] ?? '') }}</textarea>
 
                     {{-- Autocomplete Suggestions Dropdown for Address --}}
                     <div id="addressSuggestions" class="hidden absolute top-full left-0 right-0 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl mt-1.5 max-h-56 overflow-y-auto divide-y divide-slate-100"></div>

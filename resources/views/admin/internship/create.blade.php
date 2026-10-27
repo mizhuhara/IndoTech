@@ -58,7 +58,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {{-- Judul Magang --}}
                     <div class="sm:col-span-2">
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Judul Posisi Magang <span class="text-rose-500">*</span>
                         </label>
                         <input type="text" 
@@ -66,7 +66,7 @@
                                value="{{ old('title') }}" 
                                required 
                                placeholder="Contoh: Frontend Developer Intern"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('title')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
@@ -74,7 +74,7 @@
 
                     {{-- Nama Perusahaan --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Nama Perusahaan / Organisasi <span class="text-rose-500">*</span>
                         </label>
                         <input type="text" 
@@ -82,7 +82,7 @@
                                value="{{ old('company') }}" 
                                required 
                                placeholder="Contoh: PT IndoTech Solusi Nusantara"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('company')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
@@ -90,10 +90,10 @@
 
                     {{-- User Penanggung Jawab --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             User Penanggung Jawab <span class="text-rose-500">*</span>
                         </label>
-                        <select name="user_id" required class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium cursor-pointer">
+                        <select name="user_id" required class="input cursor-pointer">
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}" {{ old('user_id', auth()->id()) == $user->id ? 'selected' : '' }}>
                                     {{ $user->name }} ({{ $user->email }})
@@ -107,7 +107,7 @@
 
                     {{-- Lokasi Penempatan --}}
                     <div class="sm:col-span-2">
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Lokasi Penempatan
                         </label>
                         <div class="relative">
@@ -119,7 +119,7 @@
                                    name="location" 
                                    value="{{ old('location') }}" 
                                    placeholder="Contoh: Jakarta Selatan / Hybrid / Remote"
-                                   class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                                   class="input pl-10 pr-4">
                         </div>
                         @error('location')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
@@ -143,14 +143,14 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                    <label class="form-label-sm">
                         Deskripsi Program Magang
                     </label>
                     <textarea name="description" 
                               rows="6" 
                               id="desc-field"
                               placeholder="Jelaskan mengenai program magang, tanggung jawab peserta, teknologi yang digunakan, serta kualifikasi yang diharapkan..."
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-4 text-[14px] text-slate-800 leading-relaxed outline-none transition font-medium">{{ old('description') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('description') }}</textarea>
                     <div class="flex items-center justify-between text-[11.5px] text-slate-400 mt-1 font-medium">
                         <span>Format teks bebas atau daftar poin penjelasan.</span>
                         <span><span id="char-count">0</span> karakter</span>
@@ -180,26 +180,26 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Tanggal Mulai
                         </label>
                         <input type="date" 
                                name="start_date" 
                                value="{{ old('start_date') }}"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('start_date')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Tanggal Selesai
                         </label>
                         <input type="date" 
                                name="end_date" 
                                value="{{ old('end_date') }}"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('end_date')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
@@ -226,10 +226,10 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                    <label class="form-label-sm">
                         Status Keaktifan <span class="text-rose-500">*</span>
                     </label>
-                    <select name="status" required class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium cursor-pointer">
+                    <select name="status" required class="input cursor-pointer">
                         <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Aktif (Tampil di Publik)</option>
                         <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Non-aktif / Draft</option>
                         <option value="completed" {{ old('status') === 'completed' ? 'selected' : '' }}>Selesai (Completed)</option>
