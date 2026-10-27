@@ -26,7 +26,7 @@
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="4" y="3" width="16" height="18" rx="2"/>
                         <path stroke-linecap="round" d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
                     </svg>
@@ -72,12 +72,12 @@
                         <div class="flex items-center gap-6 h-12">
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="radio" name="status" value="active" {{ old('status', 'active') === 'active' ? 'checked' : '' }}
-                                    class="w-4 h-4 text-[#0b57d0] border-gray-300 focus:ring-[#0b57d0]">
+                                    class="w-4 h-4 text-brand-600 border-gray-300 focus:ring-brand-600">
                                 <span class="ml-2 text-[14px] font-medium text-slate-800">Active</span>
                             </label>
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="radio" name="status" value="inactive" {{ old('status') === 'inactive' ? 'checked' : '' }}
-                                    class="w-4 h-4 text-[#0b57d0] border-gray-300 focus:ring-[#0b57d0]">
+                                    class="w-4 h-4 text-brand-600 border-gray-300 focus:ring-brand-600">
                                 <span class="ml-2 text-[14px] font-medium text-slate-800">Inactive</span>
                             </label>
                         </div>
@@ -91,7 +91,7 @@
             {{-- Card 2: Description --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
                     <h2 class="text-[17px] font-bold text-slate-900">Description</h2>
@@ -126,7 +126,7 @@
 
                 {{-- Logo Preview Box --}}
                 <div class="w-full aspect-[4/3] rounded-2xl bg-[#f0f4f9] border border-slate-200/70 flex items-center justify-center p-6 mb-4 relative overflow-hidden">
-                    <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center text-[#0b57d0] font-extrabold text-xl shadow-sm border border-white">
+                    <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center text-brand-600 font-extrabold text-xl shadow-sm border border-white">
                         <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                         </svg>
@@ -187,7 +187,7 @@
         </a>
 
         <button type="submit" 
-                class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[14px] shadow-sm transition">
+                class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-sm transition">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
             </svg>

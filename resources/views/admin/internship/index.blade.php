@@ -40,7 +40,7 @@
     <div class="flex items-center justify-end gap-3">
             {{-- Tambah Internship Button --}}
             <a href="{{ route('admin.internships.create') }}" 
-               class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-xs transition transform active:scale-95">
+               class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-xs transition transform active:scale-95">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <path d="M12 5v14M5 12h14"/>
                 </svg>

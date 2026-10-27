@@ -5,7 +5,7 @@
 @section('content')
 {{-- Action Button --}}
 <div class="flex items-center justify-end mb-6">
-    <a href="{{ route('admin.articles.create') }}" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#0b57d0] text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
+    <a href="{{ route('admin.articles.create') }}" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-brand-600 text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         Create New Article
     </a>
@@ -68,7 +68,7 @@
                 <option value="draft"    {{ $currentTab === 'draft'    ? 'selected' : '' }}>Draft</option>
                 <option value="archived" {{ $currentTab === 'archived' ? 'selected' : '' }}>Archived</option>
             </select>
-            <button type="submit" class="h-9 px-3 rounded-lg bg-[#0b57d0] text-white text-[13px] font-semibold hover:bg-blue-700 transition">Search</button>
+            <button type="submit" class="h-9 px-3 rounded-lg bg-brand-600 text-white text-[13px] font-semibold hover:bg-blue-700 transition">Search</button>
         </form>
     </div>
 
@@ -160,7 +160,7 @@
 
                 @foreach ($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
                     @if ($page === $articles->currentPage())
-                        <span class="w-8 h-8 rounded-lg bg-[#0b57d0] text-white text-[13px] font-semibold flex items-center justify-center">{{ $page }}</span>
+                        <span class="w-8 h-8 rounded-lg bg-brand-600 text-white text-[13px] font-semibold flex items-center justify-center">{{ $page }}</span>
                     @else
                         <a href="{{ $url }}" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 text-[13px] flex items-center justify-center transition">{{ $page }}</a>
                     @endif

@@ -27,7 +27,7 @@
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="4" y="3" width="16" height="18" rx="2"/>
                         <path stroke-linecap="round" d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
                     </svg>
@@ -73,12 +73,12 @@
                         <div class="flex items-center gap-6 h-12">
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="radio" name="status" value="active" {{ old('status', $community['status'] ?? 'active') === 'active' ? 'checked' : '' }}
-                                    class="w-4 h-4 text-[#0b57d0] border-gray-300 focus:ring-[#0b57d0]">
+                                    class="w-4 h-4 text-brand-600 border-gray-300 focus:ring-brand-600">
                                 <span class="ml-2 text-[14px] font-medium text-slate-800">Active</span>
                             </label>
                             <label class="inline-flex items-center cursor-pointer">
                                 <input type="radio" name="status" value="inactive" {{ old('status', $community['status'] ?? '') === 'inactive' ? 'checked' : '' }}
-                                    class="w-4 h-4 text-[#0b57d0] border-gray-300 focus:ring-[#0b57d0]">
+                                    class="w-4 h-4 text-brand-600 border-gray-300 focus:ring-brand-600">
                                 <span class="ml-2 text-[14px] font-medium text-slate-800">Inactive</span>
                             </label>
                         </div>
@@ -92,7 +92,7 @@
             {{-- Card 2: Description --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
                     <h2 class="text-[17px] font-bold text-slate-900">Description</h2>
@@ -121,7 +121,7 @@
                 {{-- Card Header with Action --}}
                 <div class="flex items-center justify-between mb-5">
                     <div class="flex items-center gap-2.5 text-slate-900">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                             <rect x="3" y="3" width="18" height="18" rx="3"/>
                             <circle cx="8.5" cy="8.5" r="1.5"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
@@ -129,7 +129,7 @@
                         <h2 class="text-[17px] font-bold text-slate-900">Community Gallery</h2>
                     </div>
 
-                    <button type="button" class="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-[#0b57d0] hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
+                    <button type="button" class="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-brand-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
                         <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/>
@@ -162,7 +162,7 @@
 
                 {{-- Logo Preview Box --}}
                 <div class="w-full aspect-[4/3] rounded-2xl bg-[#f0f4f9] border border-slate-200/70 flex items-center justify-center p-6 mb-4 relative overflow-hidden">
-                    <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center text-[#0b57d0] font-extrabold text-2xl shadow-sm border border-white overflow-hidden">
+                    <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center text-brand-600 font-extrabold text-2xl shadow-sm border border-white overflow-hidden">
                         @if(!empty($community['logo_url']))
                             <img src="{{ $community['logo_url'] }}" alt="Logo" class="w-full h-full object-cover">
                         @else
@@ -225,7 +225,7 @@
         </a>
 
         <button type="submit" 
-                class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[14px] shadow-sm transition">
+                class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-sm transition">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
             </svg>

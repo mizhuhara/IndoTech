@@ -14,7 +14,7 @@
         {{-- Modal Header --}}
         <div class="px-6 py-4.5 bg-slate-50/70 border-b border-slate-100 flex items-start justify-between gap-3 shrink-0">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 text-[#0b57d0] border border-blue-100/80 flex items-center justify-center shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 text-brand-600 border border-blue-100/80 flex items-center justify-center shrink-0">
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
@@ -92,7 +92,7 @@
                 {{-- If Document Exists --}}
                 <div id="detail_doc_container" class="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-between gap-3">
                     <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-10 h-10 rounded-lg bg-blue-50 text-[#0b57d0] border border-blue-100 flex items-center justify-center shrink-0">
+                        <div class="w-10 h-10 rounded-lg bg-blue-50 text-brand-600 border border-blue-100 flex items-center justify-center shrink-0">
                             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                             </svg>
@@ -102,7 +102,7 @@
                             <span class="text-[11px] text-slate-400 block mt-0.5">Dokumen resmi pengajuan verifikasi</span>
                         </div>
                     </div>
-                    <a id="detail_doc_link" href="#" target="_blank" class="px-3.5 py-2 bg-white hover:bg-blue-50 text-[#0b57d0] border border-blue-200/80 rounded-xl text-[12.5px] font-bold shadow-2xs transition inline-flex items-center gap-1.5 shrink-0 cursor-pointer">
+                    <a id="detail_doc_link" href="#" target="_blank" class="px-3.5 py-2 bg-white hover:bg-blue-50 text-brand-600 border border-blue-200/80 rounded-xl text-[12.5px] font-bold shadow-2xs transition inline-flex items-center gap-1.5 shrink-0 cursor-pointer">
                         <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                         <span>Buka File</span>
                     </a>

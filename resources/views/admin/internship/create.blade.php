@@ -43,7 +43,7 @@
             {{-- Kartu 1: Informasi Utama Magang --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-5">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-4">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
                             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
@@ -131,7 +131,7 @@
             {{-- Kartu 2: Deskripsi Lengkap Magang --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-4">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
                         </svg>
@@ -164,7 +164,7 @@
             {{-- Kartu 3: Periode Pelaksanaan Magang --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-4">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                             <line x1="16" y1="2" x2="16" y2="6"/>
@@ -215,7 +215,7 @@
             {{-- Kartu Status Publikasi --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-3">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
@@ -240,7 +240,7 @@
             {{-- Kartu Foto / Logo Profil --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-3">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                             <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -282,7 +282,7 @@
             {{-- Kartu Aksi Simpan --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-3">
                 <button type="submit" 
-                        class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#0b57d0] hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-[14px] shadow-sm transition cursor-pointer">
+                        class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-brand-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-[14px] shadow-sm transition cursor-pointer">
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                     </svg>

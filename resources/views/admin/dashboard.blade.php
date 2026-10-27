@@ -42,7 +42,7 @@
                     <h2 class="text-[16px] font-bold text-slate-900">New User Statistics</h2>
                     <p class="text-[12.5px] text-slate-500">{{ $lineChartPeriod }}</p>
                 </div>
-                <a href="{{ route('admin.users.index') }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">View All</a>
+                <a href="{{ route('admin.users.index') }}" class="text-[13px] font-semibold text-brand-600 hover:underline">View All</a>
             </div>
             <svg viewBox="0 0 400 160" class="w-full h-auto" preserveAspectRatio="none">
                 <defs>
@@ -77,7 +77,7 @@
                     <h2 class="text-[16px] font-bold text-slate-900">Distribusi Berdasarkan Daerah</h2>
                     <p class="text-[12.5px] text-slate-500">Sebaran entitas terdaftar per wilayah</p>
                 </div>
-                <a href="{{ route('admin.schools.index') }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">Lihat Semua</a>
+                <a href="{{ route('admin.schools.index') }}" class="text-[13px] font-semibold text-brand-600 hover:underline">Lihat Semua</a>
             </div>
             <div class="flex items-end justify-around gap-3 h-40 pt-2">
                 @foreach ($regions as $r)
@@ -102,7 +102,7 @@
                 <h2 class="text-[16px] font-bold text-slate-900">Recent Verification Requests</h2>
                 <p class="text-[12.5px] text-slate-500">Latest entity verification submissions</p>
             </div>
-            <a href="{{ route('admin.verification.index') }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">View All →</a>
+            <a href="{{ route('admin.verification.index') }}" class="text-[13px] font-semibold text-brand-600 hover:underline">View All →</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
