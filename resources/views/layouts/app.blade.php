@@ -81,20 +81,6 @@
             gap: 8px;
             flex-shrink: 0;
         }
-        #it-search-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 7px;
-            color: #64748b;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.15s, color 0.15s;
-            line-height: 0;
-        }
-        #it-search-btn:hover { background: #f1f5f9; color: #0f172a; }
         .it-btn-signin {
             display: inline-flex !important;
             align-items: center;
