@@ -378,18 +378,23 @@ class AdminCompanyController extends Controller
             $link = $matches[1] ?? $link;
         }
 
-        // If Google Maps share link, convert query to embed format
-        if (str_contains($link, 'maps.google.com') || str_contains($link, 'google.com/maps')) {
-            if (! str_contains($link, 'output=embed') && ! str_contains($link, '/embed')) {
-                $link = str_contains($link, '?')
-                    ? $link.'&output=embed'
-                    : $link.'?output=embed';
-            }
-
-            return $link;
+        // Hanya izinkan http/https, mencegah javascript: dkk.
+        $scheme = strtolower((string) parse_url($link, PHP_URL_SCHEME));
+        if (! in_array($scheme, ['http', 'https'], true)) {
+            return null;
         }
 
-        // Hanya izinkan http/https, mencegah javascript: dkk.
-        return str_starts_with($link, 'http://') || str_starts_with($link, 'https://') ? $link : null;
+        // If Google Maps share link, convert query to embed format
+        $host = strtolower((string) parse_url($link, PHP_URL_HOST));
+        $isGoogleMapsWeb = in_array($host, ['maps.google.com', 'www.google.com', 'google.com'], true)
+            && str_contains($link, '/maps');
+
+        if ($isGoogleMapsWeb && ! str_contains($link, 'output=embed') && ! str_contains($link, '/embed')) {
+            $link = str_contains($link, '?')
+                ? $link.'&output=embed'
+                : $link.'?output=embed';
+        }
+
+        return $link;
     }
 }

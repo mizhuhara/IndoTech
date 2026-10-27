@@ -151,18 +151,17 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        if ($user->status === 'pending') {
+        if (strtolower((string) $user->status) !== 'active') {
             Auth::logout();
             $request->session()->regenerateToken();
 
-            return back()->withErrors(['email' => 'Akun masih menunggu verifikasi super admin.'])->withInput();
-        }
+            $message = match (strtolower((string) $user->status)) {
+                'pending' => 'Akun masih menunggu verifikasi super admin.',
+                'rejected' => 'Pendaftaran ditolak. Hubungi admin untuk informasi.',
+                default => 'Akun Anda tidak aktif. Hubungi admin untuk informasi.',
+            };
 
-        if ($user->status === 'rejected') {
-            Auth::logout();
-            $request->session()->regenerateToken();
-
-            return back()->withErrors(['email' => 'Pendaftaran ditolak. Hubungi admin untuk informasi.'])->withInput();
+            return back()->withErrors(['email' => $message])->withInput();
         }
 
         $request->session()->regenerate();
