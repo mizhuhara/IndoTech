@@ -5,15 +5,14 @@
 @section('content')
 {{-- Actions --}}
 <div class="flex items-center justify-end mb-6 gap-3">
-    <div class="flex items-center gap-3">
-        <a href="{{ route('admin.articles.index') }}" class="inline-flex items-center h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-600 text-[13.5px] font-semibold hover:bg-slate-50 transition">
-            Cancel
-        </a>
-        <button type="submit" form="article-form" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-brand-600 text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
-            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm3 0v5h8V4M7 15h10m-10 4h10"/></svg>
-            Save Article
-        </button>
-    </div>
+    <a href="{{ route('admin.articles.index') }}" class="inline-flex items-center h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-600 text-[13.5px] font-semibold hover:bg-slate-50 transition">
+        Cancel
+    </a>
+    <button type="submit" form="article-form" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-brand-600 text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm3 0v5h8V4M7 15h10m-10 4h10"/></svg>
+        Save Article
+    </button>
+</div>
 {{-- Validation errors --}}
 @if ($errors->any())
     <div class="mb-6 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-[13.5px]">
@@ -203,3 +202,17 @@
 @push('scripts')
 <script>
     function autoSlug(value) {
+        const slug = document.getElementById('slug');
+        if (slug.dataset.touched !== 'true') {
+            slug.value = value.toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .trim()
+                .replace(/[\s_]+/g, '-')
+                .replace(/-+/g, '-');
+        }
+    }
+    document.getElementById('slug').addEventListener('input', function () {
+        this.dataset.touched = 'true';
+    });
+</script>
+@endpush

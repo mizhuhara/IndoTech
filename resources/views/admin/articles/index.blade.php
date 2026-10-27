@@ -23,16 +23,16 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     @php
         $stats = [
-            ['label' => 'Total Articles', 'value' => $totalArticles,  'icon' => 'articles', 'bg' => 'bg-blue-50',   'fg' => 'text-blue-600'],
-            ['label' => 'Published',      'value' => $publishedCount, 'icon' => 'check',    'bg' => 'bg-emerald-50','fg' => 'text-emerald-600'],
-            ['label' => 'Drafts',         'value' => $draftCount,     'icon' => 'draft',    'bg' => 'bg-orange-50', 'fg' => 'text-orange-500'],
-            ['label' => 'Total Views',    'value' => $totalViews,     'icon' => 'views',    'bg' => 'bg-violet-50', 'fg' => 'text-violet-600'],
+            ['label' => 'Total Articles', 'value' => $totalArticles,  'icon' => 'articles'],
+            ['label' => 'Published',      'value' => $publishedCount, 'icon' => 'check'],
+            ['label' => 'Drafts',         'value' => $draftCount,     'icon' => 'draft'],
+            ['label' => 'Total Views',    'value' => $totalViews,     'icon' => 'views'],
         ];
     @endphp
     @foreach ($stats as $s)
         <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
             <div class="flex items-start justify-between">
-                <div class="w-10 h-10 rounded-lg {{ $s['bg'] }} {{ $s['fg'] }} flex items-center justify-center">
+                <div class="w-10 h-10 rounded-lg bg-blue-50 text-[#0b57d0] flex items-center justify-center">
                     @if ($s['icon'] === 'articles')
                         <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 12h6"/></svg>
                     @elseif ($s['icon'] === 'check')
@@ -88,8 +88,6 @@
                 @forelse ($articles as $article)
                     @php
                         $initials = collect(explode(' ', $article->author_name))->take(2)->map(fn($w) => strtoupper(substr($w,0,1)))->implode('');
-                        $colors   = ['bg-blue-100 text-blue-700','bg-violet-100 text-violet-700','bg-orange-100 text-orange-700','bg-emerald-100 text-emerald-700','bg-rose-100 text-rose-700'];
-                        $avatarBg = $colors[$article->id % count($colors)];
                         $statusCfg = match($article->status) {
                             'published' => 'bg-emerald-50 text-emerald-600 before:bg-emerald-500',
                             'archived'  => 'bg-slate-100 text-slate-600 before:bg-slate-400',
@@ -102,7 +100,7 @@
                         <td class="px-5 py-4 text-slate-600">{{ $article->category }}</td>
                         <td class="px-5 py-4">
                             <span class="inline-flex items-center gap-2">
-                                <span class="w-7 h-7 rounded-full {{ $avatarBg }} flex items-center justify-center text-[11px] font-bold">{{ $initials }}</span>
+                                <span class="w-7 h-7 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center text-[11px] font-bold">{{ $initials }}</span>
                                 <span class="text-slate-700">{{ $article->author_name }}</span>
                             </span>
                         </td>
