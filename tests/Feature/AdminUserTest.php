@@ -103,4 +103,55 @@ class AdminUserTest extends TestCase
             'id' => $user->id,
         ]);
     }
+
+    public function test_regular_admin_cannot_create_super_admin(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($admin)->post(route('admin.users.store'), [
+            'name' => 'Escalated User',
+            'email' => 'escalated@example.com',
+            'password' => 'secret123',
+            'role' => 'super_admin',
+            'status' => 'active',
+            '_token' => Session::token(),
+        ]);
+
+        $response->assertSessionHasErrors('role');
+        $this->assertDatabaseMissing('users', [
+            'email' => 'escalated@example.com',
+        ]);
+    }
+
+    public function test_regular_admin_cannot_update_super_admin(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'status' => 'active',
+        ]);
+
+        $target = User::factory()->create([
+            'name' => 'Protected Admin',
+            'role' => 'super_admin',
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($admin)->put(route('admin.users.update', $target->id), [
+            'name' => 'Hacked',
+            'email' => $target->email,
+            'role' => 'super_admin',
+            'status' => 'active',
+            '_token' => Session::token(),
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('users', [
+            'id' => $target->id,
+            'name' => 'Protected Admin',
+        ]);
+    }
 }

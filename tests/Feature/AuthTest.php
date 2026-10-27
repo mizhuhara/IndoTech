@@ -153,4 +153,22 @@ class AuthTest extends TestCase
         $this->assertGuest();
         $response->assertSessionHasErrors('email');
     }
+
+    public function test_inactive_user_cannot_login(): void
+    {
+        User::factory()->create([
+            'email' => 'inactive@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'user',
+            'status' => 'inactive',
+        ]);
+
+        $response = $this->post(route('login.submit'), [
+            'email' => 'inactive@example.com',
+            'password' => 'password123',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors('email');
+    }
 }

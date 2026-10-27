@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AdminUserController extends Controller
@@ -67,7 +68,7 @@ class AdminUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
-            'role' => ['required', 'in:super_admin,admin,school,university,company,user'],
+            'role' => ['required', Rule::in($this->assignableRoles())],
             'status' => ['required', 'in:active,pending,rejected,inactive'],
         ], [
             'email.unique' => 'Email ini sudah terdaftar di sistem.',
@@ -94,11 +95,16 @@ class AdminUserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        if ($this->isElevated($user) && ! $this->currentUserIsSuperAdmin()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Hanya super admin yang dapat mengubah akun admin.');
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'password' => ['nullable', 'string', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
-            'role' => ['required', 'in:super_admin,admin,school,university,company,user'],
+            'role' => ['required', Rule::in($this->assignableRoles())],
             'status' => ['required', 'in:active,pending,rejected,inactive'],
         ], [
             'email.unique' => 'Email ini sudah digunakan oleh user lain.',
@@ -129,6 +135,11 @@ class AdminUserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        if ($this->isElevated($user) && ! $this->currentUserIsSuperAdmin()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Hanya super admin yang dapat menghapus akun admin.');
+        }
+
         // Prevent self deletion
         if (auth()->check() && auth()->id() === $user->id) {
             return redirect()->route('admin.users.index')
@@ -146,5 +157,29 @@ class AdminUserController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', "User \"{$name}\" berhasil dihapus.");
+    }
+
+    /**
+     * Role yang boleh ditetapkan oleh pengguna yang sedang login.
+     *
+     * @return array<int, string>
+     */
+    private function assignableRoles(): array
+    {
+        if ($this->currentUserIsSuperAdmin()) {
+            return ['super_admin', 'admin', 'school', 'university', 'company', 'user'];
+        }
+
+        return ['school', 'university', 'company', 'user'];
+    }
+
+    private function isElevated(User $user): bool
+    {
+        return in_array($user->role, ['super_admin', 'admin'], true);
+    }
+
+    private function currentUserIsSuperAdmin(): bool
+    {
+        return auth()->user()?->role === 'super_admin';
     }
 }
