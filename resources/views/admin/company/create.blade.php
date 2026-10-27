@@ -23,9 +23,9 @@
         <div class="lg:col-span-8 space-y-6">
 
             {{-- Card 1: Basic Information --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="4" y="3" width="16" height="18" rx="2"/>
                         <path stroke-linecap="round" d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
                     </svg>
@@ -35,35 +35,35 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {{-- Company Name --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Nama Perusahaan <span class="text-red-500">*</span></label>
+                        <label class="form-label">Nama Perusahaan <span class="text-red-500">*</span></label>
                         <input type="text" 
                                name="name" 
                                value="{{ old('name') }}" 
                                required
                                placeholder="Contoh: PT. Telekomunikasi Indonesia Tbk"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('name')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Company Code --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Kode / NPSN Perusahaan</label>
+                        <label class="form-label">Kode / NPSN Perusahaan</label>
                         <input type="text" 
                                name="npsn" 
                                value="{{ old('npsn') }}" 
                                placeholder="Contoh: CMP001"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     {{-- Company Type --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Tipe Perusahaan <span class="text-red-500">*</span></label>
+                        <label class="form-label">Tipe Perusahaan <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <select name="type" 
                                     required
-                                    class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
+                                    class="input appearance-none cursor-pointer pr-10">
                                 <option value="Swasta" {{ old('type') == 'Swasta' ? 'selected' : '' }}>Swasta</option>
                                 <option value="BUMN" {{ old('type') == 'BUMN' ? 'selected' : '' }}>BUMN</option>
                                 <option value="Multinasional" {{ old('type') == 'Multinasional' ? 'selected' : '' }}>Multinasional</option>
@@ -77,58 +77,58 @@
 
                     {{-- Industry --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Bidang Industri <span class="text-red-500">*</span></label>
+                        <label class="form-label">Bidang Industri <span class="text-red-500">*</span></label>
                         <input type="text" 
                                name="industry" 
                                value="{{ old('industry') }}" 
                                required
                                placeholder="Contoh: Teknologi & Informasi"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('industry')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- City --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Kota / Kabupaten</label>
+                        <label class="form-label">Kota / Kabupaten</label>
                         <input type="text" 
                                name="city" 
                                value="{{ old('city') }}" 
                                placeholder="Contoh: Bandung"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     {{-- Province --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Provinsi</label>
+                        <label class="form-label">Provinsi</label>
                         <input type="text" 
                                name="province" 
                                value="{{ old('province') }}" 
                                placeholder="Contoh: Jawa Barat"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                     </div>
 
                     {{-- Location --}}
                     <div class="sm:col-span-2">
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Ringkasan Lokasi <span class="text-red-500">*</span></label>
+                        <label class="form-label">Ringkasan Lokasi <span class="text-red-500">*</span></label>
                         <input type="text" 
                                name="location" 
                                value="{{ old('location') }}" 
                                required
                                placeholder="Contoh: Bandung, Jawa Barat"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('location')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
             {{-- Card 2: Company Description --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
                     <h2 class="text-[17px] font-bold text-slate-900">Deskripsi & Profil Perusahaan</h2>
@@ -138,15 +138,15 @@
                     <textarea name="description" 
                               rows="5"
                               placeholder="Tuliskan deskripsi profil dan bisnis perusahaan..."
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-4 text-[14px] text-slate-800 outline-none transition font-medium leading-relaxed resize-none">{{ old('description') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('description') }}</textarea>
                 </div>
             </div>
 
             {{-- Card 3: Company Gallery Upload --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div class="card space-y-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2.5 text-slate-900">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                             <rect x="3" y="3" width="18" height="18" rx="3"/>
                             <circle cx="8.5" cy="8.5" r="1.5"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
@@ -157,7 +157,7 @@
                         </div>
                     </div>
 
-                    <label class="cursor-pointer inline-flex items-center gap-1.5 text-[13.5px] font-bold text-[#0b57d0] hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
+                    <label class="cursor-pointer inline-flex items-center gap-1.5 text-[13.5px] font-bold text-brand-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
                         <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                         </svg>
@@ -176,9 +176,9 @@
             </div>
 
             {{-- Card 4: Address & Google Maps Integration --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div class="card space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
                     </svg>
@@ -189,22 +189,22 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Alamat Lengkap Kantor</label>
+                    <label class="form-label">Alamat Lengkap Kantor</label>
                     <textarea name="address" 
                               rows="3"
                               placeholder="Masukkan alamat lengkap gedung/kantor perusahaan..."
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-3.5 text-[13.5px] text-slate-800 outline-none transition font-medium">{{ old('address') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('address') }}</textarea>
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Link / Embed Google Maps</label>
+                    <label class="form-label">Link / Embed Google Maps</label>
                     <input type="text" 
                            name="map_link" 
                            id="mapLinkInput"
                            value="{{ old('map_link') }}" 
                            placeholder="Contoh: https://maps.google.com/maps?q=Bandung&output=embed"
                            oninput="updateMapPreview(this.value)"
-                           class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[13.5px] text-slate-800 outline-none transition font-medium">
+                           class="input">
                 </div>
 
                 {{-- Interactive Map Preview Container --}}
@@ -225,11 +225,11 @@
         <div class="lg:col-span-4 space-y-6">
 
             {{-- Card 1: Logo & Branding --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col items-center text-center">
+            <div class="card flex flex-col items-center text-center">
                 <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Logo Perusahaan</h2>
 
                 <div class="w-full aspect-[4/3] rounded-2xl bg-[#f0f4f9] border border-slate-200/70 flex items-center justify-center p-4 mb-4 relative overflow-hidden">
-                    <div id="logoPreviewWrapper" class="w-20 h-20 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b57d0] font-extrabold text-xl overflow-hidden shadow-sm">
+                    <div id="logoPreviewWrapper" class="w-20 h-20 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-brand-600 font-extrabold text-xl overflow-hidden shadow-sm">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="4" y="3" width="16" height="18" rx="2"/>
                             <path stroke-linecap="round" d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
@@ -254,65 +254,65 @@
             </div>
 
             {{-- Card 2: Status & Operational Info --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div class="card space-y-4">
                 <h2 class="text-[17px] font-bold text-slate-900 mb-2">Status Kemitraan</h2>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Status Kemitraan <span class="text-red-500">*</span></label>
-                    <select name="status" required class="w-full bg-[#f0f4f9]/80 border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none font-medium">
+                    <label class="form-label">Status Kemitraan <span class="text-red-500">*</span></label>
+                    <select name="status" required class="input">
                         <option value="Active" {{ old('status') == 'Active' ? 'selected' : '' }}>Active (Aktif)</option>
                         <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive (Non-aktif)</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Jumlah Karyawan</label>
+                    <label class="form-label">Jumlah Karyawan</label>
                     <input type="number" 
                            name="total_employees" 
                            value="{{ old('total_employees') }}" 
                            placeholder="Contoh: 500"
-                           class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                           class="input">
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Tahun Berdiri</label>
+                    <label class="form-label">Tahun Berdiri</label>
                     <input type="number" 
                            name="founded" 
                            value="{{ old('founded') }}" 
                            placeholder="Contoh: 2010"
-                           class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                           class="input">
                 </div>
             </div>
 
             {{-- Card 3: Contact Info --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div class="card space-y-4">
                 <h2 class="text-[17px] font-bold text-slate-900 mb-2">Kontak Perusahaan</h2>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Email Perusahaan</label>
+                    <label class="form-label">Email Perusahaan</label>
                     <input type="email" 
                            name="email" 
                            value="{{ old('email') }}" 
                            placeholder="corporate@perusahaan.com"
-                           class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                           class="input">
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Website Resmi</label>
+                    <label class="form-label">Website Resmi</label>
                     <input type="url" 
                            name="website" 
                            value="{{ old('website') }}" 
                            placeholder="https://www.perusahaan.com"
-                           class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                           class="input">
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Telepon / No. HP</label>
+                    <label class="form-label">Telepon / No. HP</label>
                     <input type="text" 
                            name="phone" 
                            value="{{ old('phone') }}" 
                            placeholder="021-1234567"
-                           class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                           class="input">
                 </div>
             </div>
 

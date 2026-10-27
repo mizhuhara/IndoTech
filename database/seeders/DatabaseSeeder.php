@@ -19,10 +19,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::updateOrCreate(
-            ['email' => 'test@example.com'],
-            ['name' => 'Test User', 'password' => Hash::make('password'), 'email_verified_at' => now()]
-        );
+        if (app()->isLocal()) {
+            User::updateOrCreate(
+                ['email' => 'test@example.com'],
+                ['name' => 'Test User', 'password' => Hash::make('password'), 'email_verified_at' => now()]
+            );
+        }
 
         // Super admin bersama (proyek tim). Password dari .env; generate jika kosong.
         $adminPassword = env('ADMIN_PASSWORD') ?: Str::password(16);

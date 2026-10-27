@@ -8,7 +8,7 @@
 <div class="space-y-6">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         @foreach ($cards as $card)
-        <a href="{{ $card['url'] }}" class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs hover:shadow-md hover:border-blue-400 transition block">
+        <a href="{{ $card['url'] }}" class="card hover:shadow-md hover:border-blue-400 transition block">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">{{ $card['label'] }}</div>
             <div class="text-[22px] font-extrabold text-slate-900 leading-tight mt-2">{{ $card['value'] }}</div>
             @if (!empty($card['sub']))

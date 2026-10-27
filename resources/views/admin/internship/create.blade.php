@@ -43,7 +43,7 @@
             {{-- Kartu 1: Informasi Utama Magang --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-5">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-4">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
                             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
@@ -58,7 +58,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {{-- Judul Magang --}}
                     <div class="sm:col-span-2">
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Judul Posisi Magang <span class="text-rose-500">*</span>
                         </label>
                         <input type="text" 
@@ -66,7 +66,7 @@
                                value="{{ old('title') }}" 
                                required 
                                placeholder="Contoh: Frontend Developer Intern"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('title')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
@@ -74,7 +74,7 @@
 
                     {{-- Nama Perusahaan --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Nama Perusahaan / Organisasi <span class="text-rose-500">*</span>
                         </label>
                         <input type="text" 
@@ -82,7 +82,7 @@
                                value="{{ old('company') }}" 
                                required 
                                placeholder="Contoh: PT IndoTech Solusi Nusantara"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('company')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
@@ -90,10 +90,10 @@
 
                     {{-- User Penanggung Jawab --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             User Penanggung Jawab <span class="text-rose-500">*</span>
                         </label>
-                        <select name="user_id" required class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium cursor-pointer">
+                        <select name="user_id" required class="input cursor-pointer">
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}" {{ old('user_id', auth()->id()) == $user->id ? 'selected' : '' }}>
                                     {{ $user->name }} ({{ $user->email }})
@@ -107,7 +107,7 @@
 
                     {{-- Lokasi Penempatan --}}
                     <div class="sm:col-span-2">
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Lokasi Penempatan
                         </label>
                         <div class="relative">
@@ -119,7 +119,7 @@
                                    name="location" 
                                    value="{{ old('location') }}" 
                                    placeholder="Contoh: Jakarta Selatan / Hybrid / Remote"
-                                   class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl pl-10 pr-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                                   class="input pl-10 pr-4">
                         </div>
                         @error('location')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
@@ -131,7 +131,7 @@
             {{-- Kartu 2: Deskripsi Lengkap Magang --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-4">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/>
                         </svg>
@@ -143,14 +143,14 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                    <label class="form-label-sm">
                         Deskripsi Program Magang
                     </label>
                     <textarea name="description" 
                               rows="6" 
                               id="desc-field"
                               placeholder="Jelaskan mengenai program magang, tanggung jawab peserta, teknologi yang digunakan, serta kualifikasi yang diharapkan..."
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-4 text-[14px] text-slate-800 leading-relaxed outline-none transition font-medium">{{ old('description') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('description') }}</textarea>
                     <div class="flex items-center justify-between text-[11.5px] text-slate-400 mt-1 font-medium">
                         <span>Format teks bebas atau daftar poin penjelasan.</span>
                         <span><span id="char-count">0</span> karakter</span>
@@ -164,7 +164,7 @@
             {{-- Kartu 3: Periode Pelaksanaan Magang --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-4">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
                             <line x1="16" y1="2" x2="16" y2="6"/>
@@ -180,26 +180,26 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Tanggal Mulai
                         </label>
                         <input type="date" 
                                name="start_date" 
                                value="{{ old('start_date') }}"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('start_date')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                        <label class="form-label-sm">
                             Tanggal Selesai
                         </label>
                         <input type="date" 
                                name="end_date" 
                                value="{{ old('end_date') }}"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('end_date')
                             <p class="text-xs text-rose-500 mt-1 font-semibold">{{ $message }}</p>
                         @enderror
@@ -215,7 +215,7 @@
             {{-- Kartu Status Publikasi --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-3">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                         </svg>
@@ -226,10 +226,10 @@
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-1.5">
+                    <label class="form-label-sm">
                         Status Keaktifan <span class="text-rose-500">*</span>
                     </label>
-                    <select name="status" required class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium cursor-pointer">
+                    <select name="status" required class="input cursor-pointer">
                         <option value="active" {{ old('status', 'active') === 'active' ? 'selected' : '' }}>Aktif (Tampil di Publik)</option>
                         <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Non-aktif / Draft</option>
                         <option value="completed" {{ old('status') === 'completed' ? 'selected' : '' }}>Selesai (Completed)</option>
@@ -240,7 +240,7 @@
             {{-- Kartu Foto / Logo Profil --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
                 <div class="flex items-center gap-2.5 text-slate-900 border-b border-slate-100 pb-3">
-                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-[#0b57d0] flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-xl bg-blue-50 text-brand-600 flex items-center justify-center shrink-0">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                             <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -282,7 +282,7 @@
             {{-- Kartu Aksi Simpan --}}
             <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs space-y-3">
                 <button type="submit" 
-                        class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#0b57d0] hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-[14px] shadow-sm transition cursor-pointer">
+                        class="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-brand-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold text-[14px] shadow-sm transition cursor-pointer">
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                     </svg>

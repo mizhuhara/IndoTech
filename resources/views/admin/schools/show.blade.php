@@ -17,7 +17,7 @@
         </a>
 
         <div class="flex items-center gap-3">
-            <a href="{{ route('admin.schools.edit', $school['id']) }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-sm transition">
+            <a href="{{ route('admin.schools.edit', $school['id']) }}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-sm transition">
                 <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -31,9 +31,9 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div class="lg:col-span-8 space-y-6">
             {{-- Overview Card --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-6">
+            <div class="card space-y-6">
                 <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b57d0] font-bold text-lg shrink-0 overflow-hidden shadow-xs">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-brand-600 font-bold text-lg shrink-0 overflow-hidden shadow-xs">
                         @if(!empty($school['logo_url']))
                             <img src="{{ $school['logo_url'] }}" alt="{{ $school['name'] }}" class="w-full h-full object-cover">
                         @else
@@ -45,7 +45,7 @@
                         <div class="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-slate-500">
                             <span class="font-semibold text-slate-700">NPSN: {{ $school['npsn'] }}</span>
                             <span>•</span>
-                            <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#0b57d0] font-semibold">{{ $school['type'] }}</span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-brand-600 font-semibold">{{ $school['type'] }}</span>
                             <span>•</span>
                             <span>{{ $school['location'] }}</span>
                         </div>
@@ -63,7 +63,7 @@
 
         <div class="lg:col-span-4 space-y-6">
             {{-- Quick Info Card --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div class="card space-y-4">
                 <h3 class="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">Informasi Tambahan</h3>
 
                 <div class="space-y-3 text-sm">

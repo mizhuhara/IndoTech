@@ -42,7 +42,7 @@
                     <h2 class="text-[16px] font-bold text-slate-900">New User Statistics</h2>
                     <p class="text-[12.5px] text-slate-500">{{ $lineChartPeriod }}</p>
                 </div>
-                <a href="{{ route('admin.users.index') }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">View All</a>
+                <a href="{{ route('admin.users.index') }}" class="text-[13px] font-semibold text-brand-600 hover:underline">View All</a>
             </div>
             <svg viewBox="0 0 400 160" class="w-full h-auto" preserveAspectRatio="none">
                 <defs>
@@ -77,7 +77,7 @@
                     <h2 class="text-[16px] font-bold text-slate-900">Distribusi Berdasarkan Daerah</h2>
                     <p class="text-[12.5px] text-slate-500">Sebaran entitas terdaftar per wilayah</p>
                 </div>
-                <a href="{{ route('admin.schools.index') }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">Lihat Semua</a>
+                <a href="{{ route('admin.schools.index') }}" class="text-[13px] font-semibold text-brand-600 hover:underline">Lihat Semua</a>
             </div>
             <div class="flex items-end justify-around gap-3 h-40 pt-2">
                 @foreach ($regions as $r)
@@ -102,16 +102,16 @@
                 <h2 class="text-[16px] font-bold text-slate-900">Recent Verification Requests</h2>
                 <p class="text-[12.5px] text-slate-500">Latest entity verification submissions</p>
             </div>
-            <a href="{{ route('admin.verification.index') }}" class="text-[13px] font-semibold text-[#0b57d0] hover:underline">View All →</a>
+            <a href="{{ route('admin.verification.index') }}" class="text-[13px] font-semibold text-brand-600 hover:underline">View All →</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
                 <thead>
                     <tr class="bg-slate-50 text-[12px] uppercase tracking-wide text-slate-500">
-                        <th class="px-6 py-3.5 font-semibold">Entity Name</th>
-                        <th class="px-6 py-3.5 font-semibold">Type</th>
-                        <th class="px-6 py-3.5 font-semibold">Registration Date</th>
-                        <th class="px-6 py-3.5 font-semibold">Status</th>
+                        <th class="table-head">Entity Name</th>
+                        <th class="table-head">Type</th>
+                        <th class="table-head">Registration Date</th>
+                        <th class="table-head">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-[13.5px]">
@@ -120,7 +120,7 @@
                             <td class="px-6 py-4 font-semibold text-slate-900">{{ $r['name'] }}</td>
                             <td class="px-6 py-4 text-slate-600">{{ $r['type'] }}</td>
                             <td class="px-6 py-4 text-slate-500">{{ $r['date'] }}</td>
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <span class="inline-flex px-3 py-1 rounded-full text-[12px] font-semibold {{ $r['badge'] }}">{{ $r['status'] }}</span>
                             </td>
                         </tr>

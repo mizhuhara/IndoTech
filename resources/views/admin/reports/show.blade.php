@@ -22,7 +22,7 @@
                 XLSX
             </a>
             <a href="{{ route('admin.reports.export', ['type' => $report['slug'], 'from' => $from, 'to' => $to]) }}"
-               class="h-9 px-4 inline-flex items-center gap-2 rounded-xl bg-[#0b57d0] text-white text-[13px] font-semibold hover:bg-blue-700 transition shadow-xs">
+               class="h-9 px-4 inline-flex items-center gap-2 rounded-xl bg-brand-600 text-white text-[13px] font-semibold hover:bg-blue-700 transition shadow-xs">
                 <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
                 CSV
             </a>
@@ -68,7 +68,7 @@
                 <thead>
                     <tr class="bg-slate-50 text-[12px] uppercase tracking-wide text-slate-500">
                         @foreach ($report['columns'] as $label)
-                            <th class="px-6 py-3.5 font-semibold">{{ $label }}</th>
+                            <th class="table-head">{{ $label }}</th>
                         @endforeach
                     </tr>
                 </thead>

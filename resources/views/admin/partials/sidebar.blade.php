@@ -9,8 +9,8 @@
     {{-- Header / Brand --}}
     <div class="h-16 px-6 flex items-center border-b border-slate-200/80 shrink-0">
         <a href="{{ route('admin.dashboard') }}" class="group flex items-center gap-2">
-            <span class="text-[21px] font-black text-slate-900 tracking-tight leading-none group-hover:text-[#0b57d0] transition-colors">
-                Indo<span class="text-[#0b57d0]">Tech</span>
+            <span class="text-[21px] font-black text-slate-900 tracking-tight leading-none group-hover:text-brand-600 transition-colors">
+                Indo<span class="text-brand-600">Tech</span>
             </span>
         </a>
     </div>
@@ -118,11 +118,11 @@
                     <button type="button" 
                             onclick="toggleSubmenu('user-verification-submenu', 'user-verification-arrow')"
                             class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 cursor-pointer select-none relative group
-                                   {{ $item['active'] ? 'bg-blue-50/80 text-[#0b57d0] font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                                   {{ $item['active'] ? 'bg-blue-50/80 text-brand-600 font-semibold' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                         @if ($item['active'])
-                            <span class="absolute left-0 top-2 bottom-2 w-1 bg-[#0b57d0] rounded-r-full"></span>
+                            <span class="absolute left-0 top-2 bottom-2 w-1 bg-brand-600 rounded-r-full"></span>
                         @endif
-                        <span class="{{ $item['active'] ? 'text-[#0b57d0]' : 'text-slate-400 group-hover:text-slate-600' }} transition-colors">
+                        <span class="{{ $item['active'] ? 'text-brand-600' : 'text-slate-400 group-hover:text-slate-600' }} transition-colors">
                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.5 20c1.2-3.2 3.7-4.8 6.5-4.8s5.3 1.6 6.5 4.8"/><path stroke-linecap="round" d="M16 5.5a3 3 0 0 1 0 5.8M18.5 15.6c1.2 1.1 2 2.4 2.6 4.4"/></svg>
                         </span>
                         <span class="flex-1 text-left tracking-tight">{{ $item['label'] }}</span>
@@ -134,7 +134,7 @@
                         @endif
 
                         <svg id="user-verification-arrow" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                             class="transition-transform duration-200 {{ $item['active'] ? 'rotate-180 text-[#0b57d0]' : 'text-slate-400 group-hover:text-slate-600' }}">
+                             class="transition-transform duration-200 {{ $item['active'] ? 'rotate-180 text-brand-600' : 'text-slate-400 group-hover:text-slate-600' }}">
                             <path d="m8 10 4 4 4-4"/>
                         </svg>
                     </button>
@@ -144,14 +144,14 @@
                         <div class="absolute left-5 top-1 bottom-1 w-px bg-slate-200"></div>
 
                         <a href="{{ route('admin.users.index') }}" 
-                           class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12.5px] font-medium transition-all duration-150 {{ request()->routeIs('admin.users.*') ? 'bg-[#0b57d0] text-white shadow-xs font-semibold' : 'text-slate-600 hover:bg-slate-100/70 hover:text-slate-900' }}">
+                           class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12.5px] font-medium transition-all duration-150 {{ request()->routeIs('admin.users.*') ? 'bg-brand-600 text-white shadow-xs font-semibold' : 'text-slate-600 hover:bg-slate-100/70 hover:text-slate-900' }}">
                             <span>Manage Users</span>
                         </a>
                         <a href="{{ route('admin.verification.index') }}" 
-                           class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12.5px] font-medium transition-all duration-150 {{ request()->routeIs('admin.verification.*') ? 'bg-[#0b57d0] text-white shadow-xs font-semibold' : 'text-slate-600 hover:bg-slate-100/70 hover:text-slate-900' }}">
+                           class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12.5px] font-medium transition-all duration-150 {{ request()->routeIs('admin.verification.*') ? 'bg-brand-600 text-white shadow-xs font-semibold' : 'text-slate-600 hover:bg-slate-100/70 hover:text-slate-900' }}">
                             <span>Verification</span>
                             @if($pendingVerificationsCount > 0)
-                                <span class="px-1.5 py-0.2 text-[10px] font-bold rounded-full {{ request()->routeIs('admin.verification.*') ? 'bg-white text-[#0b57d0]' : 'bg-amber-100 text-amber-800' }}">
+                                <span class="px-1.5 py-0.2 text-[10px] font-bold rounded-full {{ request()->routeIs('admin.verification.*') ? 'bg-white text-brand-600' : 'bg-amber-100 text-amber-800' }}">
                                     {{ $pendingVerificationsCount }}
                                 </span>
                             @endif
@@ -162,15 +162,15 @@
                 <a href="{{ $item['href'] }}"
                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 relative group
                           {{ $item['active']
-                              ? 'bg-blue-50/80 text-[#0b57d0] font-semibold'
+                              ? 'bg-blue-50/80 text-brand-600 font-semibold'
                               : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     
                     {{-- Active blue left edge pill indicator --}}
                     @if ($item['active'])
-                        <span class="absolute left-0 top-2 bottom-2 w-1 bg-[#0b57d0] rounded-r-full"></span>
+                        <span class="absolute left-0 top-2 bottom-2 w-1 bg-brand-600 rounded-r-full"></span>
                     @endif
 
-                    <span class="{{ $item['active'] ? 'text-[#0b57d0]' : 'text-slate-400 group-hover:text-slate-600' }} transition-colors">
+                    <span class="{{ $item['active'] ? 'text-brand-600' : 'text-slate-400 group-hover:text-slate-600' }} transition-colors">
                         @if ($item['icon'] === 'grid')
                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
                         @elseif ($item['icon'] === 'users')

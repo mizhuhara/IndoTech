@@ -17,13 +17,6 @@
 
         {{-- Actions --}}
         <div id="it-actions">
-            <button id="it-search-btn" aria-label="Search">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="7"/>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-            </button>
-
             @auth
                 <div id="it-user" class="it-user">
                     <button type="button" id="it-user-btn" aria-haspopup="true" aria-expanded="false">
@@ -54,7 +47,7 @@
                 <a href="/register" class="it-btn-signup">Sign Up</a>
             @endauth
 
-            <button id="it-mobile-toggle" aria-label="Menu">
+            <button id="it-mobile-toggle" aria-label="Menu" aria-controls="it-mobile-menu" aria-expanded="false">
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
@@ -95,7 +88,8 @@
         var menu = document.getElementById('it-mobile-menu');
         if (btn && menu) {
             btn.addEventListener('click', function () {
-                menu.classList.toggle('it-open');
+                var open = menu.classList.toggle('it-open');
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
             });
         }
 

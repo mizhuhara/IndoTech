@@ -21,7 +21,7 @@
 
             {{-- Add New Community Button --}}
             <a href="{{ route('admin.community.create') }}" 
-               class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-sm transition">
+               class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-sm transition">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <path d="M12 5v14M5 12h14"/>
                 </svg>
@@ -50,7 +50,7 @@
                 </select>
             </div>
             <div class="flex items-end gap-2">
-                <button type="submit" class="flex-1 bg-[#0b57d0] text-white py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">Terapkan Filter</button>
+                <button type="submit" class="flex-1 bg-brand-600 text-white py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">Terapkan Filter</button>
                 <a href="{{ route('admin.community.index') }}" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-xl text-sm font-medium hover:bg-slate-200 transition">Reset</a>
             </div>
         </form>
@@ -59,19 +59,19 @@
     {{-- 3 Top Stat Cards --}}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         {{-- Card 1: TOTAL COMMUNITIES --}}
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
+        <div class="card relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">TOTAL COMMUNITIES</div>
             <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $totalCommunities }}</div>
         </div>
 
         {{-- Card 2: ACTIVE COMMUNITIES --}}
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
+        <div class="card relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">ACTIVE COMMUNITIES</div>
             <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $activeCommunities }}</div>
         </div>
 
         {{-- Card 3: NEW MEMBERS --}}
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs relative overflow-hidden flex flex-col justify-between">
+        <div class="card relative overflow-hidden flex flex-col justify-between">
             <div class="text-[12px] font-bold tracking-wider text-slate-400 uppercase">NEW MEMBERS</div>
             <div class="text-[34px] font-extrabold text-slate-900 leading-tight mt-2">{{ $newMembers }}</div>
         </div>
@@ -126,10 +126,10 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/75 text-[11.5px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">
-                        <th class="px-6 py-4">COMMUNITY NAME</th>
-                        <th class="px-6 py-4">CATEGORY</th>
-                        <th class="px-6 py-4">MEMBERS</th>
-                        <th class="px-6 py-4">STATUS</th>
+                        <th class="cell">COMMUNITY NAME</th>
+                        <th class="cell">CATEGORY</th>
+                        <th class="cell">MEMBERS</th>
+                        <th class="cell">STATUS</th>
                         <th class="px-6 py-4 text-right">ACTIONS</th>
                     </tr>
                 </thead>
@@ -137,10 +137,10 @@
                     @forelse ($communities as $community)
                         <tr class="hover:bg-slate-50/70 transition group">
                             {{-- Community Name & Logo --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <div class="flex items-center gap-3.5">
                                     {{-- Logo Avatar --}}
-                                    <div class="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-[#0b57d0] font-bold text-xs shrink-0 overflow-hidden shadow-2xs">
+                                    <div class="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center text-brand-600 font-bold text-xs shrink-0 overflow-hidden shadow-2xs">
                                         @if(!empty($community['logo_url']))
                                             <img src="{{ $community['logo_url'] }}" alt="{{ $community['name'] }}" class="w-full h-full object-cover">
                                         @else
@@ -159,12 +159,12 @@
                             </td>
 
                             {{-- Category Badge --}}
-                            <td class="px-6 py-4">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-blue-50 text-[#0b57d0]">{{ $community['category'] }}</span>
+                            <td class="cell">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-medium bg-blue-50 text-brand-600">{{ $community['category'] }}</span>
                             </td>
 
                             {{-- Members --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <div class="font-semibold text-slate-800 leading-tight">
                                     {{ number_format($community['members'], 0, ',', '.') }}
                                 </div>
@@ -174,7 +174,7 @@
                             </td>
 
                             {{-- Status --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 @if(strtolower($community['status']) === 'active')
                                     <span class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-slate-800">
                                         <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -262,7 +262,7 @@
                 {{-- Page Number Links --}}
                 @for ($page = 1; $page <= max(1, $communities->lastPage()); $page++)
                     @if ($page == $communities->currentPage())
-                        <span class="w-8 h-8 rounded-lg flex items-center justify-center bg-[#0b57d0] text-white font-bold shadow-xs select-none">{{ $page }}</span>
+                        <span class="w-8 h-8 rounded-lg flex items-center justify-center bg-brand-600 text-white font-bold shadow-xs select-none">{{ $page }}</span>
                     @else
                         <a href="{{ $communities->url($page) }}" class="w-8 h-8 rounded-lg flex items-center justify-center border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition">{{ $page }}</a>
                     @endif

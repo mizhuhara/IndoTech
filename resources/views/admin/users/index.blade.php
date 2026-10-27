@@ -119,10 +119,10 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-slate-50/75 text-[11.5px] font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100">
-                        <th class="px-6 py-4">USER & EMAIL</th>
-                        <th class="px-6 py-4">ROLE</th>
-                        <th class="px-6 py-4">STATUS</th>
-                        <th class="px-6 py-4">TERDAFTAR</th>
+                        <th class="cell">USER & EMAIL</th>
+                        <th class="cell">ROLE</th>
+                        <th class="cell">STATUS</th>
+                        <th class="cell">TERDAFTAR</th>
                         <th class="px-6 py-4 text-center">AKSI</th>
                     </tr>
                 </thead>
@@ -152,7 +152,7 @@
                         @endphp
                         <tr class="hover:bg-slate-50/70 transition group">
                             {{-- User & Email --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <div class="flex items-center gap-3.5">
                                     <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-extrabold flex items-center justify-center text-xs shrink-0 shadow-sm">
                                         {{ $initials }}
@@ -165,14 +165,14 @@
                             </td>
 
                             {{-- Role --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border {{ $roleBadgeClasses }}">
                                     {{ $roleDisplayName }}
                                 </span>
                             </td>
 
                             {{-- Status --}}
-                            <td class="px-6 py-4">
+                            <td class="cell">
                                 @if($statusLower === 'active')
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -280,7 +280,7 @@
         {{-- Modal Header --}}
         <div class="px-6 py-4.5 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#0b57d0] border border-blue-100 flex items-center justify-center">
+                <div class="w-9 h-9 rounded-xl bg-blue-50 text-brand-600 border border-blue-100 flex items-center justify-center">
                     <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                 </div>
                 <div>
@@ -297,23 +297,23 @@
         <form action="{{ route('admin.users.store') }}" method="POST" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
             @csrf
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                <label class="form-label-strong">Nama Lengkap <span class="text-red-500">*</span></label>
                 <input type="text" name="name" required placeholder="Contoh: Ahmad Rizky" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Email <span class="text-red-500">*</span></label>
+                <label class="form-label-strong">Email <span class="text-red-500">*</span></label>
                 <input type="email" name="email" required placeholder="user@indotech.id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Password <span class="text-red-500">*</span></label>
+                <label class="form-label-strong">Password <span class="text-red-500">*</span></label>
                 <input type="password" name="password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block font-bold text-slate-800 mb-1">Role / Peranan <span class="text-red-500">*</span></label>
+                    <label class="form-label-strong">Role / Peranan <span class="text-red-500">*</span></label>
                     <select name="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="user">User / Alumni</option>
                         <option value="school">Sekolah (School)</option>
@@ -324,7 +324,7 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-800 mb-1">Status Akun <span class="text-red-500">*</span></label>
+                    <label class="form-label-strong">Status Akun <span class="text-red-500">*</span></label>
                     <select name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="active">Active (Aktif)</option>
                         <option value="pending">Pending (Verifikasi)</option>
@@ -335,7 +335,7 @@
 
             <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
                 <button type="button" onclick="closeAddModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-[13px] transition cursor-pointer">Batal</button>
-                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan User</button>
+                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan User</button>
             </div>
         </form>
     </div>
@@ -349,7 +349,7 @@
         {{-- Modal Header --}}
         <div class="px-6 py-4.5 bg-slate-50/70 border-b border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#0b57d0] border border-blue-100 flex items-center justify-center">
+                <div class="w-9 h-9 rounded-xl bg-blue-50 text-brand-600 border border-blue-100 flex items-center justify-center">
                     <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </div>
                 <div>
@@ -368,23 +368,23 @@
             @method('PUT')
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                <label class="form-label-strong">Nama Lengkap <span class="text-red-500">*</span></label>
                 <input type="text" id="edit_name" name="name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Email <span class="text-red-500">*</span></label>
+                <label class="form-label-strong">Email <span class="text-red-500">*</span></label>
                 <input type="email" id="edit_email" name="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div>
-                <label class="block font-bold text-slate-800 mb-1">Password Baru <span class="text-slate-400 font-normal">(Opsional)</span></label>
+                <label class="form-label-strong">Password Baru <span class="text-slate-400 font-normal">(Opsional)</span></label>
                 <input type="password" id="edit_password" name="password" minlength="6" placeholder="Biarkan kosong jika tidak ingin mengubah password" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="block font-bold text-slate-800 mb-1">Role / Peranan <span class="text-red-500">*</span></label>
+                    <label class="form-label-strong">Role / Peranan <span class="text-red-500">*</span></label>
                     <select id="edit_role" name="role" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="user">User / Alumni</option>
                         <option value="school">Sekolah (School)</option>
@@ -395,7 +395,7 @@
                 </div>
 
                 <div>
-                    <label class="block font-bold text-slate-800 mb-1">Status Akun <span class="text-red-500">*</span></label>
+                    <label class="form-label-strong">Status Akun <span class="text-red-500">*</span></label>
                     <select id="edit_status" name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="active">Active (Aktif)</option>
                         <option value="pending">Pending (Verifikasi)</option>
@@ -406,7 +406,7 @@
 
             <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-[13px] transition cursor-pointer">Batal</button>
-                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan Perubahan</button>
+                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan Perubahan</button>
             </div>
         </form>
     </div>

@@ -203,7 +203,7 @@
                 <div class="text-[13px] font-bold text-slate-900 leading-tight">{{ Auth::user()->name }}</div>
                 <div class="text-[11px] text-slate-500 capitalize">{{ str_replace('-', ' ', Auth::user()->role) }}</div>
             </div>
-            <div class="w-9 h-9 rounded-full bg-[#0b57d0] text-white flex items-center justify-center shadow-sm">
+            <div class="w-9 h-9 rounded-full bg-brand-600 text-white flex items-center justify-center shadow-sm">
                 <span class="text-[13px] font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
             </div>
         </div>

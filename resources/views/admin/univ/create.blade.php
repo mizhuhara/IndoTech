@@ -33,10 +33,10 @@
         <div class="lg:col-span-8 space-y-6">
 
             {{-- Card 1: Basic Information --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5m-4 0h4"/>
                     </svg>
                     <h2 class="text-[17px] font-bold text-slate-900">Informasi Dasar</h2>
@@ -46,39 +46,39 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {{-- University Name --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Nama Universitas</label>
+                        <label class="form-label">Nama Universitas</label>
                         <input type="text" 
                                name="name" 
                                id="univNameInput"
                                value="{{ old('name') }}" 
                                required
                                placeholder="Contoh: Universitas Indonesia"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('name')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- NPSN --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">NPSN</label>
+                        <label class="form-label">NPSN</label>
                         <input type="text" 
                                name="npsn" 
                                value="{{ old('npsn') }}" 
                                required
                                placeholder="Contoh: 20109988"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('npsn')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Institution Type --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Tipe Institusi</label>
+                        <label class="form-label">Tipe Institusi</label>
                         <div class="relative">
                             <select name="type"
-                                    class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
+                                    class="input appearance-none cursor-pointer pr-10">
                                 <option value="Negeri" {{ old('type') == 'Negeri' ? 'selected' : '' }}>Negeri (PTN)</option>
                                 <option value="Swasta" {{ old('type') == 'Swasta' ? 'selected' : '' }}>Swasta (PTS)</option>
                             </select>
@@ -101,22 +101,22 @@
                                required
                                autocomplete="off"
                                placeholder="Contoh: Depok, Jawa Barat"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         
                         {{-- Location suggestions dropdown --}}
                         <div id="locationSuggestions" class="hidden absolute top-full left-0 right-0 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl mt-1.5 max-h-56 overflow-y-auto divide-y divide-slate-100"></div>
 
                         @error('location')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
 
                     {{-- Accreditation --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Akreditasi</label>
+                        <label class="form-label">Akreditasi</label>
                         <div class="relative">
                             <select name="accreditation" 
-                                    class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition appearance-none cursor-pointer font-medium pr-10">
+                                    class="input appearance-none cursor-pointer pr-10">
                                 <option value="A" {{ old('accreditation') == 'A' ? 'selected' : '' }}>A (Unggul)</option>
                                 <option value="B" {{ old('accreditation') == 'B' ? 'selected' : '' }}>B (Baik)</option>
                                 <option value="C" {{ old('accreditation') == 'C' ? 'selected' : '' }}>C (Cukup)</option>
@@ -130,37 +130,37 @@
 
                     {{-- Website --}}
                     <div>
-                        <label class="block text-[13px] font-semibold text-slate-700 mb-2">Website</label>
+                        <label class="form-label">Website</label>
                         <input type="url" 
                                name="website" 
                                value="{{ old('website') }}" 
                                placeholder="https://www.ui.ac.id"
-                               class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-[14px] text-slate-800 outline-none transition font-medium">
+                               class="input">
                         @error('website')
-                            <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p>
+                            <p class="form-error">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
 
             {{-- Card 2: University Description --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
-                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
                     <h2 class="text-[17px] font-bold text-slate-900">Deskripsi Universitas</h2>
                 </div>
 
                 <div>
-                    <label class="block text-[13px] font-semibold text-slate-700 mb-2">Profil, Fakultas & Keunggulan</label>
+                    <label class="form-label">Profil, Fakultas & Keunggulan</label>
                     <textarea name="description" 
                               id="univDescription"
                               rows="5"
                               maxlength="1000"
                               oninput="document.getElementById('charCount').textContent = this.value.length + ' / 1000 characters'"
                               placeholder="Tuliskan deskripsi profil, fakultas unggulan, dan keunggulan universitas..."
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-4 text-[14px] text-slate-800 outline-none transition font-medium leading-relaxed resize-none">{{ old('description') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('description') }}</textarea>
                     
                     <div class="flex justify-end mt-2">
                         <span id="charCount" class="text-[12.5px] font-medium text-slate-500">
@@ -171,10 +171,10 @@
             </div>
 
             {{-- Card 3: Campus Gallery --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs">
+            <div class="card">
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-2.5 text-slate-900">
-                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2" class="shrink-0">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                             <rect x="3" y="3" width="18" height="18" rx="3"/>
                             <circle cx="8.5" cy="8.5" r="1.5"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
@@ -186,7 +186,7 @@
                     </div>
 
                     {{-- Upload Button Trigger --}}
-                    <label for="galleryInput" class="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-[#0b57d0] hover:text-blue-700 bg-blue-50 hover:bg-blue-100/80 px-3.5 py-2 rounded-xl transition cursor-pointer">
+                    <label for="galleryInput" class="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-brand-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100/80 px-3.5 py-2 rounded-xl transition cursor-pointer">
                         <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                         </svg>
@@ -216,7 +216,7 @@
         <div class="lg:col-span-4 space-y-6">
 
             {{-- Card 1: Logo & Branding --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex flex-col items-center text-center">
+            <div class="card flex flex-col items-center text-center">
                 <div class="w-full flex items-center justify-between mb-4">
                     <h2 class="text-[17px] font-bold text-slate-900">Logo & Profil</h2>
                     <span class="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">Format Gambar</span>
@@ -230,7 +230,7 @@
                          class="hidden w-full h-full object-contain rounded-xl transition duration-300">
 
                     <div id="logoDefaultPlaceholder" class="flex flex-col items-center justify-center text-slate-400">
-                        <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-[#0b57d0] font-extrabold text-lg mb-2 shadow-xs border border-blue-100/60">
+                        <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-brand-600 font-extrabold text-lg mb-2 shadow-xs border border-blue-100/60">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5m-4 0h4"/>
                             </svg>
@@ -255,7 +255,7 @@
                 </p>
 
                 {{-- Upload Button --}}
-                <label for="logoInput" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-blue-50 hover:bg-blue-100 text-[#0b57d0] font-bold text-[13.5px] cursor-pointer transition">
+                <label for="logoInput" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-blue-50 hover:bg-blue-100 text-brand-600 font-bold text-[13.5px] cursor-pointer transition">
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"/>
                     </svg>
@@ -265,7 +265,7 @@
             </div>
 
             {{-- Card 2: Interactive Real-time Map Location (Strictly Indonesia) --}}
-            <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div class="card space-y-4">
                 <div class="flex items-center justify-between">
                     <h2 class="text-[17px] font-bold text-slate-900">Peta Lokasi Kampus</h2>
                     <span class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full flex items-center gap-1 border border-emerald-200/60">
@@ -285,7 +285,7 @@
                               rows="2"
                               autocomplete="off"
                               placeholder="Ketik alamat jalan di Indonesia..."
-                              class="w-full bg-[#f0f4f9]/80 hover:bg-[#e9eef6] focus:bg-white border border-transparent focus:border-blue-500 rounded-xl p-3 text-[13px] text-slate-800 outline-none transition font-medium leading-relaxed resize-none">{{ old('address') }}</textarea>
+                              class="input p-4 leading-relaxed resize-none">{{ old('address') }}</textarea>
 
                     {{-- Autocomplete Suggestions Dropdown for Address --}}
                     <div id="addressSuggestions" class="hidden absolute top-full left-0 right-0 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl mt-1.5 max-h-56 overflow-y-auto divide-y divide-slate-100"></div>
@@ -310,7 +310,7 @@
 
                 <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-[12px] flex items-center justify-between text-slate-600">
                     <div class="flex items-center gap-1.5 truncate max-w-[70%]">
-                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#0b57d0" stroke-width="2.2" class="shrink-0">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2.2" class="shrink-0">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
                         </svg>
@@ -319,7 +319,7 @@
                         </span>
                     </div>
                     <div class="flex items-center gap-2 shrink-0">
-                        <button type="button" onclick="getCurrentLocation()" class="text-[#0b57d0] hover:underline font-bold text-[11.5px]">GPS Saya</button>
+                        <button type="button" onclick="getCurrentLocation()" class="text-brand-600 hover:underline font-bold text-[11.5px]">GPS Saya</button>
                         <span class="text-slate-300">•</span>
                         <button type="button" onclick="openInGoogleMaps()" class="text-slate-600 hover:text-blue-600 font-bold text-[11.5px] flex items-center gap-0.5">
                             Maps
@@ -341,7 +341,7 @@
         </a>
 
         <button type="submit" 
-                class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0b57d0] hover:bg-blue-700 text-white font-semibold text-[14px] shadow-sm transition">
+                class="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[14px] shadow-sm transition">
             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
             </svg>
