@@ -62,31 +62,16 @@
                 </select>
             </div>
 
-            {{-- More Filter Button (Dropdown) --}}
-            <div class="relative group/dropdown">
-                <button type="button" class="w-full h-11 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition cursor-pointer">
-                    <svg class="w-4 h-4 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <line x1="4" y1="6" x2="20" y2="6"/>
-                        <line x1="8" y1="12" x2="16" y2="12"/>
-                        <line x1="10" y1="18" x2="14" y2="18"/>
-                    </svg>
-                    <span>More</span>
-                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover/dropdown:rotate-180 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                
-                {{-- Dropdown Menu --}}
-                <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-200 z-50 py-1">
-                    <a href="{{ route('campus.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition">
-                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                        Kampus
-                    </a>
-                    <a href="{{ route('education.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        SMK
-                    </a>
-                </div>
+            {{-- Category Switcher: SMK & Perguruan Tinggi (Direct, no 'More') --}}
+            <div class="w-full h-11 p-1 bg-slate-100 border border-slate-200 rounded-lg flex items-center gap-1">
+                <a href="{{ route('education.index') }}" 
+                   class="flex-1 h-full flex items-center justify-center text-xs lg:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 rounded-md transition text-center whitespace-nowrap px-2">
+                    SMK
+                </a>
+                <a href="{{ route('campus.index') }}" 
+                   class="flex-1 h-full flex items-center justify-center text-xs lg:text-sm font-bold rounded-md bg-white text-blue-600 shadow-xs border border-slate-200/60 transition text-center whitespace-nowrap px-2">
+                    Perguruan Tinggi
+                </a>
             </div>
         </form>
     </div>

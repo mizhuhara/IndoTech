@@ -40,7 +40,7 @@
                         <svg class="w-3.5 h-3.5 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                         </svg>
-                        Verified
+                        Terverifikasi
                     </span>
                 @endif
                 <span class="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-200/60">
@@ -86,7 +86,7 @@
                         <line x1="8" y1="2" x2="8" y2="18"/>
                         <line x1="15" y1="6" x2="15" y2="22"/>
                     </svg>
-                    Map
+                    Peta
                 </a>
             </div>
         </div>
@@ -97,7 +97,7 @@
         
         {{-- Left Column: About --}}
         <div class="lg:col-span-2">
-            <h2 class="text-2xl font-extrabold text-slate-900 mb-4">About the School</h2>
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-4">Tentang Sekolah</h2>
             <p class="text-blue-600 text-sm sm:text-base leading-relaxed mb-4">
                 {{ $school['about'] }}
             </p>
@@ -108,35 +108,35 @@
 
         {{-- Right Column: Key Statistics Box --}}
         <div class="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-6 sm:p-7 shadow-xs self-start">
-            <h3 class="text-base font-bold text-slate-900 mb-6">Key Statistics</h3>
+            <h3 class="text-base font-bold text-slate-900 mb-6">Statistik Utama</h3>
             
             <div class="grid grid-cols-2 gap-6">
                 <div>
                     <span class="text-3xl font-extrabold text-blue-600 block mb-1">
                         {{ $school['stats']['placement_rate'] }}
                     </span>
-                    <span class="text-xs font-semibold text-slate-500">Job Placement Rate</span>
+                    <span class="text-xs font-semibold text-slate-500">Tingkat Penyerapan Kerja</span>
                 </div>
 
                 <div>
                     <span class="text-3xl font-extrabold text-blue-600 block mb-1">
                         {{ $school['stats']['industry_partners'] }}
                     </span>
-                    <span class="text-xs font-semibold text-slate-500">Industry Partners</span>
+                    <span class="text-xs font-semibold text-slate-500">Mitra Industri</span>
                 </div>
 
                 <div>
                     <span class="text-3xl font-extrabold text-blue-600 block mb-1">
                         {{ $school['stats']['active_students'] }}
                     </span>
-                    <span class="text-xs font-semibold text-slate-500">Active Students</span>
+                    <span class="text-xs font-semibold text-slate-500">Siswa Aktif</span>
                 </div>
 
                 <div>
                     <span class="text-3xl font-extrabold text-blue-600 block mb-1">
                         {{ $school['stats']['modern_labs'] }}
                     </span>
-                    <span class="text-xs font-semibold text-slate-500">Modern IT Labs</span>
+                    <span class="text-xs font-semibold text-slate-500">Lab IT Modern</span>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
 
     {{-- Skill Competencies Section --}}
     <div class="pb-16">
-        <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Skill Competencies</h2>
+        <h2 class="text-2xl font-extrabold text-slate-900 mb-6">Kompetensi Keahlian</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach($school['competencies'] as $comp)

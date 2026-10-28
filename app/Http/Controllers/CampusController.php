@@ -10,7 +10,7 @@ class CampusController extends Controller
     public function index(): View
     {
         $campuses = University::where('status', 'Active')
-            ->orderBy('name')
+            ->inRandomOrder()
             ->get()
             ->map(fn (University $university) => $this->mapCampus($university))
             ->all();

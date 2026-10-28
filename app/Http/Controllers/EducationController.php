@@ -10,7 +10,7 @@ class EducationController extends Controller
     public function index(): View
     {
         $schools = School::where('status', 'Active')
-            ->orderBy('name')
+            ->inRandomOrder()
             ->get()
             ->map(fn (School $school) => $this->mapSchool($school))
             ->all();
@@ -46,12 +46,12 @@ class EducationController extends Controller
             'id' => $school->npsn ?: (string) $school->id,
             'name' => $school->name,
             'verified' => $school->status === 'Active',
-            'category_badge' => $school->institution_type ?: 'Vocational High School',
+            'category_badge' => $school->institution_type ?: 'Sekolah Menengah Kejuruan',
             'location' => $school->location ?: trim("{$school->city}, {$school->province}", ', '),
             'location_full' => $school->address ?: trim("{$school->location}, Indonesia", ', '),
             'province' => $school->province,
             'tags' => $tags,
-            'status_badge' => $school->status === 'Active' ? 'Verified' : $school->status,
+            'status_badge' => $school->status === 'Active' ? 'Terverifikasi' : $school->status,
             'status_badge_type' => $school->status === 'Active' ? 'green' : 'gray',
             'image' => $school->logo_url ?: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1000&q=80',
             'logo_bg_class' => $school->logo_bg ?: 'bg-blue-600',

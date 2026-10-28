@@ -24,6 +24,7 @@ class Article extends Model
         'author_role',
         'author_avatar',
         'image',
+        'image_caption',
         'status',
         'read_time',
         'meta_description',
