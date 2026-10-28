@@ -63,11 +63,16 @@ class AuthController extends Controller
                 'password' => Hash::make($data['password']),
                 'role' => $role,
                 'status' => $status,
+                'email_verified_at' => $role === 'user' ? now() : null,
                 'org_contact' => $data['org_contact'] ?? null,
                 'org_phone' => $data['org_phone'] ?? null,
                 'org_address' => $data['org_address'] ?? null,
                 'org_doc' => $orgDocPath,
             ]);
+
+            if ($role === 'user' && ! $user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+            }
 
             // Auto-create data institusi dari data registrasi (1 akun = 1 data).
             // User login nanti tinggal melengkapi data yang kurang, bukan menambah baru.
@@ -104,21 +109,23 @@ class AuthController extends Controller
             return $user;
         });
 
-        if ($status === 'active') {
+        if ($role !== 'user' && $status === 'active') {
             $user->sendEmailVerificationNotification();
         }
 
         // Notify super admin to verify the institution account
-        $notifyTo = User::where('email', User::ADMIN_EMAIL)->first();
-        if ($notifyTo) {
-            $notifyTo->notify(new InstitutionVerificationNotification($user));
+        if (in_array($role, $institutionRoles, true)) {
+            $notifyTo = User::where('email', User::ADMIN_EMAIL)->first();
+            if ($notifyTo) {
+                $notifyTo->notify(new InstitutionVerificationNotification($user));
+            }
         }
 
-        if ($status === 'active') {
+        if ($role === 'user') {
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect()->route('verification.notice');
+            return redirect()->intended($this->redirectFor($user));
         }
 
         // Jangan login user pending - arahkan ke halaman sukses registrasi
@@ -167,7 +174,11 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        if (! $user->hasVerifiedEmail()) {
+        if ($user->role === 'user') {
+            if (! $user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+            }
+        } elseif (! $user->hasVerifiedEmail()) {
             return redirect()->intended(route('verification.notice'));
         }
 
