@@ -1,17 +1,17 @@
 @php
     $tagClass = match($job['category']) {
         'internship' => 'internship',
-        'freelance' => 'freelance',
-        'remote' => 'remote',
-        'graduate' => 'graduate',
-        default => 'jobs',
+        'freelance'  => 'freelance',
+        'remote'     => 'remote',
+        'graduate'   => 'graduate',
+        default      => 'jobs',
     };
-    $tagLabel = $tabs[$job['category']] ?? 'Jobs';
+    $tagLabel = $tabs[$job['category']] ?? 'Pekerjaan';
 @endphp
 
 <article class="cr-card" id="job-{{ $job['id'] }}">
     @if (!empty($job['image']) || !empty($job['logo_url']))
-        <img src="{{ $job['image'] ?? $job['logo_url'] }}" alt="{{ $job['company'] }} logo" class="cr-card-image">
+        <img src="{{ $job['image'] ?? $job['logo_url'] }}" alt="Logo {{ $job['company'] }}" class="cr-card-image">
     @endif
     <div class="cr-card-top">
         <div class="cr-logo" style="background: {{ $job['logo_color'] }}">{{ $job['logo_text'] }}</div>
@@ -45,7 +45,7 @@
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/>
             </svg>
-            Closes: {{ $job['deadline'] }}
+            Tutup: {{ $job['deadline'] }}
         </span>
     </div>
 
@@ -59,6 +59,13 @@
 
     <div class="cr-card-bottom">
         <span class="it-status"><span class="it-status-dot"></span> {{ $job['status'] }}</span>
-        <a href="{{ route('career.apply', ['type' => $job['apply_type'], 'id' => $job['id']]) }}" class="cr-apply" id="apply-btn-{{ $job['id'] }}">Apply Now</a>
+        <a href="{{ route('career.apply', ['type' => $job['apply_type'], 'id' => $job['id']]) }}"
+           class="cr-apply"
+           id="apply-btn-{{ $job['id'] }}">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" style="margin-right:4px">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"/>
+            </svg>
+            Lamar Sekarang
+        </a>
     </div>
 </article>
