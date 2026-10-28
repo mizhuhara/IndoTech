@@ -59,6 +59,15 @@
         {{-- ========== MAIN COLUMN (FULL WIDTH) ========== --}}
         <div class="cmty-main-col">
 
+            @if(session('success'))
+                <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; color: #166534; padding: 14px 18px; border-radius: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600;">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="color: #16a34a; flex-shrink: 0;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <span>{{ session('success') }}</span>
+                </div>
+            @endif
+
             {{-- Komunitas Populer & Unggulan --}}
             <div class="cmty-section">
                 <div class="cmty-section-header">
@@ -66,12 +75,12 @@
                         <h2 class="cmty-section-title">Komunitas Populer &amp; Unggulan</h2>
                         <p class="cmty-section-sub">Bergabunglah dengan grup aktif yang diverifikasi oleh tim IndoTech.</p>
                     </div>
-                    <button type="button" class="cmty-add-community-btn" id="cmty-add-community-btn" aria-label="Tambah Komunitas">
+                    <a href="{{ route('community.create') }}" class="cmty-add-community-btn" id="cmty-add-community-btn" aria-label="Tambah Komunitas">
                         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                         </svg>
                         Tambah Komunitas
-                    </button>
+                    </a>
                 </div>
 
                 @if($communities->count() > 0)
@@ -515,6 +524,7 @@
     transition: all 0.15s ease;
     flex-shrink: 0;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    text-decoration: none;
 }
 .cmty-add-community-btn:hover {
     background: #dbeafe;
@@ -1189,11 +1199,6 @@ function switchTab(el, tab) {
 document.getElementById('load-more-btn')?.addEventListener('click', function () {
     this.textContent = 'Memuat...';
     setTimeout(() => { this.textContent = 'Muat Lebih Banyak Diskusi'; }, 1200);
-});
-
-// Add Community button — static placeholder for now
-document.getElementById('cmty-add-community-btn')?.addEventListener('click', function () {
-    alert('Fitur Tambah Komunitas sedang dalam pengembangan. Silakan hubungi tim IndoTech.');
 });
 </script>
 
