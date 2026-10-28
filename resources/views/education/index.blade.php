@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Vocational High School (SMK) Directory - IndoTech')
+@section('title', 'Direktori SMK (Sekolah Menengah Kejuruan) - IndoTech')
 
 @section('content')
 
 {{-- Hero Section --}}
 <section class="py-12 sm:py-16 px-4 text-center max-w-4xl mx-auto">
     <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-        Vocational High School (SMK) Directory
+        Direktori SMK (Sekolah Menengah Kejuruan)
     </h1>
     <p class="text-slate-500 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
-        Discover and connect with top IT vocational schools (SMK Jurusan IT) across Indonesia, specializing in Software Engineering, Network Infrastructure, Cybersecurity, and Creative Technologies.
+        Temukan dan terhubung dengan SMK Jurusan IT terbaik di seluruh Indonesia, dengan spesialisasi Rekayasa Perangkat Lunak, Infrastruktur Jaringan, Keamanan Siber, dan Teknologi Kreatif.
     </p>
 </section>
 
@@ -28,14 +28,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                 </svg>
                 <select id="eduLocationSelect" class="w-full h-11 pl-10 pr-8 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition cursor-pointer appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_12px_center]" onchange="applyEduFilter()">
-                    <option value="">All Locations (Seluruh Indonesia)</option>
+                    <option value="">Semua Lokasi (Seluruh Indonesia)</option>
                     <option value="Jakarta">DKI Jakarta</option>
-                    <option value="West Java">Jawa Barat (Bandung)</option>
-                    <option value="Central Java">Jawa Tengah (Kudus)</option>
-                    <option value="East Java">Jawa Timur (Surabaya/Malang)</option>
+                    <option value="Jawa Barat">Jawa Barat (Bandung)</option>
+                    <option value="Jawa Tengah">Jawa Tengah (Kudus)</option>
+                    <option value="Jawa Timur">Jawa Timur (Surabaya/Malang)</option>
                     <option value="Yogyakarta">DI Yogyakarta</option>
                     <option value="Bali">Bali (Denpasar)</option>
-                    <option value="Sumatra">Sumatera (Medan)</option>
+                    <option value="Sumatera">Sumatera (Medan)</option>
                     <option value="Sulawesi">Sulawesi (Makassar)</option>
                     <option value="Kalimantan">Kalimantan (Banjarbaru)</option>
                     <option value="Papua">Papua (Jayapura)</option>
@@ -45,22 +45,23 @@
             {{-- Skill Competencies Filter --}}
             <div>
                 <select id="eduSkillSelect" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition cursor-pointer appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_12px_center]" onchange="applyEduFilter()">
-                    <option value="">Skill Competencies (Jurusan IT)</option>
-                    <option value="RPL">Software Engineering (RPL)</option>
-                    <option value="TKJ">Computer Network (TKJ)</option>
-                    <option value="SIJA">SIJA (Cloud & Network)</option>
-                    <option value="Multimedia">Multimedia & Design</option>
-                    <option value="3D Animation">3D Animation</option>
+                    <option value="">Kompetensi Keahlian (Jurusan IT)</option>
+                    <option value="RPL">Rekayasa Perangkat Lunak (RPL)</option>
+                    <option value="TKJ">Teknik Komputer & Jaringan (TKJ)</option>
+                    <option value="SIJA">Sistem Informatika, Jaringan & Aplikasi (SIJA)</option>
+                    <option value="Multimedia">Multimedia & Desain</option>
+                    <option value="3D Animation">Animasi 3D</option>
                 </select>
             </div>
 
             {{-- Featured Programs Filter --}}
             <div>
                 <select id="eduProgramSelect" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition cursor-pointer appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_12px_center]" onchange="applyEduFilter()">
-                    <option value="">Featured Programs</option>
+                    <option value="">Program Unggulan</option>
                     <option value="Teaching Factory">Teaching Factory</option>
                     <option value="Center of Excellence">Center of Excellence</option>
-                    <option value="Enrollment Open">Enrollment Open</option>
+                    <option value="Terverifikasi">Terverifikasi</option>
+                    <option value="Pendaftaran Dibuka">Pendaftaran Dibuka</option>
                 </select>
             </div>
 
@@ -68,36 +69,21 @@
             <div>
                 <select id="eduTeFaSelect" class="w-full h-11 px-3.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition cursor-pointer appearance-none bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_12px_center]" onchange="applyEduFilter()">
                     <option value="">Teaching Factory</option>
-                    <option value="Active">Active TeFa Partner</option>
-                    <option value="Lab">Modern Lab Certified</option>
+                    <option value="Active">Mitra TeFa Aktif</option>
+                    <option value="Lab">Sertifikasi Lab Modern</option>
                 </select>
             </div>
 
-            {{-- More Filter Button (Dropdown) --}}
-            <div class="relative group/dropdown">
-                <button type="button" class="w-full h-11 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition cursor-pointer">
-                    <svg class="w-4 h-4 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <line x1="4" y1="6" x2="20" y2="6"/>
-                        <line x1="8" y1="12" x2="16" y2="12"/>
-                        <line x1="10" y1="18" x2="14" y2="18"/>
-                    </svg>
-                    <span>More</span>
-                    <svg class="w-3.5 h-3.5 text-slate-400 group-hover/dropdown:rotate-180 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-                
-                {{-- Dropdown Menu --}}
-                <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-200 z-50 py-1">
-                    <a href="{{ route('campus.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition">
-                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                        Kampus
-                    </a>
-                    <a href="{{ route('education.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        SMK
-                    </a>
-                </div>
+            {{-- Category Switcher: SMK & Perguruan Tinggi (Direct, no 'More') --}}
+            <div class="w-full h-11 p-1 bg-slate-100 border border-slate-200 rounded-lg flex items-center gap-1">
+                <a href="{{ route('education.index') }}" 
+                   class="flex-1 h-full flex items-center justify-center text-xs lg:text-sm font-bold rounded-md bg-white text-blue-600 shadow-xs border border-slate-200/60 transition text-center whitespace-nowrap px-2">
+                    SMK
+                </a>
+                <a href="{{ route('campus.index') }}" 
+                   class="flex-1 h-full flex items-center justify-center text-xs lg:text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 rounded-md transition text-center whitespace-nowrap px-2">
+                    Perguruan Tinggi
+                </a>
             </div>
         </form>
     </div>
@@ -138,7 +124,7 @@
                                     <svg class="w-3 h-3 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                                     </svg>
-                                    Verified
+                                    Terverifikasi
                                 </span>
                             @endif
                         </div>
@@ -182,7 +168,7 @@
                     </div>
 
                     <a href="{{ route('education.show', $school['id']) }}" class="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:underline transition">
-                        View Profile
+                        Lihat Profil
                     </a>
                 </div>
             </div>
@@ -202,7 +188,7 @@
 
     {{-- Pagination Navigation Bar (Matching Industry Design) --}}
     <div id="paginationBar" class="flex items-center justify-center gap-2 mt-14 mb-6">
-        <button type="button" id="prevPageBtn" onclick="changePage(currentPage - 1)" class="w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-semibold flex items-center justify-center hover:bg-slate-50 hover:border-slate-300 transition cursor-pointer" aria-label="Previous">
+        <button type="button" id="prevPageBtn" onclick="changePage(currentPage - 1)" class="w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-semibold flex items-center justify-center hover:bg-slate-50 hover:border-slate-300 transition cursor-pointer" aria-label="Sebelumnya">
             <svg class="w-4 h-4 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
@@ -212,7 +198,7 @@
         <button type="button" class="page-num w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-semibold flex items-center justify-center hover:bg-slate-50 hover:border-slate-300 transition cursor-pointer" onclick="changePage(2)">2</button>
         <button type="button" class="page-num w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-semibold flex items-center justify-center hover:bg-slate-50 hover:border-slate-300 transition cursor-pointer" onclick="changePage(3)">3</button>
 
-        <button type="button" id="nextPageBtn" onclick="changePage(currentPage + 1)" class="w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-semibold flex items-center justify-center hover:bg-slate-50 hover:border-slate-300 transition cursor-pointer" aria-label="Next">
+        <button type="button" id="nextPageBtn" onclick="changePage(currentPage + 1)" class="w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 text-sm font-semibold flex items-center justify-center hover:bg-slate-50 hover:border-slate-300 transition cursor-pointer" aria-label="Selanjutnya">
             <svg class="w-4 h-4 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
@@ -233,6 +219,7 @@
         const loc = document.getElementById('eduLocationSelect').value.toLowerCase();
         const skill = document.getElementById('eduSkillSelect').value.toLowerCase();
         const program = document.getElementById('eduProgramSelect').value.toLowerCase();
+        const tefa = document.getElementById('eduTeFaSelect') ? document.getElementById('eduTeFaSelect').value.toLowerCase() : '';
 
         const allCards = Array.from(document.querySelectorAll('.school-card'));
 
@@ -245,8 +232,9 @@
             const matchLoc = !loc || cardLoc.includes(loc) || cardProv.includes(loc);
             const matchSkill = !skill || cardTags.includes(skill);
             const matchProg = !program || cardStatus.includes(program);
+            const matchTeFa = !tefa || cardTags.includes(tefa) || cardStatus.includes(tefa);
 
-            return matchLoc && matchSkill && matchProg;
+            return matchLoc && matchSkill && matchProg && matchTeFa;
         });
 
         currentPage = 1;

@@ -59,7 +59,7 @@ class CareerController extends Controller
                 }
             }
 
-            $jobs = $query->orderByDesc('id')->get();
+            $jobs = $query->inRandomOrder()->get();
         }
 
         return view('career.index', [
@@ -98,7 +98,7 @@ class CareerController extends Controller
             });
         }
 
-        return $query->orderByDesc('id')->get();
+        return $query->inRandomOrder()->get();
     }
 
     public function apply(string $type, int $id): View
