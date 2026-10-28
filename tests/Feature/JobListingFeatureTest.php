@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\JobListing;
+use App\Models\JobSeeker;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -273,5 +274,82 @@ class JobListingFeatureTest extends TestCase
         $response->assertStatus(200);
         $this->assertTrue(str_contains($response->headers->get('content-type'), 'text/csv'));
         $this->assertTrue(str_contains($response->headers->get('content-disposition'), 'jobs_export_'));
+    }
+
+    public function test_career_kerja_tab_displays_job_seekers(): void
+    {
+        JobSeeker::create([
+            'name' => 'Aditya Pratama',
+            'email' => 'aditya@example.com',
+            'job_title' => 'Senior Fullstack Developer',
+            'experience_level' => 'Senior',
+            'availability' => 'Segera',
+            'status' => 'aktif',
+        ]);
+
+        $response = $this->get(route('career.index', ['type' => 'kerja']));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('career.kerja');
+        $response->assertSee('Aditya Pratama');
+        $response->assertSee('Senior Fullstack Developer');
+    }
+
+    public function test_user_can_view_seeker_create_page(): void
+    {
+        $response = $this->get(route('career.seeker.create'));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('career.seeker-create');
+        $response->assertSee('Daftarkan Diri Sebagai Pencari Kerja');
+    }
+
+    public function test_user_can_view_seeker_detail_page(): void
+    {
+        $seeker = JobSeeker::create([
+            'name' => 'Aditya Pratama',
+            'email' => 'aditya.detail@example.com',
+            'job_title' => 'Senior Fullstack Developer',
+            'experience_level' => 'Senior',
+            'availability' => 'Segera',
+            'status' => 'aktif',
+        ]);
+
+        $response = $this->get(route('career.seeker.show', $seeker->id));
+
+        $response->assertStatus(200);
+        $response->assertViewIs('career.seeker-show');
+        $response->assertSee('Aditya Pratama');
+        $response->assertSee('Senior Fullstack Developer');
+    }
+
+    public function test_user_can_register_as_job_seeker(): void
+    {
+        $payload = [
+            'name' => 'Dewi Lestari',
+            'email' => 'dewi@example.com',
+            'phone' => '081298765432',
+            'location' => 'Bandung',
+            'job_title' => 'UI/UX Designer',
+            'skills' => 'Figma, Adobe XD, Tailwind',
+            'experience_level' => 'Mid',
+            'expected_salary' => '10-15 jt',
+            'about' => 'Desainer berpengalaman lebih dari 3 tahun di industri startup.',
+            'portfolio_url' => 'https://portfolio.dewi.dev',
+            'linkedin_url' => 'https://linkedin.com/in/dewilestari',
+            'availability' => 'Segera',
+        ];
+
+        $response = $this->post(route('career.seeker.store'), $payload);
+
+        $seeker = JobSeeker::where('email', 'dewi@example.com')->firstOrFail();
+        $response->assertRedirect(route('career.seeker.show', $seeker->id));
+        $this->assertDatabaseHas('job_seekers', [
+            'email' => 'dewi@example.com',
+            'name' => 'Dewi Lestari',
+            'job_title' => 'UI/UX Designer',
+            'experience_level' => 'Mid',
+            'status' => 'aktif',
+        ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Internship;
 use App\Models\JobApplication;
 use App\Models\JobListing;
+use App\Models\JobSeeker;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,15 +14,47 @@ use Illuminate\View\View;
 
 class CareerController extends Controller
 {
+    /** @var array<string, string> */
+    private array $tabs = [
+        'jobs' => 'Pekerjaan',
+        'kerja' => 'Siap Kerja',
+        'internship' => 'Magang',
+        'freelance' => 'Freelance',
+        'remote' => 'Kerja Remote',
+        'graduate' => 'Fresh Graduate',
+    ];
+
     public function index(Request $request): View
     {
         $tab = $request->query('type', 'jobs');
 
-        // If internship tab is selected, fetch from Internship model
+        // "Siap Kerja" tab — show job seekers directory
+        if ($tab === 'kerja') {
+            $seekerQuery = JobSeeker::where('status', 'aktif');
+
+            if ($request->filled('q')) {
+                $keyword = trim($request->query('q'));
+                $seekerQuery->where(function ($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%")
+                        ->orWhere('job_title', 'like', "%{$keyword}%")
+                        ->orWhere('location', 'like', "%{$keyword}%");
+                });
+            }
+
+            $seekers = $seekerQuery->latest()->get();
+
+            return view('career.kerja', [
+                'seekers' => $seekers,
+                'tab' => $tab,
+                'tabs' => $this->tabs,
+            ]);
+        }
+
+        // Internship tab — fetch from Internship model
         if ($tab === 'internship') {
             $jobs = $this->getInternships($request);
         } else {
-            // Otherwise fetch from JobListing model
+            // All other tabs — fetch from JobListing model
             $query = JobListing::query()
                 ->where('is_active', true)
                 ->where('status', '!=', 'Draft');
@@ -65,13 +98,7 @@ class CareerController extends Controller
         return view('career.index', [
             'jobs' => $jobs,
             'tab' => $tab,
-            'tabs' => [
-                'jobs' => 'Jobs',
-                'internship' => 'Internship',
-                'freelance' => 'Freelance',
-                'remote' => 'Remote Work',
-                'graduate' => 'Graduate Job',
-            ],
+            'tabs' => $this->tabs,
             'jobTypes' => ['Full-time', 'Part-time', 'Contract', 'Internship'],
             'experienceLevels' => ['Entry', 'Mid', 'Senior'],
             'salaryRanges' => ['< 8jt', '8–15jt', '15–25jt', '25jt+'],
@@ -82,6 +109,75 @@ class CareerController extends Controller
                 'Kubernetes', 'AWS', 'GraphQL', 'REST API', 'Git', 'Flutter',
             ],
         ]);
+    }
+
+    /**
+     * Show form for registering as a job seeker.
+     */
+    public function createJobSeeker(): View
+    {
+        return view('career.seeker-create', [
+            'tab' => 'kerja',
+            'tabs' => $this->tabs,
+        ]);
+    }
+
+    /**
+     * Show details of a specific job seeker.
+     */
+    public function showJobSeeker(int $id): View
+    {
+        $seeker = JobSeeker::where('status', 'aktif')->findOrFail($id);
+
+        return view('career.seeker-show', [
+            'seeker' => $seeker,
+            'tab' => 'kerja',
+            'tabs' => $this->tabs,
+        ]);
+    }
+
+    /**
+     * Store a new job seeker profile.
+     */
+    public function storeJobSeeker(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'email', 'max:150', 'unique:job_seekers,email'],
+            'phone' => ['nullable', 'string', 'max:30'],
+            'location' => ['nullable', 'string', 'max:100'],
+            'job_title' => ['required', 'string', 'max:100'],
+            'skills' => ['nullable', 'string'],
+            'experience_level' => ['required', 'in:Entry,Mid,Senior'],
+            'expected_salary' => ['nullable', 'string', 'max:50'],
+            'about' => ['nullable', 'string', 'max:1000'],
+            'portfolio_url' => ['nullable', 'url', 'max:300'],
+            'linkedin_url' => ['nullable', 'url', 'max:300'],
+            'availability' => ['required', 'in:Segera,Bulan Depan,> 1 Bulan'],
+        ]);
+
+        $skillsArray = ! empty($validated['skills'])
+            ? array_map('trim', explode(',', $validated['skills']))
+            : [];
+
+        $seeker = JobSeeker::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'location' => $validated['location'] ?? null,
+            'job_title' => $validated['job_title'],
+            'skills' => $skillsArray,
+            'experience_level' => $validated['experience_level'],
+            'expected_salary' => $validated['expected_salary'] ?? null,
+            'about' => $validated['about'] ?? null,
+            'portfolio_url' => $validated['portfolio_url'] ?? null,
+            'linkedin_url' => $validated['linkedin_url'] ?? null,
+            'availability' => $validated['availability'],
+            'status' => 'aktif',
+        ]);
+
+        return redirect()->route('career.seeker.show', $seeker->id)
+            ->with('seeker_success', "Profil \"{$validated['name']}\" berhasil didaftarkan! Perusahaan kini bisa menemukan dan melihat profilmu.");
     }
 
     private function getInternships(Request $request)

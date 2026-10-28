@@ -39,6 +39,14 @@ Route::get('/campus/{id}', [CampusController::class, 'show'])->name('campus.show
 Route::get('/industry', [IndustryController::class, 'index'])->name('industry');
 
 Route::get('/career', [CareerController::class, 'index'])->name('career.index');
+Route::get('/career/kerja/daftar', [CareerController::class, 'createJobSeeker'])
+    ->name('career.seeker.create');
+Route::post('/career/kerja', [CareerController::class, 'storeJobSeeker'])
+    ->name('career.seeker.store')
+    ->middleware('throttle:5,1');
+Route::get('/career/kerja/{id}', [CareerController::class, 'showJobSeeker'])
+    ->whereNumber('id')
+    ->name('career.seeker.show');
 Route::get('/career/{type}/{id}/apply', [CareerController::class, 'apply'])
     ->whereIn('type', ['job', 'internship'])
     ->name('career.apply');

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Career — IndoTech')
+@section('title', 'Karir — IndoTech')
 
 @section('content')
 <style>
@@ -389,7 +389,27 @@
         box-shadow: 0 1px 3px rgba(37,99,235,0.2);
         transition: background 0.15s;
     }
+    .cr-apply { background: #2563eb; }
     .cr-apply:hover { background: #1d4ed8; }
+    .cr-open {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 10px;
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #2563eb;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: all 0.15s;
+    }
+    .cr-open:hover {
+        background: #dbeafe;
+        border-color: #93c5fd;
+        color: #1d4ed8;
+    }
     .cr-empty {
         text-align: center;
         padding: 64px 24px;
@@ -438,7 +458,7 @@
 </style>
 
 <div class="cr-page">
-    <nav class="cr-tabs" aria-label="Career categories">
+    <nav class="cr-tabs" aria-label="Kategori Karir">
         <div class="cr-tabs-inner">
             @foreach($tabs as $key => $label)
                 <a href="{{ route('career.index', array_merge(request()->except('type'), ['type' => $key])) }}"
@@ -466,10 +486,10 @@
         @include('career._filters')
 
         <div class="cr-main">
-            <button type="button" class="cr-filter-toggle" id="cr-filter-toggle">Show filters</button>
+            <button type="button" class="cr-filter-toggle" id="cr-filter-toggle">Tampilkan Filter</button>
 
             <div class="cr-toolbar">
-                <p class="cr-count"><strong>{{ count($jobs) }}</strong> {{ Str::plural('opening', count($jobs)) }}</p>
+                <p class="cr-count"><strong>{{ count($jobs) }}</strong> {{ count($jobs) === 1 ? 'lowongan' : 'lowongan' }} tersedia</p>
                 <form class="cr-search" method="GET" action="{{ route('career.index') }}">
                     <input type="hidden" name="type" value="{{ $tab }}">
                     @foreach((array) request('job_type', []) as $v)
@@ -488,14 +508,14 @@
                         <circle cx="11" cy="11" r="7"/>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
-                    <input type="search" name="q" value="{{ request('q') }}" placeholder="Search title, company, location..." id="career-search">
+                    <input type="search" name="q" value="{{ request('q') }}" placeholder="Cari judul, perusahaan, lokasi..." id="career-search">
                 </form>
             </div>
 
             @if(count($jobs) === 0)
                 <div class="cr-empty">
-                    <h3>No openings match</h3>
-                    <p>Clear filters or try another category.</p>
+                    <h3>Tidak ada lowongan yang sesuai</h3>
+                    <p>Hapus filter atau coba kategori lain.</p>
                 </div>
             @else
                 <div class="cr-list">
@@ -515,7 +535,7 @@
         if (btn && side) {
             btn.addEventListener('click', function () {
                 side.classList.toggle('open');
-                btn.textContent = side.classList.contains('open') ? 'Hide filters' : 'Show filters';
+                btn.textContent = side.classList.contains('open') ? 'Sembunyikan Filter' : 'Tampilkan Filter';
             });
         }
     })();
