@@ -7,30 +7,33 @@
 
     {{-- Status Quick Filter Tabs --}}
     <div class="flex items-center justify-start flex-wrap gap-4">
-        <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-bold overflow-x-auto">
+        <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-semibold overflow-x-auto">
             <a href="{{ route('admin.verification.index', ['status' => 'pending', 'type' => request('type'), 'q' => request('q')]) }}" 
-               class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ request('status', 'pending') === 'pending' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
-                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+               class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 {{ request('status', 'pending') === 'pending' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800' }}">
                 <span>Pending</span>
-                <span class="bg-amber-100 text-amber-800 text-[10px] px-1.5 py-0.5 rounded-full font-extrabold">{{ $pendingCount }}</span>
+                <span class="bg-slate-100 text-slate-700 text-[10.5px] px-2 py-0.5 rounded-full font-bold">{{ $pendingCount }}</span>
             </a>
 
             <a href="{{ route('admin.verification.index', ['status' => 'active', 'type' => request('type'), 'q' => request('q')]) }}" 
-               class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ request('status') === 'active' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+               class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 {{ request('status') === 'active' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800' }}">
                 <span>Disetujui</span>
-                <span class="bg-emerald-100 text-emerald-800 text-[10px] px-1.5 py-0.5 rounded-full font-extrabold">{{ $approvedCount }}</span>
+                <span class="bg-slate-100 text-slate-700 text-[10.5px] px-2 py-0.5 rounded-full font-bold">{{ $approvedCount }}</span>
             </a>
 
             <a href="{{ route('admin.verification.index', ['status' => 'rejected', 'type' => request('type'), 'q' => request('q')]) }}" 
-               class="px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 {{ request('status') === 'rejected' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
-                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+               class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 {{ request('status') === 'rejected' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800' }}">
                 <span>Ditolak</span>
-                <span class="bg-red-100 text-red-800 text-[10px] px-1.5 py-0.5 rounded-full font-extrabold">{{ $rejectedCount }}</span>
+                <span class="bg-slate-100 text-slate-700 text-[10.5px] px-2 py-0.5 rounded-full font-bold">{{ $rejectedCount }}</span>
+            </a>
+
+            <a href="{{ route('admin.verification.index', ['status' => 'hidden', 'type' => request('type'), 'q' => request('q')]) }}" 
+               class="px-3.5 py-2 rounded-xl transition flex items-center gap-2 {{ request('status') === 'hidden' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800' }}">
+                <span>Hidden</span>
+                <span class="bg-slate-100 text-slate-700 text-[10.5px] px-2 py-0.5 rounded-full font-bold">{{ $hiddenCount }}</span>
             </a>
 
             <a href="{{ route('admin.verification.index', ['status' => 'all', 'type' => request('type'), 'q' => request('q')]) }}" 
-               class="px-3.5 py-2 rounded-xl transition {{ request('status') === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">
+               class="px-3.5 py-2 rounded-xl transition {{ request('status') === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-800' }}">
                 <span>Semua</span>
             </a>
         </div>
@@ -41,9 +44,9 @@
         <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs flex items-center justify-between">
             <div>
                 <div class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">PENDING VERIFIKASI</div>
-                <div class="text-2xl font-extrabold text-amber-600 mt-0.5">{{ number_format($pendingCount) }}</div>
+                <div class="text-2xl font-bold text-slate-900 mt-0.5">{{ number_format($pendingCount) }}</div>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 flex items-center justify-center font-bold">
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
         </div>
@@ -51,9 +54,9 @@
         <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs flex items-center justify-between">
             <div>
                 <div class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">INSTITUSI DISETUJUI</div>
-                <div class="text-2xl font-extrabold text-emerald-600 mt-0.5">{{ number_format($approvedCount) }}</div>
+                <div class="text-2xl font-bold text-slate-900 mt-0.5">{{ number_format($approvedCount) }}</div>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 flex items-center justify-center font-bold">
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
         </div>
@@ -61,9 +64,9 @@
         <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs flex items-center justify-between">
             <div>
                 <div class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">DITOLAK</div>
-                <div class="text-2xl font-extrabold text-red-600 mt-0.5">{{ number_format($rejectedCount) }}</div>
+                <div class="text-2xl font-bold text-slate-900 mt-0.5">{{ number_format($rejectedCount) }}</div>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 flex items-center justify-center font-bold">
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
             </div>
         </div>
@@ -71,9 +74,9 @@
         <div class="bg-white rounded-2xl border border-slate-200/80 p-4 shadow-xs flex items-center justify-between">
             <div>
                 <div class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">TOTAL DATA</div>
-                <div class="text-2xl font-extrabold text-slate-800 mt-0.5">{{ number_format($totalCount) }}</div>
+                <div class="text-2xl font-bold text-slate-900 mt-0.5">{{ number_format($totalCount) }}</div>
             </div>
-            <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-bold">
+            <div class="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 flex items-center justify-center font-bold">
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             </div>
         </div>
@@ -88,23 +91,23 @@
             {{-- Category Pills --}}
             <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
                 <a href="{{ route('admin.verification.index', ['type' => 'all', 'status' => request('status'), 'q' => request('q')]) }}" 
-                   class="px-3.5 py-1.5 rounded-full text-xs font-bold transition {{ request('type', 'all') === 'all' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                   class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition {{ request('type', 'all') === 'all' ? 'bg-slate-900 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     Semua Tipe
                 </a>
                 <a href="{{ route('admin.verification.index', ['type' => 'user', 'status' => request('status'), 'q' => request('q')]) }}" 
-                   class="px-3.5 py-1.5 rounded-full text-xs font-bold transition {{ request('type') === 'user' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                   class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition {{ request('type') === 'user' ? 'bg-slate-900 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     User / Alumni
                 </a>
                 <a href="{{ route('admin.verification.index', ['type' => 'school', 'status' => request('status'), 'q' => request('q')]) }}" 
-                   class="px-3.5 py-1.5 rounded-full text-xs font-bold transition {{ request('type') === 'school' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                   class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition {{ request('type') === 'school' ? 'bg-slate-900 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     School (Sekolah)
                 </a>
                 <a href="{{ route('admin.verification.index', ['type' => 'university', 'status' => request('status'), 'q' => request('q')]) }}" 
-                   class="px-3.5 py-1.5 rounded-full text-xs font-bold transition {{ request('type') === 'university' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                   class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition {{ request('type') === 'university' ? 'bg-slate-900 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     University (Kampus)
                 </a>
                 <a href="{{ route('admin.verification.index', ['type' => 'company', 'status' => request('status'), 'q' => request('q')]) }}" 
-                   class="px-3.5 py-1.5 rounded-full text-xs font-bold transition {{ request('type') === 'company' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                   class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition {{ request('type') === 'company' ? 'bg-slate-900 text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
                     Company (Perusahaan)
                 </a>
             </div>
@@ -149,13 +152,7 @@
                             $roleLower = strtolower($req->role ?? 'user');
                             $statusLower = strtolower($req->status ?? 'pending');
 
-                            $roleBadge = match($roleLower) {
-                                'school', 'school_admin' => 'bg-blue-50 text-blue-700 border-blue-200',
-                                'university', 'univ_rep' => 'bg-indigo-50 text-indigo-700 border-indigo-200',
-                                'company', 'company_hr' => 'bg-teal-50 text-teal-700 border-teal-200',
-                                'user' => 'bg-slate-100 text-slate-700 border-slate-200',
-                                default => 'bg-slate-100 text-slate-700 border-slate-200',
-                            };
+                            $roleBadge = 'bg-slate-50 text-slate-600 border border-slate-200/90 font-medium';
 
                             $roleDisplayName = match($roleLower) {
                                 'school', 'school_admin' => 'School',
@@ -171,7 +168,7 @@
                             {{-- Entity Name & Email --}}
                             <td class="cell">
                                 <div class="flex items-center gap-3.5">
-                                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-slate-800 to-slate-900 text-white font-extrabold flex items-center justify-center text-xs shrink-0 shadow-sm">
+                                    <div class="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 text-slate-600 font-bold flex items-center justify-center text-xs shrink-0">
                                         @if(in_array($roleLower, ['school', 'school_admin']))
                                             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
                                         @elseif(in_array($roleLower, ['university', 'univ_rep']))
@@ -191,7 +188,7 @@
 
                             {{-- Tipe / Role --}}
                             <td class="cell">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border capitalize {{ $roleBadge }}">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs border {{ $roleBadge }}">
                                     {{ $roleDisplayName }}
                                 </span>
                             </td>
@@ -214,13 +211,20 @@
                                         Disetujui (Active)
                                     </span>
                                 @elseif($statusLower === 'rejected')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                                         Ditolak
+                                    </span>
+                                @elseif($statusLower === 'hidden')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-300">
+                                        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="text-slate-500">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                                        </svg>
+                                        Hidden (Membership)
                                     </span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                         Pending Verifikasi
                                     </span>
                                 @endif
@@ -233,8 +237,8 @@
                                     {{-- Lihat Detail Button --}}
                                     <button type="button" 
                                             onclick="openDetailModal({{ json_encode($req) }})" 
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
-                                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition">
+                                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         <span>Lihat Detail</span>
                                     </button>
 
@@ -242,7 +246,7 @@
                                     @if($statusLower !== 'rejected')
                                         <button type="button" 
                                                 onclick="openRejectModal({{ $req->id }}, '{{ addslashes($req->name) }}', '{{ addslashes($req->email) }}')"
-                                                class="p-2 rounded-xl text-red-500 hover:bg-red-50 transition" 
+                                                class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" 
                                                 title="Tolak Pendaftaran">
                                             <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                                         </button>
@@ -252,9 +256,31 @@
                                     @if($statusLower !== 'active')
                                         <button type="button" 
                                                 onclick="openApproveModal({{ $req->id }}, '{{ addslashes($req->name) }}', '{{ addslashes($req->email) }}')"
-                                                class="p-2 rounded-xl text-emerald-600 hover:bg-emerald-50 transition" 
+                                                class="p-2 rounded-xl text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition" 
                                                 title="Setujui Pendaftaran">
                                             <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                        </button>
+                                    @endif
+
+                                    {{-- Hide / Unhide Button (Membership) --}}
+                                    @if($statusLower === 'hidden')
+                                        <button type="button" 
+                                                onclick="openToggleHideVerificationModal({{ $req->id }}, '{{ addslashes($req->name) }}', '{{ addslashes($req->email) }}', true)" 
+                                                class="p-2 rounded-xl text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition" 
+                                                title="Tampilkan / Unhide Akun">
+                                            <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
+                                    @else
+                                        <button type="button" 
+                                                onclick="openToggleHideVerificationModal({{ $req->id }}, '{{ addslashes($req->name) }}', '{{ addslashes($req->email) }}', false)" 
+                                                class="p-2 rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition" 
+                                                title="Hide / Sembunyikan Akun (Membership)">
+                                            <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                                            </svg>
                                         </button>
                                     @endif
 
@@ -262,7 +288,7 @@
                                     <form action="{{ route('admin.verification.destroy', $req->id) }}" method="POST" onsubmit="return confirm('Hapus data verifikasi {{ addslashes($req->name) }}?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-2 rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 transition" title="Hapus Data">
+                                        <button type="submit" class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" title="Hapus Data">
                                             <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                         </button>
                                     </form>
@@ -396,6 +422,45 @@
     </div>
 </div>
 
+{{-- ========================================================================= --}}
+{{-- MODAL POP-UP 4: KONFIRMASI HIDE / UNHIDE VERIFIKASI (MEMBERSHIP) --}}
+{{-- ========================================================================= --}}
+<div id="modal-toggle-hide-verification" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4 transition-all duration-200">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-left">
+        <div class="flex items-start gap-3.5">
+            <div id="hide_verif_icon_box" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200 mt-0.5">
+                <svg id="hide_verif_icon_slash" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                </svg>
+                <svg id="hide_verif_icon_eye" class="hidden" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 id="hide_verif_modal_title" class="text-[15px] font-bold text-slate-900 tracking-tight">Konfirmasi Sembunyikan Akun</h3>
+                <p class="text-[13px] text-slate-500 leading-relaxed mt-1">
+                    <span id="hide_verif_modal_desc">Sembunyikan akun untuk</span> <strong id="hide_verif_name" class="text-slate-800 font-semibold"></strong> (<span id="hide_verif_email" class="text-slate-600"></span>)?
+                </p>
+            </div>
+            <button type="button" onclick="closeToggleHideVerificationModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="hide_verif_warning_box" class="text-[12px] text-slate-600 bg-slate-50 border border-slate-200 px-3.5 py-2.5 rounded-xl flex items-start gap-2">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="shrink-0 text-slate-400 mt-0.5"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="hide_verif_warning_text">Akun yang disembunyikan (belum perpanjang membership) tidak akan tampil di direktori publik.</span>
+        </div>
+
+        <form id="form-toggle-hide-verification" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
+            @csrf
+            <button type="button" onclick="closeToggleHideVerificationModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
+            <button type="submit" id="hide_verif_submit_btn" class="px-4.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[13px] shadow-xs transition cursor-pointer">Sembunyikan Akun</button>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
     let currentDetailReq = null;
@@ -424,6 +489,8 @@
             badgeHtml = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Active</span>';
         } else if (statusVal === 'rejected') {
             badgeHtml = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-rose-50 text-rose-700 border border-rose-200"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Rejected</span>';
+        } else if (statusVal === 'hidden') {
+            badgeHtml = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-slate-100 text-slate-700 border border-slate-300"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" class="text-slate-500"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>Hidden</span>';
         } else {
             badgeHtml = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-semibold bg-amber-50 text-amber-700 border border-amber-200"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Pending</span>';
         }
@@ -448,7 +515,13 @@
         const actionsContainer = document.getElementById('detail_actions_container');
         if (actionsContainer) {
             if (statusVal === 'active' || statusVal === 'approved') {
-                actionsContainer.innerHTML = '<span class="text-xs text-emerald-600 font-semibold flex items-center gap-1"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Akun Telah Aktif</span>';
+                actionsContainer.innerHTML = `
+                    <button type="button" onclick="triggerDetailToggleHide(false)" class="px-3.5 py-2.5 rounded-xl bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200/80 font-semibold text-[13px] transition cursor-pointer flex items-center gap-1.5">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
+                        <span>Hide (Membership)</span>
+                    </button>
+                    <span class="text-xs text-emerald-600 font-semibold flex items-center gap-1"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Akun Aktif</span>
+                `;
             } else if (statusVal === 'rejected') {
                 actionsContainer.innerHTML = `
                     <button type="button" onclick="triggerDetailApprove()" class="px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] shadow-xs shadow-emerald-600/20 transition cursor-pointer flex items-center gap-1.5">
@@ -456,11 +529,22 @@
                         <span>Pulihkan & Setujui</span>
                     </button>
                 `;
+            } else if (statusVal === 'hidden') {
+                actionsContainer.innerHTML = `
+                    <button type="button" onclick="triggerDetailToggleHide(true)" class="px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] shadow-xs shadow-emerald-600/20 transition cursor-pointer flex items-center gap-1.5">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        <span>Tampilkan Kembali (Unhide)</span>
+                    </button>
+                `;
             } else {
                 actionsContainer.innerHTML = `
                     <button type="button" onclick="triggerDetailReject()" class="px-4 py-2.5 rounded-xl bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200/80 font-semibold text-[13px] transition cursor-pointer flex items-center gap-1.5">
                         <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         <span>Tolak</span>
+                    </button>
+                    <button type="button" onclick="triggerDetailToggleHide(false)" class="px-3.5 py-2.5 rounded-xl bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200/80 font-semibold text-[13px] transition cursor-pointer flex items-center gap-1.5">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
+                        <span>Hide</span>
                     </button>
                     <button type="button" onclick="triggerDetailApprove()" class="px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] shadow-xs shadow-emerald-600/20 transition cursor-pointer flex items-center gap-1.5">
                         <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
@@ -489,6 +573,60 @@
         if (currentDetailReq) {
             openRejectModal(currentDetailReq.id, currentDetailReq.name, currentDetailReq.email);
         }
+    }
+
+    function triggerDetailToggleHide(isHidden) {
+        if (currentDetailReq) {
+            openToggleHideVerificationModal(currentDetailReq.id, currentDetailReq.name, currentDetailReq.email, isHidden);
+        }
+    }
+
+    function openToggleHideVerificationModal(id, name, email, isHidden) {
+        closeDetailModal();
+        const form = document.getElementById('form-toggle-hide-verification');
+        form.action = `{{ url('/admin/verification') }}/${id}/toggle-hide`;
+
+        document.getElementById('hide_verif_name').textContent = name;
+        document.getElementById('hide_verif_email').textContent = email;
+
+        const titleEl = document.getElementById('hide_verif_modal_title');
+        const descEl = document.getElementById('hide_verif_modal_desc');
+        const submitBtn = document.getElementById('hide_verif_submit_btn');
+        const iconSlash = document.getElementById('hide_verif_icon_slash');
+        const iconEye = document.getElementById('hide_verif_icon_eye');
+        const iconBox = document.getElementById('hide_verif_icon_box');
+        const warnBox = document.getElementById('hide_verif_warning_box');
+        const warnText = document.getElementById('hide_verif_warning_text');
+
+        if (isHidden) {
+            titleEl.textContent = 'Konfirmasi Tampilkan Akun (Unhide)';
+            descEl.textContent = 'Tampilkan kembali akun untuk';
+            submitBtn.textContent = 'Tampilkan Akun';
+            submitBtn.className = 'px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] shadow-xs shadow-emerald-600/20 transition cursor-pointer';
+            iconSlash.classList.add('hidden');
+            iconEye.classList.remove('hidden');
+            iconBox.className = 'w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 mt-0.5';
+            warnBox.className = 'text-[12px] text-emerald-800 bg-emerald-50/80 border border-emerald-200/80 px-3.5 py-2.5 rounded-xl flex items-start gap-2';
+            warnText.textContent = 'Akun dan institusi terkait akan diaktifkan kembali dan tampil di direktori publik.';
+        } else {
+            titleEl.textContent = 'Konfirmasi Sembunyikan Akun (Hide)';
+            descEl.textContent = 'Sembunyikan akun untuk';
+            submitBtn.textContent = 'Sembunyikan Akun';
+            submitBtn.className = 'px-4.5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-[13px] shadow-xs shadow-amber-600/20 transition cursor-pointer';
+            iconSlash.classList.remove('hidden');
+            iconEye.classList.add('hidden');
+            iconBox.className = 'w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 mt-0.5';
+            warnBox.className = 'text-[12px] text-amber-800 bg-amber-50/80 border border-amber-200/80 px-3.5 py-2.5 rounded-xl flex items-start gap-2';
+            warnText.textContent = 'Akun yang disembunyikan (belum perpanjang membership) tidak akan tampil di direktori publik.';
+        }
+
+        document.getElementById('modal-toggle-hide-verification').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeToggleHideVerificationModal() {
+        document.getElementById('modal-toggle-hide-verification').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
     }
 
     function openApproveModal(id, name, email) {

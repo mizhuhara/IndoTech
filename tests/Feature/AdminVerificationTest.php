@@ -131,4 +131,48 @@ class AdminVerificationTest extends TestCase
             'status' => 'active',
         ]);
     }
+
+    public function test_admin_can_toggle_hide_verification_request(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'SMK Bina Informatika',
+            'role' => 'school',
+            'status' => 'active',
+        ]);
+
+        School::create([
+            'user_id' => $user->id,
+            'npsn' => 'BF-HIDE-TEST',
+            'name' => $user->name,
+            'status' => 'Active',
+        ]);
+
+        // Hide
+        $response = $this->actingAs($this->admin)->post(route('admin.verification.toggle-hide', $user->id));
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'status' => 'hidden',
+        ]);
+        $this->assertDatabaseHas('schools', [
+            'user_id' => $user->id,
+            'status' => 'Inactive',
+        ]);
+
+        // Unhide
+        $responseUnhide = $this->actingAs($this->admin)->post(route('admin.verification.toggle-hide', $user->id));
+        $responseUnhide->assertRedirect();
+        $responseUnhide->assertSessionHas('success');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'status' => 'active',
+        ]);
+        $this->assertDatabaseHas('schools', [
+            'user_id' => $user->id,
+            'status' => 'Active',
+        ]);
+    }
 }
