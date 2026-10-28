@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -17,11 +18,56 @@ class ProfileController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
+        $user = $request->user();
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'cv' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+            'portfolio_url' => ['nullable', 'string', 'max:255'],
+            'instagram_url' => ['nullable', 'string', 'max:255'],
+            'linkedin_url' => ['nullable', 'string', 'max:255'],
+        ], [
+            'avatar.image' => 'File foto profil harus berupa gambar.',
+            'avatar.mimes' => 'Format foto profil harus berupa JPEG, PNG, JPG, atau WEBP.',
+            'avatar.max' => 'Ukuran foto profil maksimal 2MB.',
+            'cv.file' => 'File CV harus berupa berkas dokumen.',
+            'cv.mimes' => 'Format CV harus berupa file PDF (.pdf).',
+            'cv.max' => 'Ukuran file CV maksimal 2MB.',
         ]);
 
-        $request->user()->update(['name' => $validated['name']]);
+        $payload = [
+            'name' => $validated['name'],
+            'portfolio_url' => $validated['portfolio_url'] ?? null,
+            'instagram_url' => $validated['instagram_url'] ?? null,
+            'linkedin_url' => $validated['linkedin_url'] ?? null,
+        ];
+
+        if ($request->boolean('remove_avatar')) {
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $payload['avatar'] = null;
+        } elseif ($request->hasFile('avatar')) {
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $payload['avatar'] = $request->file('avatar')->store('avatars', 'public');
+        }
+
+        if ($request->boolean('remove_cv')) {
+            if ($user->cv_path && Storage::disk('public')->exists($user->cv_path)) {
+                Storage::disk('public')->delete($user->cv_path);
+            }
+            $payload['cv_path'] = null;
+        } elseif ($request->hasFile('cv')) {
+            if ($user->cv_path && Storage::disk('public')->exists($user->cv_path)) {
+                Storage::disk('public')->delete($user->cv_path);
+            }
+            $payload['cv_path'] = $request->file('cv')->store('cvs', 'public');
+        }
+
+        $user->update($payload);
 
         return back()->with('success', 'Profil berhasil diperbarui.');
     }

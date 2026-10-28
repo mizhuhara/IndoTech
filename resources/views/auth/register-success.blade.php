@@ -208,7 +208,7 @@
         <!-- Success Message -->
         <div class="info-box">
             <p>Akun Anda sudah aktif dan siap dipakai.</p>
-            <p>Kami sudah mengirim tautan verifikasi email. Buka tautan itu sebelum login.</p>
+            <p>Silakan login untuk mulai menggunakan IndoTech.</p>
         </div>
 
         <!-- Email -->

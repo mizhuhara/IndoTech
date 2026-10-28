@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'status', 'org_contact', 'org_phone', 'org_address', 'org_doc'])]
+#[Fillable(['name', 'email', 'password', 'role', 'status', 'email_verified_at', 'avatar', 'portfolio_url', 'instagram_url', 'linkedin_url', 'cv_path', 'org_contact', 'org_phone', 'org_address', 'org_doc'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -28,11 +28,52 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'status',
+        'email_verified_at',
+        'avatar',
+        'portfolio_url',
+        'instagram_url',
+        'linkedin_url',
+        'cv_path',
         'org_contact',
         'org_phone',
         'org_address',
         'org_doc',
     ];
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (! $this->avatar) {
+            return null;
+        }
+
+        if (str_starts_with($this->avatar, 'http://') || str_starts_with($this->avatar, 'https://')) {
+            return $this->avatar;
+        }
+
+        return asset('storage/'.$this->avatar);
+    }
+
+    public function getCvUrlAttribute(): ?string
+    {
+        if (! $this->cv_path) {
+            return null;
+        }
+
+        if (str_starts_with($this->cv_path, 'http://') || str_starts_with($this->cv_path, 'https://')) {
+            return $this->cv_path;
+        }
+
+        return asset('storage/'.$this->cv_path);
+    }
+
+    public function getCvNameAttribute(): ?string
+    {
+        if (! $this->cv_path) {
+            return null;
+        }
+
+        return basename($this->cv_path);
+    }
 
     public function sendEmailVerificationNotification(): void
     {

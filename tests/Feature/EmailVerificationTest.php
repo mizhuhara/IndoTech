@@ -13,7 +13,7 @@ class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_sends_verification_email_and_redirects_to_notice(): void
+    public function test_user_registration_is_auto_verified_without_verification_email(): void
     {
         Notification::fake();
 
@@ -27,30 +27,32 @@ class EmailVerificationTest extends TestCase
 
         $user = User::where('email', 'email@example.com')->firstOrFail();
 
-        $response->assertRedirect(route('verification.notice'));
+        $response->assertRedirect(route('welcome'));
         $this->assertAuthenticatedAs($user);
-        $this->assertNull($user->email_verified_at);
-        Notification::assertSentTo($user, VerifyEmailNotification::class);
+        $this->assertNotNull($user->email_verified_at);
+        Notification::assertNotSentTo($user, VerifyEmailNotification::class);
     }
 
-    public function test_verification_notice_page_renders_for_unverified_user(): void
+    public function test_verification_notice_page_renders_for_unverified_institution(): void
     {
-        $user = User::factory()->unverified()->create(['role' => 'user', 'status' => 'active']);
+        $user = User::factory()->unverified()->create(['role' => 'school', 'status' => 'active']);
 
         $this->actingAs($user)->get(route('verification.notice'))
             ->assertOk()
             ->assertSee($user->email);
     }
 
-    public function test_unverified_user_is_redirected_from_dashboard(): void
+    public function test_notice_page_redirects_and_verifies_user_role(): void
     {
         $user = User::factory()->unverified()->create(['role' => 'user', 'status' => 'active']);
 
-        $this->actingAs($user)->get(route('dashboard'))
-            ->assertRedirect(route('verification.notice'));
+        $this->actingAs($user)->get(route('verification.notice'))
+            ->assertRedirect(route('welcome'));
+
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
     }
 
-    public function test_unverified_user_login_redirects_to_verification_notice(): void
+    public function test_unverified_user_login_auto_verifies_and_logs_in(): void
     {
         $user = User::factory()->unverified()->create([
             'email' => 'unverified@example.com',
@@ -62,9 +64,27 @@ class EmailVerificationTest extends TestCase
         $this->post(route('login.submit'), [
             'email' => 'unverified@example.com',
             'password' => 'password123',
-        ])->assertRedirect(route('verification.notice'));
+        ])->assertRedirect(route('welcome'));
 
         $this->assertAuthenticatedAs($user);
+        $this->assertTrue($user->fresh()->hasVerifiedEmail());
+    }
+
+    public function test_unverified_institution_login_redirects_to_verification_notice(): void
+    {
+        $institution = User::factory()->unverified()->create([
+            'email' => 'school@example.com',
+            'password' => bcrypt('password123'),
+            'role' => 'school',
+            'status' => 'active',
+        ]);
+
+        $this->post(route('login.submit'), [
+            'email' => 'school@example.com',
+            'password' => 'password123',
+        ])->assertRedirect(route('verification.notice'));
+
+        $this->assertAuthenticatedAs($institution);
     }
 
     public function test_signed_verification_link_marks_email_as_verified(): void

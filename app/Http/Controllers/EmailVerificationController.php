@@ -11,6 +11,14 @@ class EmailVerificationController extends Controller
 {
     public function notice(Request $request): View|RedirectResponse
     {
+        if ($request->user()->role === 'user') {
+            if (! $request->user()->hasVerifiedEmail()) {
+                $request->user()->markEmailAsVerified();
+            }
+
+            return redirect()->route('welcome');
+        }
+
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->route('dashboard');
         }
