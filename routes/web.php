@@ -141,10 +141,13 @@ Route::middleware(['admin', 'verified', 'throttle:120,1'])->group(function () {
     Route::post('/admin/users', [AdminUserController::class, 'store'])->name('admin.users.store');
     Route::put('/admin/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::post('/admin/users/{id}/toggle-hide', [AdminUserController::class, 'toggleHide'])->name('admin.users.toggle-hide');
+
     Route::get('/admin/verification', [AdminVerificationController::class, 'index'])->name('admin.verification.index');
     Route::get('/admin/verification/{user}/document', [AdminVerificationController::class, 'document'])->name('admin.verification.document');
     Route::post('/admin/verification/{user}/approve', [AdminVerificationController::class, 'approve'])->name('admin.verification.approve');
     Route::post('/admin/verification/{user}/reject', [AdminVerificationController::class, 'reject'])->name('admin.verification.reject');
+    Route::post('/admin/verification/{user}/toggle-hide', [AdminVerificationController::class, 'toggleHide'])->name('admin.verification.toggle-hide');
     Route::delete('/admin/verification/{user}', [AdminVerificationController::class, 'destroy'])->name('admin.verification.destroy');
     Route::get('/admin/user', function () {
         return redirect()->route('admin.users.index');

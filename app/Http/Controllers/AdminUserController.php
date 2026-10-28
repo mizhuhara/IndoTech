@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
+use App\Models\School;
+use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -47,12 +51,14 @@ class AdminUserController extends Controller
         $totalUsersCount = User::count();
         $activeUsersCount = User::whereIn('status', ['active', 'Active'])->count();
         $pendingUsersCount = User::whereIn('status', ['pending', 'Pending'])->count();
+        $hiddenUsersCount = User::whereIn('status', ['hidden', 'Hidden'])->count();
 
         return view('admin.users.index', [
             'users' => $users,
             'totalUsersCount' => $totalUsersCount,
             'activeUsersCount' => $activeUsersCount,
             'pendingUsersCount' => $pendingUsersCount,
+            'hiddenUsersCount' => $hiddenUsersCount,
             'activeRole' => $request->query('role', 'all'),
             'activeStatus' => $request->query('status', 'all'),
             'searchQuery' => $request->query('q', ''),
@@ -69,7 +75,7 @@ class AdminUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
             'role' => ['required', Rule::in($this->assignableRoles())],
-            'status' => ['required', 'in:active,pending,rejected,inactive'],
+            'status' => ['required', 'in:active,pending,rejected,inactive,hidden'],
         ], [
             'email.unique' => 'Email ini sudah terdaftar di sistem.',
             'password.min' => 'Password minimal harus 8 karakter.',
@@ -105,7 +111,7 @@ class AdminUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'password' => ['nullable', 'string', 'min:8', 'regex:/[A-Za-z]/', 'regex:/[0-9]/'],
             'role' => ['required', Rule::in($this->assignableRoles())],
-            'status' => ['required', 'in:active,pending,rejected,inactive'],
+            'status' => ['required', 'in:active,pending,rejected,inactive,hidden'],
         ], [
             'email.unique' => 'Email ini sudah digunakan oleh user lain.',
             'password.min' => 'Password minimal harus 8 karakter.',
@@ -122,10 +128,58 @@ class AdminUserController extends Controller
             $payload['password'] = Hash::make($validated['password']);
         }
 
-        $user->update($payload);
+        DB::transaction(function () use ($user, $payload) {
+            $user->update($payload);
+
+            $institutionStatus = $payload['status'] === 'active' ? 'Active' : 'Inactive';
+            $this->syncInstitutionStatus($user, $institutionStatus);
+        });
 
         return redirect()->route('admin.users.index')
             ->with('success', "Data user \"{$user->name}\" berhasil diperbarui.");
+    }
+
+    /**
+     * Sembunyikan atau tampilkan kembali akun pengguna (Membership toggle).
+     */
+    public function toggleHide(int $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+
+        if ($this->isElevated($user) && ! $this->currentUserIsSuperAdmin()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Hanya super admin yang dapat mengubah status akun admin.');
+        }
+
+        // Prevent hiding own account
+        if (auth()->check() && auth()->id() === $user->id) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Anda tidak dapat menyembunyikan akun Anda sendiri.');
+        }
+
+        // Prevent hiding main super admin
+        if ($user->email === User::ADMIN_EMAIL || $user->role === 'super_admin') {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Akun Super Admin tidak dapat disembunyikan.');
+        }
+
+        $isCurrentlyHidden = strtolower((string) $user->status) === 'hidden';
+        $newStatus = $isCurrentlyHidden ? 'active' : 'hidden';
+
+        DB::transaction(function () use ($user, $newStatus) {
+            $user->status = $newStatus;
+            $user->save();
+
+            $institutionStatus = $newStatus === 'active' ? 'Active' : 'Inactive';
+            $this->syncInstitutionStatus($user, $institutionStatus);
+        });
+
+        $message = $isCurrentlyHidden
+            ? "Akun \"{$user->name}\" berhasil ditampilkan kembali (Active)."
+            : "Akun \"{$user->name}\" berhasil disembunyikan (Hidden) karena membership.";
+
+        return redirect()->route('admin.users.index')
+            ->with('success', $message);
     }
 
     /**
@@ -181,5 +235,19 @@ class AdminUserController extends Controller
     private function currentUserIsSuperAdmin(): bool
     {
         return auth()->user()?->role === 'super_admin';
+    }
+
+    private function syncInstitutionStatus(User $user, string $status): void
+    {
+        $model = match ($user->role) {
+            'school' => School::class,
+            'university' => University::class,
+            'company' => Company::class,
+            default => null,
+        };
+
+        if ($model) {
+            $model::where('user_id', $user->id)->update(['status' => $status]);
+        }
     }
 }

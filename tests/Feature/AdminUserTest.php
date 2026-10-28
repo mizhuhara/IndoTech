@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Session;
@@ -152,6 +153,68 @@ class AdminUserTest extends TestCase
         $this->assertDatabaseHas('users', [
             'id' => $target->id,
             'name' => 'Protected Admin',
+        ]);
+    }
+
+    public function test_admin_can_toggle_hide_user(): void
+    {
+        $user = User::factory()->create([
+            'name' => 'PT Member Expired',
+            'role' => 'company',
+            'status' => 'active',
+        ]);
+
+        Company::create([
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'status' => 'Active',
+        ]);
+
+        // 1. Hide user
+        $response = $this->actingAs($this->admin)->post(route('admin.users.toggle-hide', $user->id), [
+            '_token' => Session::token(),
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'status' => 'hidden',
+        ]);
+        $this->assertDatabaseHas('companies', [
+            'user_id' => $user->id,
+            'status' => 'Inactive',
+        ]);
+
+        // 2. Unhide user
+        $responseUnhide = $this->actingAs($this->admin)->post(route('admin.users.toggle-hide', $user->id), [
+            '_token' => Session::token(),
+        ]);
+
+        $responseUnhide->assertRedirect(route('admin.users.index'));
+        $responseUnhide->assertSessionHas('success');
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'status' => 'active',
+        ]);
+        $this->assertDatabaseHas('companies', [
+            'user_id' => $user->id,
+            'status' => 'Active',
+        ]);
+    }
+
+    public function test_admin_cannot_hide_self_or_super_admin(): void
+    {
+        // Cannot hide self
+        $responseSelf = $this->actingAs($this->admin)->post(route('admin.users.toggle-hide', $this->admin->id), [
+            '_token' => Session::token(),
+        ]);
+
+        $responseSelf->assertRedirect(route('admin.users.index'));
+        $responseSelf->assertSessionHas('error');
+        $this->assertDatabaseHas('users', [
+            'id' => $this->admin->id,
+            'status' => 'active',
         ]);
     }
 }
