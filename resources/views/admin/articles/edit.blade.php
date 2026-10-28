@@ -2,6 +2,248 @@
 
 @section('title', 'Edit Article — Admin')
 
+@push('styles')
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- Summernote Lite CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+<style>
+    /* Summernote styling adjustments for clean Tailwind admin integration */
+    .note-editor.note-frame {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
+    }
+    .note-toolbar {
+        background: #f8fafc !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 0 !important;
+        padding: 8px 10px !important;
+    }
+    /* Standard toolbar buttons (exclude color swatches and reset buttons) */
+    .note-toolbar .note-btn:not(.note-color-btn):not(.note-color-reset) {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        color: #334155 !important;
+        padding: 5px 9px !important;
+        font-size: 13px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
+        transition: all 0.15s ease !important;
+    }
+    .note-toolbar .note-btn:not(.note-color-btn):not(.note-color-reset):hover,
+    .note-toolbar .note-btn:not(.note-color-btn):not(.note-color-reset).active {
+        background: #eff6ff !important;
+        border-color: #bfdbfe !important;
+        color: #2563eb !important;
+    }
+
+    /* Recent Color button in toolbar */
+    .note-toolbar .note-current-color-button {
+        padding: 4px 6px !important;
+    }
+    .note-toolbar .note-current-color-button .note-recent-color {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 19px !important;
+        height: 19px !important;
+        border-radius: 3px !important;
+        font-weight: 800 !important;
+        font-size: 12px !important;
+        line-height: 1 !important;
+        border: 1px solid rgba(0, 0, 0, 0.25) !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+        font-style: normal !important;
+    }
+    .note-btn-group.note-color > .note-current-color-button {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        border-right: none !important;
+    }
+    .note-btn-group.note-color > .dropdown-toggle {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+
+    /* Color Dropdown Menu styling */
+    .note-color .note-dropdown-menu {
+        min-width: 380px !important;
+        padding: 12px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.12), 0 8px 10px -6px rgba(0,0,0,0.08) !important;
+    }
+    .note-color .note-dropdown-menu > div {
+        display: flex !important;
+        gap: 16px !important;
+    }
+    .note-color .btn-background-color,
+    .note-color .btn-foreground-color {
+        flex: 1 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .note-color .note-palette-title {
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.03em !important;
+        color: #475569 !important;
+        margin: 0 0 6px 0 !important;
+        padding-bottom: 4px !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        text-align: left !important;
+    }
+    .note-color .note-color-reset {
+        display: block !important;
+        width: 100% !important;
+        padding: 5px 8px !important;
+        margin: 0 0 8px 0 !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 6px !important;
+        color: #475569 !important;
+        cursor: pointer !important;
+        text-align: center !important;
+        box-shadow: none !important;
+        transition: all 0.15s ease !important;
+    }
+    .note-color .note-color-reset:hover {
+        background: #eff6ff !important;
+        border-color: #bfdbfe !important;
+        color: #2563eb !important;
+    }
+
+    /* Color Palette Grid & Swatches */
+    .note-color-palette {
+        line-height: 1 !important;
+    }
+    .note-color-palette .note-color-row {
+        display: flex !important;
+        flex-direction: row !important;
+        height: auto !important;
+        margin-bottom: 2px !important;
+        gap: 2px !important;
+    }
+    .note-color-palette .note-color-btn {
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+        min-height: 18px !important;
+        max-width: 18px !important;
+        max-height: 18px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 1px solid rgba(0, 0, 0, 0.15) !important;
+        border-radius: 3px !important;
+        box-shadow: none !important;
+        outline: none !important;
+        display: inline-block !important;
+        cursor: pointer !important;
+        transition: transform 0.12s ease, box-shadow 0.12s ease !important;
+    }
+    .note-color-palette .note-color-btn:hover {
+        transform: scale(1.35) !important;
+        z-index: 20 !important;
+        position: relative !important;
+        border-color: #ffffff !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Custom HTML5 color picker */
+    .note-color input[type="color"] {
+        height: 30px !important;
+        width: 100% !important;
+        padding: 1px 2px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        background: #ffffff !important;
+        cursor: pointer !important;
+        margin-top: 6px !important;
+        box-sizing: border-box !important;
+    }
+    .note-dropdown-menu {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1) !important;
+        padding: 6px !important;
+        z-index: 1050 !important;
+    }
+    .note-dropdown-item {
+        color: #334155 !important;
+        padding: 6px 10px !important;
+        border-radius: 6px !important;
+        font-size: 13px !important;
+    }
+    .note-dropdown-item:hover {
+        background: #eff6ff !important;
+        color: #2563eb !important;
+    }
+    .note-modal {
+        z-index: 1050 !important;
+    }
+    .note-modal-backdrop {
+        z-index: 1040 !important;
+    }
+    .note-modal .modal-content {
+        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1) !important;
+    }
+    .note-modal .modal-header {
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 16px 20px !important;
+    }
+    .note-modal .modal-footer {
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 14px 20px !important;
+    }
+    .note-modal .btn-primary {
+        background: #2563eb !important;
+        border-color: #2563eb !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 8px 16px !important;
+    }
+    .note-editable {
+        font-family: inherit !important;
+        font-size: 14px !important;
+        color: #1e293b !important;
+        line-height: 1.7 !important;
+        padding: 18px !important;
+        background-color: #ffffff !important;
+    }
+    .note-editable ul {
+        list-style-type: disc !important;
+        padding-left: 24px !important;
+    }
+    .note-editable ol {
+        list-style-type: decimal !important;
+        padding-left: 24px !important;
+    }
+    .note-editable h1 { font-size: 2rem !important; font-weight: 700 !important; margin-bottom: 0.5rem !important; }
+    .note-editable h2 { font-size: 1.5rem !important; font-weight: 700 !important; margin-bottom: 0.5rem !important; }
+    .note-editable h3 { font-size: 1.25rem !important; font-weight: 600 !important; margin-bottom: 0.5rem !important; }
+    .note-editable h4 { font-size: 1.125rem !important; font-weight: 600 !important; margin-bottom: 0.5rem !important; }
+    .note-editable p { margin-bottom: 0.75rem !important; }
+    .note-editable table { width: 100% !important; border-collapse: collapse !important; margin-bottom: 1rem !important; }
+    .note-editable table td, .note-editable table th { border: 1px solid #cbd5e1 !important; padding: 6px 10px !important; }
+    .note-editable blockquote { border-left: 4px solid #2563eb !important; padding-left: 16px !important; color: #64748b !important; font-style: italic !important; }
+    .note-statusbar {
+        border-top: 1px solid #f1f5f9 !important;
+        background: #f8fafc !important;
+    }
+</style>
+@endpush
+
 @section('content')
 {{-- Actions --}}
 <div class="flex items-center justify-end mb-6 gap-3">
@@ -63,27 +305,12 @@
                           class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20 resize-none">{{ old('excerpt', $article->excerpt) }}</textarea>
             </div>
 
-            {{-- Content --}}
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="px-6 pt-5 pb-3">
-                    <label class="block text-[13.5px] font-semibold text-slate-800 mb-2">Content</label>
-                </div>
-                <div class="border-t border-slate-200">
-                    <div class="flex items-center gap-1 px-3 py-2 border-b border-slate-200 bg-slate-50/50">
-                        <button type="button" class="w-8 h-8 rounded-md text-slate-600 font-bold text-[15px] hover:bg-slate-200/70 transition" title="Bold"><b>B</b></button>
-                        <button type="button" class="w-8 h-8 rounded-md text-slate-600 font-serif italic text-[15px] hover:bg-slate-200/70 transition" title="Italic"><i>I</i></button>
-                        <button type="button" class="w-8 h-8 rounded-md text-slate-600 underline text-[15px] hover:bg-slate-200/70 transition" title="Underline"><u>U</u></button>
-                        <div class="w-px h-5 bg-slate-200 mx-1"></div>
-                        <button type="button" class="w-8 h-8 rounded-md text-slate-600 text-[15px] hover:bg-slate-200/70 transition" title="Bullet list">
-                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>
-                        </button>
-                        <button type="button" class="w-8 h-8 rounded-md text-slate-600 text-[15px] hover:bg-slate-200/70 transition" title="Numbered list">
-                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 6h11M10 12h11M10 18h11M4 6h1v4M4 10h2M6 14v4"/></svg>
-                        </button>
-                    </div>
-                    <textarea id="content" name="content" rows="14" placeholder="Write your article content here…"
-                              class="w-full px-5 py-4 text-[14px] text-slate-800 leading-relaxed placeholder-slate-400 outline-none bg-white resize-y min-h-[280px]">{{ old('content', $article->content) }}</textarea>
-                </div>
+            {{-- Content (Summernote) --}}
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                <label for="content" class="block text-[13.5px] font-semibold text-slate-800 mb-2">
+                    Content <span class="text-red-500">*</span>
+                </label>
+                <textarea id="content" name="content">{{ old('content', $article->content) }}</textarea>
             </div>
         </div>
 
@@ -169,6 +396,13 @@
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
                     <p class="text-[12px] text-slate-400 mt-1.5">Upload an image file for the article thumbnail.</p>
                 </div>
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <label for="image_caption" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Judul / Keterangan Gambar (Image Title / Caption)</label>
+                    <input id="image_caption" name="image_caption" type="text" value="{{ old('image_caption', $article->image_caption) }}"
+                           placeholder="Masukkan judul atau caption gambar (contoh: Ilustrasi perkembangan ekosistem AI modern)"
+                           class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
+                    <p class="text-[12px] text-slate-400 mt-1.5">Judul atau keterangan gambar akan ditampilkan di bawah foto utama artikel.</p>
+                </div>
                 <script>
                     document.querySelectorAll('input[name="image_source"]').forEach(function(el){
                         el.addEventListener('change', function(){
@@ -201,7 +435,69 @@
 @endsection
 
 @push('scripts')
+<!-- Summernote Lite JS -->
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
 <script>
+    $(document).ready(function() {
+        $('#content').summernote({
+            placeholder: 'Tulis isi konten artikel lengkap di sini...',
+            tabsize: 2,
+            height: 380,
+            minHeight: 250,
+            maxHeight: 700,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph', 'height']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video', 'hr']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+            fontNames: ['Plus Jakarta Sans', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
+            fontNamesIgnoreCheck: ['Plus Jakarta Sans'],
+            callbacks: {
+                onChange: function(contents, $editable) {
+                    $('#content').val(contents);
+                }
+            }
+        });
+
+        // Ensure initial recent-color swatches are visible
+        $('.note-current-color-button .note-recent-color').each(function() {
+            var $el = $(this);
+            var $btn = $el.closest('.note-current-color-button');
+            var bg = $btn.attr('data-backcolor') || '#FFFF00';
+            var fg = $btn.attr('data-forecolor') || '#000000';
+            $el.css({
+                'background-color': bg,
+                'color': fg
+            });
+        });
+
+        // Listen for color changes in the palette to update the recent color preview
+        $(document).on('click', '.note-color-btn, .note-color-reset', function() {
+            var $btn = $(this);
+            var eventName = $btn.data('event');
+            var value = $btn.data('value');
+            var $container = $btn.closest('.note-color');
+            var $recent = $container.find('.note-recent-color');
+            if (eventName === 'backColor') {
+                $recent.css('background-color', value === 'transparent' ? 'transparent' : value);
+            } else if (eventName === 'foreColor' || eventName === 'removeFormat') {
+                $recent.css('color', value === 'foreColor' ? '#000000' : value);
+            }
+        });
+
+        // Ensure Summernote content syncs before form submit
+        $('#article-edit-form').on('submit', function() {
+            var code = $('#content').summernote('code');
+            $('#content').val(code);
+        });
+    });
+
     function autoSlug(value) {
         const slug = document.getElementById('slug');
         if (slug.dataset.touched !== 'true') {

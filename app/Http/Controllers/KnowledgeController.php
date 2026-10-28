@@ -163,6 +163,7 @@ class KnowledgeController extends Controller
             'category_tag' => $article->category,
             'excerpt' => $article->excerpt ?? '',
             'image' => $article->image ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=500&fit=crop',
+            'image_caption' => $article->image_caption ?? null,
             'author_name' => $article->author_name,
             'author_avatar' => $article->author_avatar ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop',
             'author_role' => $article->author_role ?? '',

@@ -112,6 +112,7 @@ class AdminContentAccessTest extends TestCase
             'category' => 'Technology',
             'excerpt' => 'Ringkasan artikel.',
             'content' => 'Isi artikel.',
+            'image_caption' => 'Ilustrasi arsitektur cloud modern',
             'tags' => 'Laravel, PHP',
             'status' => 'published',
         ])->assertRedirect(route('admin.articles.index'));
@@ -119,6 +120,19 @@ class AdminContentAccessTest extends TestCase
         $article = Article::where('title', 'Artikel Baru')->firstOrFail();
         $this->assertSame(['Laravel', 'PHP'], $article->tags);
         $this->assertSame('artikel-baru', $article->slug);
+        $this->assertSame('Ilustrasi arsitektur cloud modern', $article->image_caption);
+
+        $this->actingAs($admin)->put(route('admin.articles.update', $article->id), [
+            'title' => 'Artikel Baru Diedit',
+            'category' => 'Technology',
+            'excerpt' => 'Ringkasan diedit.',
+            'content' => 'Isi diedit.',
+            'image_caption' => 'Caption gambar yang diperbarui',
+            'status' => 'published',
+        ])->assertRedirect(route('admin.articles.index'));
+
+        $article->refresh();
+        $this->assertSame('Caption gambar yang diperbarui', $article->image_caption);
 
         $this->actingAs($admin)
             ->delete(route('admin.articles.destroy', $article->id))
