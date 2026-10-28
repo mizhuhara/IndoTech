@@ -44,7 +44,7 @@ class AuthController extends Controller
             $rules['org_contact'] = ['required', 'string', 'max:255'];
             $rules['org_phone'] = ['required', 'string', 'max:30', 'unique:users,org_phone'];
             $rules['org_address'] = ['required', 'string'];
-            $rules['org_doc'] = ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'];
+            $rules['org_doc'] = ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'];
         }
 
         $data = $request->validate($rules);

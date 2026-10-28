@@ -63,6 +63,19 @@ Route::get('/event/{id}', function ($id) {
 });
 
 Route::get('/community', [CommunityController::class, 'index'])->name('community.index');
+Route::get('/community/create', [CommunityController::class, 'create'])->name('community.create');
+Route::post('/community', [CommunityController::class, 'store'])->name('community.store')->middleware('throttle:15,1');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/community/my', [CommunityController::class, 'my'])->name('community.my');
+    Route::get('/community/{community}/manage', [CommunityController::class, 'manage'])->name('community.manage');
+    Route::put('/community/{community}/manage', [CommunityController::class, 'updateSettings'])->name('community.manage.update');
+    Route::delete('/community/{community}/members/{user}/kick', [CommunityController::class, 'kickMember'])->name('community.manage.kick');
+    Route::post('/community/{community}/members/{user}/toggle-ban', [CommunityController::class, 'toggleBanMember'])->name('community.manage.ban');
+    Route::patch('/community/{community}/posts/{post}/moderate', [CommunityController::class, 'moderatePost'])->name('community.manage.post.moderate');
+    Route::post('/community/{community}/posts', [CommunityController::class, 'storePost'])->name('community.posts.store')->middleware('throttle:20,1');
+});
+
 Route::get('/community/{community}', [CommunityController::class, 'show'])->name('community.show');
 Route::post('/community/{community}/join', [CommunityController::class, 'join'])
     ->middleware(['auth', 'verified', 'throttle:10,1'])

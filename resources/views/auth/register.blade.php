@@ -95,7 +95,7 @@
             {{-- Institution verification notice --}}
             <div id="inst-notice" class="hidden mt-5 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-[13px] text-amber-800 flex items-start gap-2.5">
                 <svg class="shrink-0 mt-0.5 text-amber-600" width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-                <span>Akun institusi butuh verifikasi. Setelah daftar, super admin periksa dokumen lalu <b>approve</b> — baru akun bisa login.</span>
+                <span>Akun institusi butuh verifikasi super admin lalu di-<b>approve</b> sebelum akun bisa login.</span>
             </div>
 
             <form id="register-form" action="{{ url('/register') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-5">
@@ -160,19 +160,6 @@
                             <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
                             <textarea id="org_address" name="org_address" rows="2" placeholder="Alamat lengkap institusi"
                                       class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-300 text-[14px] text-gray-900 placeholder-gray-400 bg-white outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">{{ old('org_address') }}</textarea>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="org_doc" class="block text-[13.5px] font-semibold text-gray-900">
-                            Dokumen Verifikasi
-                            <span class="text-gray-400 font-normal">(akta / SIUP / NPWP / SK)</span>
-                        </label>
-                        <div class="mt-2 flex items-center gap-3 rounded-lg border border-dashed border-gray-300 px-4 py-4">
-                            <svg class="shrink-0 text-gray-400" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16V4m0 0L7 9m5-5 5 5M4 20h16"/></svg>
-                            <span class="text-[13px] text-gray-500">Upload satu file (PDF/JPG, maks 5 MB). Dokumen diperiksa super admin sebelum akun aktif.</span>
-                            <input id="org_doc" name="org_doc" type="file" accept=".pdf,.jpg,.jpeg,.png"
-                                   class="block w-full text-[13px] text-gray-500 file:mr-3 file:rounded-lg file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-[13px] file:font-semibold file:text-blue-600 hover:file:bg-blue-100">
                         </div>
                     </div>
                 </div>
@@ -256,8 +243,11 @@
                 var nameEl = document.getElementById('name');
                 document.getElementById('label-name').textContent = isInst ? 'Nama Institusi / Perusahaan' : 'Full Name';
                 nameEl.placeholder = isInst ? 'Nama institusi / perusahaan' : 'Enter your full name';
-                ['org_contact', 'org_phone', 'org_address', 'org_doc'].forEach(function (id) {
-                    document.getElementById(id).required = isInst;
+                ['org_contact', 'org_phone', 'org_address'].forEach(function (id) {
+                    var el = document.getElementById(id);
+                    if (el) {
+                        el.required = isInst;
+                    }
                 });
             }
 
@@ -376,7 +366,7 @@
                 btn.classList.toggle('disabled:opacity-50', !enabled);
             }
             agree.addEventListener('change', updateBtn);
-            ['name', 'email', 'password', 'password_confirmation', 'org_contact', 'org_phone', 'org_address', 'org_doc'].forEach(function (id) {
+            ['name', 'email', 'password', 'password_confirmation', 'org_contact', 'org_phone', 'org_address'].forEach(function (id) {
                 var el = document.getElementById(id);
                 if (el) {
                     el.addEventListener('input', updateBtn);
@@ -403,14 +393,14 @@
                 // Check institution fields if needed
                 var role = document.getElementById('input-role').value;
                 if (['school', 'university', 'company'].indexOf(role) !== -1) {
-                    var instFields = ['org_contact', 'org_phone', 'org_address', 'org_doc'];
+                    var instFields = ['org_contact', 'org_phone', 'org_address'];
                     var hasError = false;
                     
                     instFields.forEach(function(id) {
                         var el = document.getElementById(id);
-                        if (!el.value || (el.type === 'file' && !el.files.length)) {
+                        if (!el || !el.value) {
                             hasError = true;
-                            var label = el.previousElementSibling ? el.previousElementSibling.textContent.trim() : id;
+                            var label = el && el.previousElementSibling ? el.previousElementSibling.textContent.trim() : id;
                             errorList.innerHTML += '<li>' + label + ' wajib diisi</li>';
                         }
                     });

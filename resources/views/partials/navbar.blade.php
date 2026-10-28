@@ -11,7 +11,10 @@
             <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industry</a>
             <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Career</a>
             <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Events</a>
-            <a href="/community" class="{{ request()->is('community*') ? 'it-active' : '' }}">Community</a>
+            <a href="/community" class="{{ (request()->is('community') || request()->is('community/create') || (request()->is('community/*') && !request()->routeIs('community.my*') && !request()->is('community/*/manage*'))) ? 'it-active' : '' }}">Community</a>
+            @auth
+                <a href="{{ route('community.my') }}" class="{{ request()->routeIs('community.my*') || request()->is('community/*/manage*') ? 'it-active' : '' }}">Komunitas Saya</a>
+            @endauth
             <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">Knowledge Hub</a>
         </nav>
 
@@ -33,6 +36,7 @@
                             </span>
                         </div>
                         <a href="{{ route('profile.edit') }}" class="it-user-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21a8 8 0 0 1 16 0"/></svg> Profil Saya</a>
+                        <a href="{{ route('community.my') }}" class="it-user-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg> Komunitas Saya</a>
                         @if (in_array(Auth::user()->role, ['super_admin', 'school', 'university', 'company']))
                             <a href="{{ route('dashboard') }}" class="it-user-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg> Dashboard</a>
                         @endif
@@ -62,7 +66,10 @@
         <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industry</a>
         <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Career</a>
         <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Events</a>
-        <a href="/community" class="{{ request()->is('community*') ? 'it-active' : '' }}">Community</a>
+        <a href="/community" class="{{ (request()->is('community') || request()->is('community/create') || (request()->is('community/*') && !request()->routeIs('community.my*') && !request()->is('community/*/manage*'))) ? 'it-active' : '' }}">Community</a>
+        @auth
+            <a href="{{ route('community.my') }}" class="{{ request()->routeIs('community.my*') || request()->is('community/*/manage*') ? 'it-active' : '' }}">Komunitas Saya</a>
+        @endauth
         <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">Knowledge Hub</a>
         <div class="it-mobile-btns">
             @auth
