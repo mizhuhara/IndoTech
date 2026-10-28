@@ -66,6 +66,7 @@ class AdminVerificationController extends Controller
         $pendingCount = User::where('status', 'pending')->count();
         $approvedCount = User::whereIn('status', ['active', 'Approved'])->count();
         $rejectedCount = User::whereIn('status', ['rejected', 'Rejected'])->count();
+        $hiddenCount = User::whereIn('status', ['hidden', 'Hidden'])->count();
         $totalCount = User::count();
 
         return view('admin.verification.index', [
@@ -73,6 +74,7 @@ class AdminVerificationController extends Controller
             'pendingCount' => $pendingCount,
             'approvedCount' => $approvedCount,
             'rejectedCount' => $rejectedCount,
+            'hiddenCount' => $hiddenCount,
             'totalCount' => $totalCount,
             'activeType' => $request->query('type', 'all'),
             'activeStatus' => $statusFilter,
@@ -120,6 +122,31 @@ class AdminVerificationController extends Controller
         $user->notify(new AccountRejectedNotification);
 
         return back()->with('success', "Akun \"{$user->name}\" telah ditolak (Rejected).");
+    }
+
+    /**
+     * Sembunyikan atau tampilkan kembali akun institusi/user (Membership toggle).
+     */
+    public function toggleHide(User $user): RedirectResponse
+    {
+        $this->ensureVerifiable($user);
+
+        $isCurrentlyHidden = strtolower((string) $user->status) === 'hidden';
+        $newStatus = $isCurrentlyHidden ? 'active' : 'hidden';
+
+        DB::transaction(function () use ($user, $newStatus) {
+            $user->status = $newStatus;
+            $user->save();
+
+            $institutionStatus = $newStatus === 'active' ? 'Active' : 'Inactive';
+            $this->syncInstitutionStatus($user, $institutionStatus);
+        });
+
+        $message = $isCurrentlyHidden
+            ? "Akun \"{$user->name}\" berhasil ditampilkan kembali (Active)."
+            : "Akun \"{$user->name}\" berhasil disembunyikan (Hidden) karena membership.";
+
+        return back()->with('success', $message);
     }
 
     /**

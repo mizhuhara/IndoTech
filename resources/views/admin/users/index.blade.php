@@ -43,7 +43,7 @@
             {{-- Tambah User Button --}}
             <button type="button" 
                     onclick="openAddModal()" 
-                    class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-[13.5px] font-semibold shadow-md shadow-blue-500/20 transition transform active:scale-95">
+                    class="flex items-center gap-2 px-4.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-[13.5px] font-semibold shadow-xs transition">
                 <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
                     <path d="M12 5v14M5 12h14"/>
                 </svg>
@@ -52,34 +52,44 @@
     </div>
 
     {{-- Stats Cards --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
             <div>
                 <div class="text-[11.5px] font-bold tracking-wider text-slate-400 uppercase">TOTAL USERS</div>
                 <div class="text-3xl font-extrabold text-slate-900 mt-1">{{ number_format($totalUsersCount) }}</div>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 flex items-center justify-center font-bold">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             </div>
         </div>
 
         <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
             <div>
                 <div class="text-[11.5px] font-bold tracking-wider text-slate-400 uppercase">USER AKTIF</div>
-                <div class="text-3xl font-extrabold text-emerald-600 mt-1">{{ number_format($activeUsersCount) }}</div>
+                <div class="text-3xl font-extrabold text-slate-900 mt-1">{{ number_format($activeUsersCount) }}</div>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 flex items-center justify-center font-bold">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
         </div>
 
         <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
             <div>
                 <div class="text-[11.5px] font-bold tracking-wider text-slate-400 uppercase">PENDING VERIFIKASI</div>
-                <div class="text-3xl font-extrabold text-amber-600 mt-1">{{ number_format($pendingUsersCount) }}</div>
+                <div class="text-3xl font-extrabold text-slate-900 mt-1">{{ number_format($pendingUsersCount) }}</div>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 flex items-center justify-center font-bold">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs flex items-center justify-between">
+            <div>
+                <div class="text-[11.5px] font-bold tracking-wider text-slate-400 uppercase">USER HIDDEN</div>
+                <div class="text-3xl font-extrabold text-slate-900 mt-1">{{ number_format($hiddenUsersCount ?? 0) }}</div>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 flex items-center justify-center font-bold">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
             </div>
         </div>
     </div>
@@ -133,11 +143,8 @@
                             $statusLower = strtolower($user->status ?? 'active');
 
                             $roleBadgeClasses = match($roleLower) {
-                                'super_admin', 'superadmin' => 'bg-purple-50 text-purple-700 border-purple-200',
-                                'school_admin', 'school admin' => 'bg-blue-50 text-blue-700 border-blue-200',
-                                'univ_rep', 'university representative' => 'bg-indigo-50 text-indigo-700 border-indigo-200',
-                                'company_hr', 'company hr' => 'bg-teal-50 text-teal-700 border-teal-200',
-                                default => 'bg-slate-100 text-slate-700 border-slate-200',
+                                'super_admin', 'superadmin' => 'bg-slate-100 text-slate-800 border-slate-300 font-semibold',
+                                default => 'bg-slate-50 text-slate-600 border-slate-200/90 font-medium',
                             };
 
                             $roleDisplayName = match($roleLower) {
@@ -154,7 +161,7 @@
                             {{-- User & Email --}}
                             <td class="cell">
                                 <div class="flex items-center gap-3.5">
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-extrabold flex items-center justify-center text-xs shrink-0 shadow-sm">
+                                    <div class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-bold flex items-center justify-center text-xs shrink-0">
                                         {{ $initials }}
                                     </div>
                                     <div class="min-w-0">
@@ -166,7 +173,7 @@
 
                             {{-- Role --}}
                             <td class="cell">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border {{ $roleBadgeClasses }}">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs border {{ $roleBadgeClasses }}">
                                     {{ $roleDisplayName }}
                                 </span>
                             </td>
@@ -174,18 +181,25 @@
                             {{-- Status --}}
                             <td class="cell">
                                 @if($statusLower === 'active')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                         Active
                                     </span>
                                 @elseif($statusLower === 'pending')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200/60">
                                         <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
                                         Pending
                                     </span>
+                                @elseif($statusLower === 'hidden')
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-50 text-slate-600 border border-slate-200/80">
+                                        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-slate-400">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                                        </svg>
+                                        Hidden
+                                    </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200/60">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                                         Inactive
                                     </span>
                                 @endif
@@ -198,21 +212,43 @@
 
                             {{-- Actions --}}
                             <td class="px-6 py-4 text-center">
-                                <div class="flex items-center justify-center gap-2">
+                                <div class="flex items-center justify-center gap-1.5">
                                     {{-- Edit Button --}}
                                     <button type="button" 
                                             onclick="openEditModal({{ json_encode($user) }})" 
-                                            class="p-2 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition" 
+                                            class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" 
                                             title="Edit User">
                                         <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/>
                                         </svg>
                                     </button>
 
+                                    {{-- Hide / Unhide Button --}}
+                                    @if($statusLower === 'hidden')
+                                        <button type="button" 
+                                                onclick="openToggleHideModal({{ $user->id }}, '{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}', true)" 
+                                                class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" 
+                                                title="Tampilkan / Unhide User">
+                                            <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
+                                    @else
+                                        <button type="button" 
+                                                onclick="openToggleHideModal({{ $user->id }}, '{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}', false)" 
+                                                class="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition" 
+                                                title="Hide / Sembunyikan User (Membership)">
+                                            <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                                            </svg>
+                                        </button>
+                                    @endif
+
                                     {{-- Delete Button --}}
                                     <button type="button" 
                                             onclick="openDeleteModal({{ $user->id }}, '{{ addslashes($user->name) }}', '{{ addslashes($user->email) }}')" 
-                                            class="p-2 rounded-xl text-slate-500 hover:text-red-600 hover:bg-red-50 transition" 
+                                            class="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition" 
                                             title="Hapus User">
                                         <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
@@ -328,6 +364,7 @@
                     <select name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="active">Active (Aktif)</option>
                         <option value="pending">Pending (Verifikasi)</option>
+                        <option value="hidden">Hidden (Disembunyikan / Membership)</option>
                         <option value="inactive">Inactive (Non-aktif)</option>
                     </select>
                 </div>
@@ -399,6 +436,7 @@
                     <select id="edit_status" name="status" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 outline-none focus:border-blue-600 focus:bg-white transition text-[13px]">
                         <option value="active">Active (Aktif)</option>
                         <option value="pending">Pending (Verifikasi)</option>
+                        <option value="hidden">Hidden (Disembunyikan / Membership)</option>
                         <option value="inactive">Inactive (Non-aktif)</option>
                     </select>
                 </div>
@@ -434,6 +472,7 @@
                     <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>Semua Status</option>
                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active (Aktif)</option>
                     <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending (Verifikasi)</option>
+                    <option value="hidden" {{ request('status') === 'hidden' ? 'selected' : '' }}>Hidden (Disembunyikan)</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive (Non-aktif)</option>
                 </select>
             </div>
@@ -458,8 +497,87 @@
     </div>
 </div>
 
+{{-- ========================================================================= --}}
+{{-- MODAL POP-UP 4: KONFIRMASI HIDE / UNHIDE USER (MEMBERSHIP) --}}
+{{-- ========================================================================= --}}
+<div id="modal-toggle-hide-user" class="fixed inset-0 z-50 hidden bg-slate-900/40 backdrop-blur-[2px] flex items-center justify-center p-4 transition-all duration-200">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all p-6 space-y-4 text-left">
+        <div class="flex items-start gap-3.5">
+            <div id="hide_user_icon_box" class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200 mt-0.5">
+                <svg id="hide_user_icon_slash" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+                </svg>
+                <svg id="hide_user_icon_eye" class="hidden" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+                <h3 id="hide_user_modal_title" class="text-[15px] font-bold text-slate-900 tracking-tight">Konfirmasi Sembunyikan Akun</h3>
+                <p class="text-[13px] text-slate-500 leading-relaxed mt-1">
+                    <span id="hide_user_modal_desc">Sembunyikan akun untuk</span> <strong id="hide_user_name" class="text-slate-800 font-semibold"></strong> (<span id="hide_user_email" class="text-slate-600"></span>)?
+                </p>
+            </div>
+            <button type="button" onclick="closeToggleHideModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="hide_user_warning_box" class="text-[12px] text-slate-600 bg-slate-50 border border-slate-200 px-3.5 py-2.5 rounded-xl flex items-start gap-2">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="shrink-0 text-slate-400 mt-0.5"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span id="hide_user_warning_text">Akun yang disembunyikan (belum perpanjang membership) tidak akan tampil di direktori publik dan dinonaktifkan sementara.</span>
+        </div>
+
+        <form id="form-toggle-hide-user" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
+            @csrf
+            <button type="button" onclick="closeToggleHideModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
+            <button type="submit" id="hide_user_submit_btn" class="px-4.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[13px] shadow-xs transition cursor-pointer">Sembunyikan User</button>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
+    function openToggleHideModal(id, name, email, isHidden) {
+        const form = document.getElementById('form-toggle-hide-user');
+        form.action = `{{ url('/admin/users') }}/${id}/toggle-hide`;
+
+        document.getElementById('hide_user_name').textContent = name;
+        document.getElementById('hide_user_email').textContent = email;
+
+        const titleEl = document.getElementById('hide_user_modal_title');
+        const descEl = document.getElementById('hide_user_modal_desc');
+        const submitBtn = document.getElementById('hide_user_submit_btn');
+        const iconSlash = document.getElementById('hide_user_icon_slash');
+        const iconEye = document.getElementById('hide_user_icon_eye');
+        const warnText = document.getElementById('hide_user_warning_text');
+
+        if (isHidden) {
+            titleEl.textContent = 'Konfirmasi Tampilkan Akun (Unhide)';
+            descEl.textContent = 'Tampilkan kembali akun untuk';
+            submitBtn.textContent = 'Tampilkan User';
+            submitBtn.className = 'px-4.5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs transition cursor-pointer';
+            iconSlash.classList.add('hidden');
+            iconEye.classList.remove('hidden');
+            warnText.textContent = 'Akun akan diaktifkan kembali dan data institusinya akan muncul di direktori publik.';
+        } else {
+            titleEl.textContent = 'Konfirmasi Sembunyikan Akun (Hide)';
+            descEl.textContent = 'Sembunyikan akun untuk';
+            submitBtn.textContent = 'Sembunyikan User';
+            submitBtn.className = 'px-4.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[13px] shadow-xs transition cursor-pointer';
+            iconSlash.classList.remove('hidden');
+            iconEye.classList.add('hidden');
+            warnText.textContent = 'Akun yang disembunyikan (belum perpanjang membership) tidak akan tampil di direktori publik dan dinonaktifkan sementara.';
+        }
+
+        document.getElementById('modal-toggle-hide-user').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeToggleHideModal() {
+        document.getElementById('modal-toggle-hide-user').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
     function openAddModal() {
         document.getElementById('modal-add-user').classList.remove('hidden');
         document.body.classList.add('overflow-hidden');

@@ -158,6 +158,7 @@ class AuthController extends Controller
             $message = match (strtolower((string) $user->status)) {
                 'pending' => 'Akun masih menunggu verifikasi super admin.',
                 'rejected' => 'Pendaftaran ditolak. Hubungi admin untuk informasi.',
+                'hidden' => 'Akun Anda sedang disembunyikan/dinonaktifkan (membership berakhir). Hubungi admin untuk memperpanjang membership.',
                 default => 'Akun Anda tidak aktif. Hubungi admin untuk informasi.',
             };
 
