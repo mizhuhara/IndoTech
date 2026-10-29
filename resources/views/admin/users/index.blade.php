@@ -423,7 +423,7 @@
 
             <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
                 <button type="button" onclick="closeAddModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-[13px] transition cursor-pointer">Batal</button>
-                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan User</button>
+                <button type="submit" style="background-color: #2563eb !important; color: #ffffff !important;" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-sm transition cursor-pointer">Simpan User</button>
             </div>
         </form>
     </div>
@@ -495,7 +495,7 @@
 
             <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-[13px] transition cursor-pointer">Batal</button>
-                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan Perubahan</button>
+                <button type="submit" style="background-color: #2563eb !important; color: #ffffff !important;" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-sm transition cursor-pointer">Simpan Perubahan</button>
             </div>
         </form>
     </div>
