@@ -128,10 +128,14 @@
                         <img src="{{ $school['image'] }}" alt="{{ $school['name'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         
                         {{-- Logo Box --}}
-                        <div class="absolute bottom-3 left-4 w-12 h-12 rounded-xl bg-white border border-slate-200/80 shadow-md p-1.5 flex items-center justify-center">
-                            <div class="w-full h-full rounded-lg flex items-center justify-center text-white text-xs font-bold text-center leading-none {{ $school['logo_bg_class'] ?? 'bg-blue-600' }}">
-                                {{ $school['logo_text'] }}
-                            </div>
+                        <div class="absolute bottom-3 left-4 w-12 h-12 rounded-xl bg-white border border-slate-200/80 shadow-md p-1.5 flex items-center justify-center overflow-hidden">
+                            @if(!empty($school['logo_url']))
+                                <img src="{{ $school['logo_url'] }}" alt="{{ $school['name'] }}" class="w-full h-full object-contain rounded-lg">
+                            @else
+                                <div class="w-full h-full rounded-lg flex items-center justify-center text-white text-xs font-bold text-center leading-none {{ $school['logo_bg_class'] ?? 'bg-blue-600' }}">
+                                    {{ $school['logo_text'] }}
+                                </div>
+                            @endif
                         </div>
                     </div>
 
