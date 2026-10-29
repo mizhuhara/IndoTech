@@ -379,7 +379,7 @@
             <span>Akun ini akan langsung diaktifkan dan dapat digunakan login ke sistem.</span>
         </div>
 
-        <form id="form-approve-verification" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
+        <form id="form-approve-verification" method="POST" data-async data-async-reload class="pt-1 flex items-center justify-end gap-2.5">
             @csrf
             <button type="button" onclick="closeApproveModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
             <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[13px] shadow-xs shadow-emerald-600/20 transition cursor-pointer">Setujui Akun</button>
@@ -414,7 +414,7 @@
             <span>Status akun akan diubah menjadi Ditolak (Rejected).</span>
         </div>
 
-        <form id="form-reject-verification" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
+        <form id="form-reject-verification" method="POST" data-async data-async-reload class="pt-1 flex items-center justify-end gap-2.5">
             @csrf
             <button type="button" onclick="closeRejectModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
             <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-[13px] shadow-xs shadow-rose-600/20 transition cursor-pointer">Tolak Verifikasi</button>
@@ -453,7 +453,7 @@
             <span id="hide_verif_warning_text">Akun yang disembunyikan (belum perpanjang membership) tidak akan tampil di direktori publik.</span>
         </div>
 
-        <form id="form-toggle-hide-verification" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
+        <form id="form-toggle-hide-verification" method="POST" data-async data-async-reload class="pt-1 flex items-center justify-end gap-2.5">
             @csrf
             <button type="button" onclick="closeToggleHideVerificationModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
             <button type="submit" id="hide_verif_submit_btn" class="px-4.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[13px] shadow-xs transition cursor-pointer">Sembunyikan Akun</button>

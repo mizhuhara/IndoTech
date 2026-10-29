@@ -475,6 +475,8 @@
 
                     <form
                         method="POST"
+                        data-async
+                        data-async-follow
                         action="{{ route('career.apply.store', ['type' => $applyType, 'id' => $job['id']]) }}"
                         enctype="multipart/form-data"
                         id="ap-form"

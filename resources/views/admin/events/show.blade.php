@@ -59,7 +59,7 @@
 
             {{-- Action Buttons --}}
             <div class="flex items-center gap-2.5">
-                <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST">
+                <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST" data-async data-async-reload>
                     @csrf
                     <button type="submit" 
                             class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs inline-flex items-center gap-1.5 transition">
@@ -70,7 +70,7 @@
                     </button>
                 </form>
 
-                <form action="{{ route('admin.events.reject', $event['id']) }}" method="POST">
+                <form action="{{ route('admin.events.reject', $event['id']) }}" method="POST" data-async data-async-reload>
                     @csrf
                     <button type="submit"
                             class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs inline-flex items-center gap-1.5 transition">
@@ -203,7 +203,7 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-3">
-                                        <form action="{{ route('admin.events.registrations.check-in', [$event, $registration]) }}" method="POST">
+                                        <form action="{{ route('admin.events.registrations.check-in', [$event, $registration]) }}" method="POST" data-async data-async-reload>
                                             @csrf
                                             <button type="submit"
                                                     class="font-semibold {{ $registration->checked_in_at ? 'text-rose-600 hover:underline' : 'text-blue-600 hover:underline' }}">

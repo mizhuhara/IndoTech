@@ -295,7 +295,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('career.seeker.store') }}">
+            <form method="POST" data-async data-async-follow action="{{ route('career.seeker.store') }}">
                 @csrf
                 <div class="skc-form-grid">
                     {{-- Nama Lengkap --}}

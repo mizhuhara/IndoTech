@@ -58,6 +58,7 @@
 @include('admin.assets.show-modal')
 @include('admin.assets.update-modal')
 @include('admin.assets.verification-pending-modal')
+@include('partials.async-form')
 
 @stack('scripts')
 </body>

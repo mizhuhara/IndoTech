@@ -40,7 +40,7 @@
             </div>
         @endif
 
-        <form action="{{ route('password.email') }}" method="POST" class="mt-9 space-y-5">
+        <form data-async data-async-follow action="{{ route('password.email') }}" method="POST" class="mt-9 space-y-5">
             @csrf
 
             <div>
@@ -68,5 +68,6 @@
         </p>
     </div>
 
+    @include('partials.async-form')
 </body>
 </html>

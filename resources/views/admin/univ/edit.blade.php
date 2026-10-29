@@ -13,7 +13,7 @@
 @endpush
 
 @section('content')
-<form method="POST" action="{{ route('admin.univ.update', $univ->id) }}" enctype="multipart/form-data" class="space-y-6 max-w-7xl mx-auto" id="univForm">
+<form method="POST" action="{{ route('admin.univ.update', $univ->id) }}" enctype="multipart/form-data" data-async class="space-y-6 max-w-7xl mx-auto" id="univForm">
     @csrf
     @method('PUT')
 

@@ -25,10 +25,14 @@
     <div class="-mt-20 sm:-mt-24 relative z-10 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row items-center md:items-start gap-6 mb-12">
         
         {{-- Circular Avatar Logo --}}
-        <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-slate-100 shadow-md bg-white flex items-center justify-center shrink-0 p-2">
-            <div class="w-full h-full rounded-full flex items-center justify-center text-white text-base sm:text-lg font-black text-center {{ $school['logo_bg_class'] ?? 'bg-blue-600' }}">
-                {{ $school['logo_text'] }}
-            </div>
+        <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-slate-100 shadow-md bg-white flex items-center justify-center shrink-0 p-2 overflow-hidden">
+            @if(!empty($school['logo_url']))
+                <img src="{{ $school['logo_url'] }}" alt="{{ $school['name'] }}" class="w-full h-full object-contain rounded-full">
+            @else
+                <div class="w-full h-full rounded-full flex items-center justify-center text-white text-base sm:text-lg font-black text-center {{ $school['logo_bg_class'] ?? 'bg-blue-600' }}">
+                    {{ $school['logo_text'] }}
+                </div>
+            @endif
         </div>
 
         {{-- School Main Info --}}
@@ -98,12 +102,14 @@
         {{-- Left Column: About --}}
         <div class="lg:col-span-2">
             <h2 class="text-2xl font-extrabold text-slate-900 mb-4">Tentang Sekolah</h2>
-            <p class="text-blue-600 text-sm sm:text-base leading-relaxed mb-4">
-                {{ $school['about'] }}
-            </p>
-            <p class="text-blue-600 text-sm sm:text-base leading-relaxed">
-                {{ $school['mission'] }}
-            </p>
+            <div class="prose max-w-none text-slate-700 text-sm sm:text-base leading-relaxed mb-4">
+                {!! $school['about'] !!}
+            </div>
+            @if(!empty($school['mission']))
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    {{ $school['mission'] }}
+                </p>
+            @endif
         </div>
 
         {{-- Right Column: Key Statistics Box --}}
@@ -186,6 +192,29 @@
             @endforeach
         </div>
     </div>
+
+    {{-- Galeri Sekolah Section (jika ada foto galeri) --}}
+    @if(!empty($school['gallery']) && count($school['gallery']) > 0)
+        <div class="pb-16 border-t border-slate-100 pt-12">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Galeri Sekolah</h2>
+                    <p class="text-sm text-slate-500 mt-1">Dokumentasi suasana pembelajaran, fasilitas IT, dan aktivitas di {{ $school['name'] }}</p>
+                </div>
+                <span class="text-xs font-semibold px-3 py-1 bg-blue-50 text-blue-600 rounded-full border border-blue-200/60">
+                    {{ count($school['gallery']) }} Foto
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                @foreach($school['gallery'] as $photo)
+                    <div class="aspect-4/3 rounded-2xl overflow-hidden border border-slate-200/80 bg-slate-100 shadow-xs group">
+                        <img src="{{ $photo }}" alt="Foto Galeri {{ $school['name'] }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
 </div>
 

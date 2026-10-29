@@ -54,10 +54,50 @@
 
                 <div class="border-t border-slate-100 pt-5">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Deskripsi & Profil</h3>
-                    <p class="text-sm text-slate-700 leading-relaxed font-medium">
-                        {{ $school['description'] ?? 'Belum ada deskripsi profil untuk sekolah ini.' }}
-                    </p>
+                    <div class="prose max-w-none text-sm text-slate-700 leading-relaxed font-medium">
+                        {!! $school['description'] ?? 'Belum ada deskripsi profil untuk sekolah ini.' !!}
+                    </div>
                 </div>
+
+                @php
+                    $schoolCompetencies = is_array($school['competencies'] ?? null) ? $school['competencies'] : [];
+                @endphp
+                @if(!empty($schoolCompetencies))
+                    <div class="border-t border-slate-100 pt-5">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Kompetensi Keahlian</h3>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($schoolCompetencies as $comp)
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold rounded-xl">
+                                    <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
+                                    {{ $comp }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
+
+            {{-- Gallery Card --}}
+            @php
+                $galleryPhotos = is_array($school['gallery'] ?? null) ? $school['gallery'] : [];
+            @endphp
+            <div class="card space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-base font-bold text-slate-900">Galeri Sekolah</h3>
+                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-brand-600">{{ count($galleryPhotos) }} Foto</span>
+                </div>
+
+                @if(!empty($galleryPhotos))
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        @foreach($galleryPhotos as $photo)
+                            <div class="aspect-square rounded-xl overflow-hidden border border-slate-200/80 bg-slate-100 shadow-2xs group">
+                                <img src="{{ $photo }}" alt="Galeri Sekolah" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-xs text-slate-400 italic">Belum ada foto galeri yang diunggah.</p>
+                @endif
             </div>
         </div>
 

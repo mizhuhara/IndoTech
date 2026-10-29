@@ -62,7 +62,7 @@
                                 <div class="text-xs text-slate-500 mt-1">{{ $application->phone }}</div>
                             </td>
                             <td class="px-5 py-4">
-                                <form method="POST" action="{{ route('admin.applications.update', $application) }}" class="space-y-2 min-w-48">
+                                <form method="POST" action="{{ route('admin.applications.update', $application) }}" data-async data-async-reload class="space-y-2 min-w-48">
                                     @csrf
                                     @method('PATCH')
                                     <select name="status"

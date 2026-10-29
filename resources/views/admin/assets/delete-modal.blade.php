@@ -40,7 +40,7 @@
         </div>
 
         {{-- Action Buttons --}}
-        <form id="global-delete-form" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
+        <form id="global-delete-form" method="POST" data-async data-async-reload class="pt-1 flex items-center justify-end gap-2.5">
             @csrf
             @method('DELETE')
             <button type="button" 
@@ -149,7 +149,13 @@
                         message: msg,
                         onConfirm: () => {
                             this.dataset.confirmed = 'true';
-                            this.submit();
+                            this.setAttribute('data-async-reload', '');
+
+                            if (typeof window.saveFormAsync === 'function') {
+                                window.saveFormAsync(this);
+                            } else {
+                                this.submit();
+                            }
                         }
                     });
                 });

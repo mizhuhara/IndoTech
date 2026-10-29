@@ -246,7 +246,7 @@
                                     </p>
                                 </div>
                             @endif
-                            <form action="{{ route('event.unregister', $event['id']) }}" method="POST" class="mt-3"
+                            <form data-async data-async-reload action="{{ route('event.unregister', $event['id']) }}" method="POST" class="mt-3"
                                   onsubmit="return confirm('Batalkan pendaftaran event ini?')">
                                 @csrf
                                 @method('DELETE')
@@ -261,7 +261,7 @@
                                 Event Full
                             </button>
                         @elseif (auth()->check())
-                            <form action="{{ route('event.register', $event['id']) }}" method="POST" class="space-y-3">
+                            <form data-async data-async-reload action="{{ route('event.register', $event['id']) }}" method="POST" class="space-y-3">
                                 @csrf
                                 <div>
                                     <input name="name" type="text" required value="{{ old('name', auth()->user()->name) }}"

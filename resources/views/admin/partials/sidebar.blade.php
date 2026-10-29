@@ -1,6 +1,9 @@
 <aside class="w-64 shrink-0 bg-white border-r border-slate-200/80 flex flex-col h-screen sticky top-0 z-40 select-none">
     @php 
         $userRole = auth()->user()?->role ?? 'user'; 
+        if ($userRole === 'school_admin') {
+            $userRole = 'school';
+        }
         $pendingVerificationsCount = in_array($userRole, ['super_admin', 'admin'], true) 
             ? \App\Models\User::where('status', 'pending')->count() 
             : 0;
@@ -8,7 +11,7 @@
 
     {{-- Header / Brand --}}
     <div class="h-16 px-6 flex items-center border-b border-slate-200/80 shrink-0">
-        <a href="{{ route('admin.dashboard') }}" class="group flex items-center gap-2">
+        <a href="{{ $userRole === 'school' ? route('admin.schools.index') : route('admin.dashboard') }}" class="group flex items-center gap-2">
             <span class="text-[21px] font-black text-slate-900 tracking-tight leading-none group-hover:text-brand-600 transition-colors">
                 Indo<span class="text-brand-600">Tech</span>
             </span>
@@ -25,7 +28,7 @@
                     'icon' => 'grid',
                     'active' => request()->routeIs('admin.dashboard'),
                     'href' => route('admin.dashboard'),
-                    'roles' => ['super_admin', 'admin', 'school', 'university', 'company'],
+                    'roles' => ['super_admin', 'admin', 'university', 'company'],
                 ],
                 [
                     'label' => 'Applications',
@@ -208,7 +211,7 @@
 
     {{-- Sidebar footer / Actions --}}
     <div class="p-3 border-t border-slate-100 shrink-0 bg-white space-y-1">
-        <form method="POST" action="{{ route('logout') }}" class="w-full m-0">
+        <form method="POST" data-async data-async-follow action="{{ route('logout') }}" class="w-full m-0">
             @csrf
             <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/80 transition-all duration-150 cursor-pointer text-left group">
                 <span class="text-slate-400 group-hover:text-red-500 transition-colors">

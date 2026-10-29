@@ -3,7 +3,7 @@
 @section('title', 'Tambah Lowongan Internship Baru — IndoTech Admin')
 
 @section('content')
-<form method="POST" action="{{ route('admin.internships.store') }}" enctype="multipart/form-data" class="space-y-6 max-w-7xl mx-auto">
+<form method="POST" action="{{ route('admin.internships.store') }}" enctype="multipart/form-data" data-async data-async-reset class="space-y-6 max-w-7xl mx-auto">
     @csrf
 
     {{-- Top Back Link & Breadcrumbs --}}
