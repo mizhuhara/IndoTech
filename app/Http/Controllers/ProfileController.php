@@ -15,6 +15,10 @@ class ProfileController extends Controller
             return redirect()->route('dashboard.school');
         }
 
+        if ($request->user()->role === 'university') {
+            return redirect()->route('dashboard.university');
+        }
+
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
