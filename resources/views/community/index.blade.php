@@ -7,10 +7,6 @@
 {{-- ===== HERO SECTION ===== --}}
 <div class="cmty-hero">
     <div class="cmty-hero-inner">
-<<<<<<< HEAD
-
-=======
->>>>>>> eca7993e169e40c491504cfbd6ae7c9f786b71b8
         <h1 class="cmty-hero-title">Komunitas Tech Indonesia</h1>
         <p class="cmty-hero-sub">
             Terhubung, berbagi ilmu, dan berkolaborasi bersama ribuan talenta teknologi di seluruh Nusantara. Temukan ruang yang tumbuh yang relevan dengan kariermu.

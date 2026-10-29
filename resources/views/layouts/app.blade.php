@@ -12,7 +12,7 @@
         @else
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
             <script src="https://cdn.tailwindcss.com"></script>
             <style>
                 body { font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -45,12 +45,23 @@
             height: 62px;
         }
         #it-logo {
-            font-size: 20px;
-            font-weight: 800;
+            font-size: 21px;
+            font-weight: 900;
             color: #0f172a;
             text-decoration: none;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.025em;
             flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+            transition: color 0.15s ease;
+        }
+        #it-logo span {
+            color: #2563eb;
+            transition: color 0.15s ease;
+        }
+        #it-logo:hover {
+            color: #2563eb;
         }
         #it-nav {
             display: flex;
@@ -486,12 +497,12 @@
         @media (max-width: 640px) {
             .it-chat-dropdown {
                 position: fixed;
-                top: 68px;
+                top: 64px;
                 left: 12px;
                 right: 12px;
                 width: auto;
                 max-width: none;
-                max-height: calc(88dvh - 68px);
+                max-height: calc(88dvh - 64px);
                 border-radius: 16px;
                 box-shadow: 0 16px 40px rgba(15, 23, 42, 0.22);
                 z-index: 100;
@@ -596,56 +607,267 @@
         .it-user-logout:hover { background: #fef2f2; color: #b91c1c; }
         .it-user-logout:hover svg { color: #b91c1c; }
 
-        /* Mobile menu toggle — hidden by default on desktop */
+        /* Mobile menu toggle button */
         #it-mobile-toggle {
             display: none;
-            background: none;
-            border: none;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1.5px solid #e2e8f0;
             cursor: pointer;
-            padding: 8px;
+            width: 38px;
+            height: 38px;
             color: #475569;
-            border-radius: 8px;
+            border-radius: 10px;
+            padding: 0;
             line-height: 0;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
         }
+        #it-mobile-toggle:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+        #it-mobile-toggle.it-open,
+        #it-mobile-toggle[aria-expanded="true"] {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #2563eb;
+        }
+        #it-mobile-toggle .it-icon-close { display: none; }
+        #it-mobile-toggle.it-open .it-icon-bars,
+        #it-mobile-toggle[aria-expanded="true"] .it-icon-bars { display: none; }
+        #it-mobile-toggle.it-open .it-icon-close,
+        #it-mobile-toggle[aria-expanded="true"] .it-icon-close { display: block; }
+
+        /* Mobile drawer */
         #it-mobile-menu {
             display: none;
             border-top: 1px solid #f1f5f9;
             background: #ffffff;
-            padding: 10px 20px 16px;
+            padding: 12px 18px 20px;
+            max-height: calc(100dvh - 58px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
+        }
+        #it-mobile-menu.it-open {
+            display: block;
+            animation: itMobileMenuSlide 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes itMobileMenuSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .it-mobile-user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 6px 14px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .it-mobile-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+        .it-mobile-user-name {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #0f172a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .it-mobile-links {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
         #it-mobile-menu a {
-            display: block;
-            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
             font-size: 14px;
             font-weight: 500;
             color: #475569;
             text-decoration: none;
-            border-radius: 7px;
+            border-radius: 8px;
             transition: background 0.12s, color 0.12s;
         }
-        #it-mobile-menu a:hover,
-        #it-mobile-menu a.it-active { color: #2563eb; background: #eff6ff; }
-        .it-mobile-btns {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            padding-top: 12px;
-            border-top: 1px solid #f1f5f9;
+        #it-mobile-menu a svg {
+            color: #94a3b8;
+            flex-shrink: 0;
+            transition: color 0.12s;
         }
-        .it-mobile-btns a {
-            flex: 1;
-            text-align: center;
-            padding: 8px 12px !important;
-            border-radius: 8px !important;
-            font-size: 14px;
+        #it-mobile-menu a:hover,
+        #it-mobile-menu a:active,
+        #it-mobile-menu a.it-active {
+            color: #2563eb;
+            background: #eff6ff;
             font-weight: 600;
         }
+        #it-mobile-menu a:hover svg,
+        #it-mobile-menu a.it-active svg {
+            color: #2563eb;
+        }
 
-        @media (max-width: 860px) {
+        .it-mobile-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #f1f5f9;
+        }
+        .it-mobile-btns a,
+        .it-mobile-btns button {
+            flex: 1;
+            text-align: center;
+            padding: 9px 12px !important;
+            border-radius: 8px !important;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            width: 100%;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .it-mbtn-profile {
+            color: #2563eb !important;
+            background: #eff6ff !important;
+            border: 1.5px solid #bfdbfe !important;
+        }
+        .it-mbtn-profile:hover {
+            background: #dbeafe !important;
+        }
+        .it-mbtn-dash {
+            color: #ffffff !important;
+            background: #2563eb !important;
+            border: 1.5px solid #2563eb !important;
+        }
+        .it-mbtn-dash:hover {
+            background: #1d4ed8 !important;
+        }
+        .it-mbtn-logout {
+            color: #dc2626 !important;
+            background: #fef2f2 !important;
+            border: 1.5px solid #fecaca !important;
+        }
+        .it-mbtn-logout:hover {
+            background: #fee2e2 !important;
+        }
+        .it-mbtn-signin {
+            color: #2563eb !important;
+            background: transparent !important;
+            border: 1.5px solid #2563eb !important;
+        }
+        .it-mbtn-signin:hover {
+            background: #eff6ff !important;
+        }
+        .it-mbtn-signup {
+            color: #ffffff !important;
+            background: #2563eb !important;
+            border: 1.5px solid #2563eb !important;
+            box-shadow: 0 1px 4px rgba(37,99,235,0.25);
+        }
+        .it-mbtn-signup:hover {
+            background: #1d4ed8 !important;
+        }
+
+        /* Laptops fit (1025px - 1200px) */
+        @media (min-width: 1025px) and (max-width: 1200px) {
+            #it-nav a {
+                padding: 0 8px;
+                font-size: 13.5px;
+            }
+            #it-navbar-inner {
+                padding: 0 16px;
+            }
+        }
+
+        /* Tablets & Mobile breakpoint */
+        @media (max-width: 1024px) {
             #it-nav { display: none; }
             .it-btn-signin, .it-btn-signup { display: none !important; }
-            #it-mobile-toggle { display: flex; }
+            #it-mobile-toggle { display: inline-flex; }
             #it-mobile-menu.it-open { display: block; }
+        }
+
+        /* Mobile phones (<= 768px) */
+        @media (max-width: 768px) {
+            #it-navbar-inner {
+                padding: 0 16px;
+                height: 58px;
+            }
+            #it-logo {
+                font-size: 19px;
+            }
+            #it-actions {
+                gap: 6px;
+            }
+            .it-nav-icon-btn,
+            #it-mobile-toggle {
+                width: 36px;
+                height: 36px;
+            }
+            #it-user-btn {
+                padding: 2px;
+                border-radius: 50%;
+                gap: 0;
+            }
+            .it-user-name,
+            #it-user-btn svg {
+                display: none !important;
+            }
+            .it-user-menu {
+                position: fixed;
+                top: 64px;
+                right: 12px;
+                left: auto;
+                width: min(260px, calc(100vw - 24px));
+                border-radius: 16px;
+                box-shadow: 0 16px 40px rgba(15, 23, 42, 0.18);
+                z-index: 90;
+            }
+        }
+
+        /* Extra small phones (<= 380px) */
+        @media (max-width: 380px) {
+            #it-navbar-inner {
+                padding: 0 10px;
+                height: 56px;
+            }
+            #it-logo {
+                font-size: 18px;
+            }
+            #it-actions {
+                gap: 4px;
+            }
+            .it-nav-icon-btn,
+            #it-mobile-toggle {
+                width: 34px;
+                height: 34px;
+            }
+            .it-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 13px;
+            }
         }
 
         /* ---- FOOTER ---- */
@@ -669,11 +891,21 @@
         }
         .it-f-brand {
             font-size: 22px;
-            font-weight: 800;
+            font-weight: 900;
             color: #0f172a;
             text-decoration: none;
-            letter-spacing: -0.5px;
-            display: inline-block;
+            letter-spacing: -0.025em;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+            transition: color 0.15s ease;
+        }
+        .it-f-brand span {
+            color: #2563eb;
+            transition: color 0.15s ease;
+        }
+        .it-f-brand:hover {
+            color: #2563eb;
         }
         .it-f-tagline {
             font-size: 13.5px;
