@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\School;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AdminSchoolController extends Controller
@@ -74,9 +75,31 @@ class AdminSchoolController extends Controller
         $this->authorizeCreate();
 
         $data = $this->validateSchool($request);
-        $user = $request->user();
 
-        // Feed lama (data diisi manual oleh admin) dipakai untuk apa?
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $path = $file->store('schools/logos', 'public');
+            $data['logo_url'] = Storage::url($path);
+            $data['logo_name'] = $file->getClientOriginalName();
+        }
+
+        $gallery = [];
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $image) {
+                $path = $image->store('schools/gallery', 'public');
+                $gallery[] = Storage::url($path);
+            }
+        }
+        $data['gallery'] = $gallery;
+
+        if (empty($data['logo_text'])) {
+            $data['logo_text'] = mb_substr($data['name'], 0, 8);
+        }
+
+        if (! empty($data['latitude']) && ! empty($data['longitude']) && empty($data['map_link'])) {
+            $data['map_link'] = "https://www.google.com/maps?q={$data['latitude']},{$data['longitude']}";
+        }
+
         School::create($data);
 
         return redirect()->route('admin.schools.index')
@@ -115,6 +138,44 @@ class AdminSchoolController extends Controller
         // Institusi tidak boleh mengubah status — hanya admin yang approve/reject
         if (in_array($user->role, ['school', 'university', 'company'], true)) {
             unset($data['status']);
+        }
+
+        if ($request->hasFile('logo')) {
+            // Delete old logo if exists on public disk
+            if (! empty($school->logo_url) && str_starts_with($school->logo_url, '/storage/')) {
+                $oldPath = str_replace('/storage/', '', $school->logo_url);
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            $file = $request->file('logo');
+            $path = $file->store('schools/logos', 'public');
+            $data['logo_url'] = Storage::url($path);
+            $data['logo_name'] = $file->getClientOriginalName();
+        }
+
+        // Handle gallery images: keep retained existing ones + add newly uploaded ones
+        $gallery = $request->input('existing_gallery', []);
+        if (! is_array($gallery)) {
+            $gallery = [];
+        }
+
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $image) {
+                $path = $image->store('schools/gallery', 'public');
+                $gallery[] = Storage::url($path);
+            }
+        }
+
+        if ($request->has('existing_gallery') || $request->hasFile('gallery')) {
+            $data['gallery'] = array_values($gallery);
+        }
+
+        if (empty($data['logo_text'])) {
+            $data['logo_text'] = mb_substr($data['name'], 0, 8);
+        }
+
+        if (! empty($data['latitude']) && ! empty($data['longitude']) && empty($data['map_link'])) {
+            $data['map_link'] = "https://www.google.com/maps?q={$data['latitude']},{$data['longitude']}";
         }
 
         $school->update($data);
@@ -172,7 +233,7 @@ class AdminSchoolController extends Controller
 
     private function validateSchool(Request $request): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'npsn' => ['required', 'string', 'max:20'],
             'name' => ['required', 'string', 'max:255'],
             'institution_type' => ['required', 'string', 'max:100', 'in:SMK IT,SMK,SMA IT,SMK Non-IT,Sekolah IT,Vokasi IT'],
@@ -181,19 +242,41 @@ class AdminSchoolController extends Controller
             'location' => ['required', 'string', 'max:150'],
             'address' => ['nullable', 'string', 'max:255'],
             'status' => ['nullable', 'string', 'max:20'],
-            'logo_url' => ['nullable', 'url', 'max:500'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:5120'],
+            'logo_url' => ['nullable', 'string', 'max:500'],
             'logo_text' => ['nullable', 'string', 'max:50'],
             'logo_bg' => ['nullable', 'string', 'max:50'],
             'email' => ['nullable', 'email', 'max:255'],
             'website' => ['nullable', 'url', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
-            'description' => ['nullable', 'string', 'max:1000'],
+            'description' => ['nullable', 'string'],
             'tags' => ['nullable', 'array'],
             'tags.*' => ['string', 'max:50'],
+            'competencies' => ['nullable', 'array'],
+            'competencies.*' => ['string', 'max:100'],
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'mimes:jpeg,png,jpg,webp,svg', 'max:5120'],
+            'existing_gallery' => ['nullable', 'array'],
+            'existing_gallery.*' => ['string'],
             'total_students' => ['nullable', 'integer', 'min:0'],
             'industry_partners' => ['nullable', 'integer', 'min:0'],
             'founded' => ['nullable', 'string', 'max:10'],
             'accreditation' => ['nullable', 'string', 'max:10'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'map_link' => ['nullable', 'string', 'max:500'],
         ]);
+
+        if (empty($validated['city']) || empty($validated['province'])) {
+            $locationParts = array_map('trim', explode(',', $validated['location']));
+            if (empty($validated['city'])) {
+                $validated['city'] = $locationParts[0] ?? $validated['location'];
+            }
+            if (empty($validated['province']) && isset($locationParts[1])) {
+                $validated['province'] = $locationParts[1];
+            }
+        }
+
+        return $validated;
     }
 }
