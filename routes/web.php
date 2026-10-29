@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminVerificationController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CampusController;
 use App\Http\Controllers\CareerController;
+use App\Http\Controllers\CommunityChatController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EducationController;
@@ -82,6 +83,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/community/{community}/members/{user}/toggle-ban', [CommunityController::class, 'toggleBanMember'])->name('community.manage.ban');
     Route::patch('/community/{community}/posts/{post}/moderate', [CommunityController::class, 'moderatePost'])->name('community.manage.post.moderate');
     Route::post('/community/{community}/posts', [CommunityController::class, 'storePost'])->name('community.posts.store')->middleware('throttle:20,1');
+
+    // Community Chat Routes
+    Route::get('/chat', [CommunityChatController::class, 'all'])->name('chat.index');
+    Route::get('/community/chat/navbar-summary', [CommunityChatController::class, 'dropdownSummary'])->name('community.chat.navbar_summary');
+    Route::post('/community/{community}/chat/read', [CommunityChatController::class, 'markAsRead'])->name('community.chat.mark_read');
+    Route::get('/community/{community}/chat', [CommunityChatController::class, 'index'])->name('community.chat');
+    Route::get('/community/{community}/chat/messages', [CommunityChatController::class, 'messages'])->name('community.chat.messages');
+    Route::get('/community/{community}/chat/members', [CommunityChatController::class, 'membersList'])->name('community.chat.members');
+    Route::post('/community/{community}/chat/send', [CommunityChatController::class, 'send'])->name('community.chat.send')->middleware('throttle:60,1');
+    Route::post('/community/{community}/chat/upload-chunk', [CommunityChatController::class, 'uploadChunk'])->name('community.chat.upload_chunk')->middleware('throttle:120,1');
+    Route::get('/community/{community}/chat/attachments/{attachment}/preview', [CommunityChatController::class, 'preview'])->name('community.chat.preview');
+    Route::get('/community/{community}/chat/attachments/{attachment}/download', [CommunityChatController::class, 'download'])->name('community.chat.download');
+    Route::get('/community/{community}/chat/messages/{message}/download-folder', [CommunityChatController::class, 'downloadFolder'])->name('community.chat.download_folder');
 });
 
 Route::get('/community/{community}', [CommunityController::class, 'show'])->name('community.show');

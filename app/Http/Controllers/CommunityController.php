@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Community;
 use App\Models\CommunityPost;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -202,17 +204,13 @@ class CommunityController extends Controller
         return back()->with('success', "Pengaturan komunitas \"{$community->name}\" berhasil diperbarui.");
     }
 
-    public function kickMember(Request $request, Community $community, User $user): RedirectResponse
+    public function kickMember(Request $request, Community $community, User $user): RedirectResponse|JsonResponse
     {
         abort_unless(
-            $community->user_id === $request->user()->id,
+            $community->canKickMember($request->user(), $user),
             403,
-            'Anda tidak memiliki hak akses untuk mengelola komunitas ini.'
+            'Anda tidak memiliki hak akses untuk mengeluarkan anggota ini.'
         );
-
-        if ($user->id === $community->user_id) {
-            return back()->with('error', 'Pembuat komunitas tidak dapat dikeluarkan.');
-        }
 
         $detached = DB::transaction(function () use ($community, $user) {
             $locked = Community::whereKey($community->id)->lockForUpdate()->firstOrFail();
@@ -223,6 +221,33 @@ class CommunityController extends Controller
 
             return $count > 0;
         });
+
+        if ($detached) {
+            Log::info('Anggota komunitas dikeluarkan (kicked)', [
+                'actor_id' => $request->user()->id,
+                'actor_name' => $request->user()->name,
+                'target_id' => $user->id,
+                'target_name' => $user->name,
+                'community_id' => $community->id,
+                'community_name' => $community->name,
+                'kicked_at' => now()->toIso8601String(),
+            ]);
+        }
+
+        if ($request->expectsJson() || $request->ajax()) {
+            if ($detached) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Pengguna {$user->name} berhasil dikeluarkan dari komunitas.",
+                    'members_count' => (int) $community->fresh()->members,
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Pengguna tersebut bukan anggota komunitas ini.',
+            ], 422);
+        }
 
         return back()->with(
             $detached ? 'success' : 'error',

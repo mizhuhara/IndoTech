@@ -87,7 +87,24 @@ class CommunityMembershipTest extends TestCase
         $this->actingAs($user)->get(route('community.show', $community))
             ->assertOk()
             ->assertSee('Keluar dari Komunitas')
+            ->assertSee('Chat Komunitas')
+            ->assertSee('Ruang Chat Komunitas')
+            ->assertSee('Buka Chat Komunitas')
+            ->assertSee('Live Chat &amp; Berbagi Berkas', false)
             ->assertSee($user->name);
+    }
+
+    public function test_creator_sees_manage_icon_button(): void
+    {
+        $creator = User::factory()->create();
+        $community = $this->createCommunity(['user_id' => $creator->id]);
+        $community->members()->attach($creator->id, ['role' => 'admin', 'is_banned' => false]);
+
+        $this->actingAs($creator)->get(route('community.show', $community))
+            ->assertOk()
+            ->assertSee('Kelola Komunitas')
+            ->assertSee('Chat Komunitas')
+            ->assertSee('Keluar dari Komunitas');
     }
 
     public function test_inactive_community_is_not_publicly_visible(): void
