@@ -49,7 +49,7 @@
             </div>
         @enderror
 
-        <form action="{{ route('verification.send') }}" method="POST" class="mt-7">
+        <form data-async data-async-follow action="{{ route('verification.send') }}" method="POST" class="mt-7">
             @csrf
             <button type="submit"
                     class="w-full h-[46px] rounded-lg bg-blue-700 text-white text-[14.5px] font-semibold transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/40">
@@ -62,7 +62,7 @@
         </p>
 
         <div class="mt-6 pt-6 border-t border-gray-200">
-            <form action="{{ route('logout') }}" method="POST" class="text-center">
+            <form data-async data-async-follow action="{{ route('logout') }}" method="POST" class="text-center">
                 @csrf
                 <button type="submit" class="text-[13px] font-medium text-gray-500 hover:text-gray-700">
                     Keluar dari akun
@@ -71,5 +71,6 @@
         </div>
     </div>
 
+    @include('partials.async-form')
 </body>
 </html>

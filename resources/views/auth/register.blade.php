@@ -98,7 +98,7 @@
                 <span>Akun institusi butuh verifikasi super admin lalu di-<b>approve</b> sebelum akun bisa login.</span>
             </div>
 
-            <form id="register-form" action="{{ url('/register') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-5">
+            <form id="register-form" data-async data-async-follow action="{{ url('/register') }}" method="POST" enctype="multipart/form-data" class="mt-8 space-y-5">
                 @csrf
                 <input type="hidden" name="role" id="input-role" value="{{ old('role') }}">
                 
@@ -416,5 +416,6 @@
         })();
     </script>
 
+    @include('partials.async-form')
 </body>
 </html>

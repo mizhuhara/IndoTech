@@ -3,7 +3,7 @@
 @section('title', 'Post New Job — Admin IndoTech')
 
 @section('content')
-<form action="{{ route('admin.jobs.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+<form action="{{ route('admin.jobs.store') }}" method="POST" enctype="multipart/form-data" data-async data-async-reset class="space-y-6">
     @csrf
 
     {{-- Validation errors --}}

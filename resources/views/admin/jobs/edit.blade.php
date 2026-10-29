@@ -3,7 +3,7 @@
 @section('title', 'Edit Job Posting — Admin IndoTech')
 
 @section('content')
-<form action="{{ route('admin.jobs.update', $job['id']) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+<form action="{{ route('admin.jobs.update', $job['id']) }}" method="POST" enctype="multipart/form-data" data-async class="space-y-6">
     @csrf
     @method('PUT')
 

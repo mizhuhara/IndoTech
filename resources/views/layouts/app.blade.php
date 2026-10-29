@@ -742,5 +742,6 @@
         </main>
 
         @include('partials.footer')
+        @include('partials.async-form')
     </body>
 </html>

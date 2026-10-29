@@ -3,7 +3,7 @@
 @section('title', 'Edit Community — IndoTech')
 
 @section('content')
-<form method="POST" action="{{ route('admin.community.update', $community['id']) }}" enctype="multipart/form-data" class="space-y-6 max-w-7xl mx-auto">
+<form method="POST" action="{{ route('admin.community.update', $community['id']) }}" enctype="multipart/form-data" data-async class="space-y-6 max-w-7xl mx-auto">
     @csrf
     @method('PUT')
 

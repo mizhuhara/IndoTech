@@ -381,7 +381,7 @@
         </div>
 
         {{-- Modal Body Form --}}
-        <form action="{{ route('admin.users.store') }}" method="POST" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
+        <form action="{{ route('admin.users.store') }}" method="POST" data-async data-async-reload class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
             @csrf
             <div>
                 <label class="form-label-strong">Nama Lengkap <span class="text-red-500">*</span></label>
@@ -451,7 +451,7 @@
         </div>
 
         {{-- Modal Body Form --}}
-        <form id="form-edit-user" method="POST" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
+        <form id="form-edit-user" method="POST" data-async data-async-reload class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
             @csrf
             @method('PUT')
 
@@ -589,7 +589,7 @@
             <span id="hide_user_warning_text">Akun yang disembunyikan (belum perpanjang membership) tidak akan tampil di direktori publik dan dinonaktifkan sementara.</span>
         </div>
 
-        <form id="form-toggle-hide-user" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
+        <form id="form-toggle-hide-user" method="POST" data-async data-async-reload class="pt-1 flex items-center justify-end gap-2.5">
             @csrf
             <button type="button" onclick="closeToggleHideModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
             <button type="submit" id="hide_user_submit_btn" class="px-4.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[13px] shadow-xs transition cursor-pointer">Sembunyikan User</button>

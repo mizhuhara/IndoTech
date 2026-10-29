@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\School;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -70,7 +71,7 @@ class AdminSchoolController extends Controller
     /**
      * Store a newly created school in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $this->authorizeCreate();
 
@@ -102,6 +103,12 @@ class AdminSchoolController extends Controller
 
         School::create($data);
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => "Sekolah \"{$data['name']}\" berhasil ditambahkan.",
+            ], 201);
+        }
+
         return redirect()->route('admin.schools.index')
             ->with('success', "Sekolah \"{$data['name']}\" berhasil ditambahkan.");
     }
@@ -129,7 +136,7 @@ class AdminSchoolController extends Controller
     /**
      * Update the specified school in storage.
      */
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(Request $request, int $id): RedirectResponse|JsonResponse
     {
         $school = $this->findVisibleSchool($id);
         $data = $this->validateSchool($request);
@@ -179,6 +186,12 @@ class AdminSchoolController extends Controller
         }
 
         $school->update($data);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'message' => "Data sekolah \"{$data['name']}\" berhasil diperbarui.",
+            ]);
+        }
 
         return redirect()->route('admin.schools.index')
             ->with('success', "Data sekolah \"{$data['name']}\" berhasil diperbarui.");
