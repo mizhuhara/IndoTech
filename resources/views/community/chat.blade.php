@@ -2,6 +2,7 @@
 
 @section('title', 'Chat Komunitas — ' . $community->name)
 
+@section('hide_navbar')@endsection
 @section('hide_footer')@endsection
 
 @section('content')
@@ -527,7 +528,7 @@
 
 .chat-page-shell {
     background: #f1f5f9;
-    min-height: calc(100vh - 62px);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     padding: 16px 12px 24px;

@@ -35,7 +35,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
                 </svg>
                 <span>Filter</span>
-                @if(request('status') || request('role'))
+                @if(request('status') || (request('role') && request('role') !== 'all') || (request('sort') && request('sort') !== 'latest'))
                     <span class="w-2 h-2 rounded-full bg-blue-600"></span>
                 @endif
             </button>
@@ -93,17 +93,20 @@
             </div>
         </div>
     </div>
+    @php
+        $currentRole = strtolower(request('role', 'all'));
+    @endphp
 
     {{-- Main Container Card --}}
     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
 
-        {{-- Table Toolbar --}}
-        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <form method="GET" action="{{ route('admin.users.index') }}" class="w-full sm:max-w-md">
+        {{-- Table Toolbar: Search, Role Selector, Sorting & Reset --}}
+        <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1 max-w-4xl">
                 @if(request('status')) <input type="hidden" name="status" value="{{ request('status') }}"> @endif
-                @if(request('role')) <input type="hidden" name="role" value="{{ request('role') }}"> @endif
 
-                <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3.5 h-10 w-full focus-within:border-blue-500 focus-within:bg-white transition">
+                {{-- Search Input --}}
+                <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3.5 h-10 w-full sm:w-72 focus-within:border-blue-500 focus-within:bg-white transition">
                     <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-slate-400">
                         <circle cx="11" cy="11" r="7"/>
                         <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
@@ -111,15 +114,58 @@
                     <input type="text" 
                            name="q" 
                            value="{{ request('q') }}" 
-                           placeholder="Cari nama, email, atau role..." 
-                           class="bg-transparent outline-none text-[13.5px] text-slate-800 placeholder-slate-400 flex-1 min-w-0">
+                           placeholder="Cari nama, email..." 
+                           class="bg-transparent outline-none text-[13px] text-slate-800 placeholder-slate-400 flex-1 min-w-0">
                     @if(request('q'))
-                        <a href="{{ route('admin.users.index') }}" class="text-xs text-slate-400 hover:text-slate-600 font-bold">&times;</a>
+                        <a href="{{ request()->fullUrlWithQuery(['q' => null, 'page' => 1]) }}" class="text-xs text-slate-400 hover:text-slate-600 font-bold">&times;</a>
                     @endif
                 </div>
+
+                {{-- Role Selector Dropdown --}}
+                <div class="relative min-w-[155px]">
+                    <select name="role" 
+                            onchange="this.form.submit()" 
+                            class="w-full h-10 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-xl text-[13px] text-slate-700 font-medium outline-none focus:border-blue-500 focus:bg-white transition cursor-pointer appearance-none">
+                        <option value="all" {{ (request('role') === 'all' || !request('role')) ? 'selected' : '' }}>Semua Role</option>
+                        <option value="user" {{ request('role') === 'user' ? 'selected' : '' }}>User Biasa</option>
+                        <option value="school" {{ request('role') === 'school' ? 'selected' : '' }}>Sekolah (School)</option>
+                        <option value="company" {{ request('role') === 'company' ? 'selected' : '' }}>Company (Perusahaan)</option>
+                        <option value="university" {{ request('role') === 'university' ? 'selected' : '' }}>Universitas (University)</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
+
+                {{-- Sorting Selector Dropdown --}}
+                <div class="relative min-w-[160px]">
+                    <select name="sort" 
+                            onchange="this.form.submit()" 
+                            class="w-full h-10 pl-3 pr-8 bg-slate-50 border border-slate-200 rounded-xl text-[13px] text-slate-700 font-medium outline-none focus:border-blue-500 focus:bg-white transition cursor-pointer appearance-none">
+                        <option value="latest" {{ (request('sort') === 'latest' || !request('sort')) ? 'selected' : '' }}>Urutkan: Terbaru</option>
+                        <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Urutkan: Terlama</option>
+                        <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>Nama: A → Z</option>
+                        <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>Nama: Z → A</option>
+                        <option value="role_asc" {{ request('sort') === 'role_asc' ? 'selected' : '' }}>Role: A → Z</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
+                    </div>
+                </div>
+
+                {{-- Submit button for keyboard/enter --}}
+                <button type="submit" class="hidden sm:inline-flex items-center justify-center px-3 h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-[12.5px] font-semibold transition cursor-pointer shrink-0">
+                    Terapkan
+                </button>
+
+                @if(request('q') || (request('role') && request('role') !== 'all') || (request('sort') && request('sort') !== 'latest') || (request('status') && request('status') !== 'all'))
+                    <a href="{{ route('admin.users.index') }}" class="inline-flex items-center justify-center px-3 h-10 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-[12.5px] font-semibold transition shrink-0">
+                        Reset Filter
+                    </a>
+                @endif
             </form>
 
-            <div class="text-xs text-slate-500 font-medium self-end sm:self-auto">
+            <div class="text-xs text-slate-500 font-medium shrink-0 self-end lg:self-auto">
                 Total: <span class="font-bold text-slate-800">{{ number_format($users->total()) }}</span> User Ditemukan
             </div>
         </div>
@@ -143,15 +189,20 @@
                             $statusLower = strtolower($user->status ?? 'active');
 
                             $roleBadgeClasses = match($roleLower) {
-                                'super_admin', 'superadmin' => 'bg-slate-100 text-slate-800 border-slate-300 font-semibold',
+                                'super_admin', 'superadmin', 'admin' => 'bg-slate-100 text-slate-800 border-slate-300 font-semibold',
+                                'school', 'school_admin', 'school admin' => 'bg-slate-50 text-slate-700 border-slate-200/90 font-medium',
+                                'company', 'company_hr', 'company hr' => 'bg-slate-50 text-slate-700 border-slate-200/90 font-medium',
+                                'university', 'univ_rep', 'university representative' => 'bg-slate-50 text-slate-700 border-slate-200/90 font-medium',
                                 default => 'bg-slate-50 text-slate-600 border-slate-200/90 font-medium',
                             };
 
                             $roleDisplayName = match($roleLower) {
                                 'super_admin', 'superadmin' => 'Super Admin',
-                                'school_admin', 'school admin' => 'School Admin',
-                                'univ_rep', 'university representative' => 'Univ Rep',
-                                'company_hr', 'company hr' => 'Company HR',
+                                'admin' => 'Admin',
+                                'school', 'school_admin', 'school admin' => 'Sekolah',
+                                'company', 'company_hr', 'company hr' => 'Company',
+                                'univ_rep', 'university representative', 'university' => 'Universitas',
+                                'user' => 'User Biasa',
                                 default => ucwords($user->role ?? 'User'),
                             };
 
@@ -330,7 +381,7 @@
         </div>
 
         {{-- Modal Body Form --}}
-        <form action="{{ route('admin.users.store') }}" method="POST" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
+        <form action="{{ route('admin.users.store') }}" method="POST" data-async data-async-reload class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
             @csrf
             <div>
                 <label class="form-label-strong">Nama Lengkap <span class="text-red-500">*</span></label>
@@ -372,7 +423,7 @@
 
             <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
                 <button type="button" onclick="closeAddModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-[13px] transition cursor-pointer">Batal</button>
-                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan User</button>
+                <button type="submit" style="background-color: #2563eb !important; color: #ffffff !important;" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-sm transition cursor-pointer">Simpan User</button>
             </div>
         </form>
     </div>
@@ -400,7 +451,7 @@
         </div>
 
         {{-- Modal Body Form --}}
-        <form id="form-edit-user" method="POST" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
+        <form id="form-edit-user" method="POST" data-async data-async-reload class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700">
             @csrf
             @method('PUT')
 
@@ -444,7 +495,7 @@
 
             <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-semibold text-[13px] transition cursor-pointer">Batal</button>
-                <button type="submit" class="px-4.5 py-2.5 rounded-xl bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-xs shadow-blue-700/20 transition cursor-pointer">Simpan Perubahan</button>
+                <button type="submit" style="background-color: #2563eb !important; color: #ffffff !important;" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[13px] shadow-sm transition cursor-pointer">Simpan Perubahan</button>
             </div>
         </form>
     </div>
@@ -479,13 +530,23 @@
 
             <div>
                 <label class="block text-slate-700 mb-1.5 font-bold">Role / Peranan</label>
-                <select name="role" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600">
-                    <option value="all" {{ request('role') === 'all' ? 'selected' : '' }}>Semua Role</option>
-                    <option value="user" {{ request('role') === 'user' ? 'selected' : '' }}>User / Alumni</option>
+                <select name="role" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600 text-[13px]">
+                    <option value="all" {{ (request('role') === 'all' || !request('role')) ? 'selected' : '' }}>Semua Role</option>
+                    <option value="user" {{ request('role') === 'user' ? 'selected' : '' }}>User Biasa</option>
                     <option value="school" {{ request('role') === 'school' ? 'selected' : '' }}>Sekolah (School)</option>
+                    <option value="company" {{ request('role') === 'company' ? 'selected' : '' }}>Company (Perusahaan)</option>
                     <option value="university" {{ request('role') === 'university' ? 'selected' : '' }}>Universitas (University)</option>
-                    <option value="company" {{ request('role') === 'company' ? 'selected' : '' }}>Perusahaan (Company)</option>
-                    <option value="super_admin" {{ request('role') === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-slate-700 mb-1.5 font-bold">Urutkan Data</label>
+                <select name="sort" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600 text-[13px]">
+                    <option value="latest" {{ (request('sort') === 'latest' || !request('sort')) ? 'selected' : '' }}>Terbaru (Default)</option>
+                    <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Terlama</option>
+                    <option value="name_asc" {{ request('sort') === 'name_asc' ? 'selected' : '' }}>Nama: A → Z</option>
+                    <option value="name_desc" {{ request('sort') === 'name_desc' ? 'selected' : '' }}>Nama: Z → A</option>
+                    <option value="role_asc" {{ request('sort') === 'role_asc' ? 'selected' : '' }}>Role: A → Z</option>
                 </select>
             </div>
 
@@ -528,7 +589,7 @@
             <span id="hide_user_warning_text">Akun yang disembunyikan (belum perpanjang membership) tidak akan tampil di direktori publik dan dinonaktifkan sementara.</span>
         </div>
 
-        <form id="form-toggle-hide-user" method="POST" class="pt-1 flex items-center justify-end gap-2.5">
+        <form id="form-toggle-hide-user" method="POST" data-async data-async-reload class="pt-1 flex items-center justify-end gap-2.5">
             @csrf
             <button type="button" onclick="closeToggleHideModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 text-[13px] transition cursor-pointer">Batal</button>
             <button type="submit" id="hide_user_submit_btn" class="px-4.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[13px] shadow-xs transition cursor-pointer">Sembunyikan User</button>

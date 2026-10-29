@@ -226,7 +226,7 @@
         </div>
 
         {{-- Modal Body Form --}}
-        <form id="form-edit-internship" method="POST" enctype="multipart/form-data" class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700 max-h-[70vh] overflow-y-auto">
+        <form id="form-edit-internship" method="POST" enctype="multipart/form-data" data-async data-async-reload class="p-6 space-y-4 text-xs sm:text-sm font-medium text-slate-700 max-h-[70vh] overflow-y-auto">
             @csrf
             @method('PUT')
 

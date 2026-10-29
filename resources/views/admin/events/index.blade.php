@@ -141,7 +141,7 @@
                                     </a>
 
                                     {{-- Approve Form --}}
-                                    <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST" class="inline">
+                                    <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST" data-async data-async-reload class="inline">
                                         @csrf
                                         <button type="submit" 
                                                 class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/90 font-bold text-xs px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition shadow-2xs">
@@ -153,7 +153,7 @@
                                     </form>
 
                                     {{-- Reject Form --}}
-                                    <form action="{{ route('admin.events.reject', $event['id']) }}" method="POST" class="inline">
+                                    <form action="{{ route('admin.events.reject', $event['id']) }}" method="POST" data-async data-async-reload class="inline">
                                         @csrf
                                         <button type="submit" 
                                                 class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 font-bold text-xs px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition shadow-2xs">

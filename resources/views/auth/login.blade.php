@@ -37,7 +37,7 @@
         @endif
 
         {{-- Form --}}
-        <form action="{{ url('/login') }}" method="POST" class="mt-9 space-y-5">
+        <form data-async data-async-follow action="{{ url('/login') }}" method="POST" class="mt-9 space-y-5">
             @csrf
 
             {{-- Email --}}
@@ -103,5 +103,6 @@
         </p>
     </div>
 
+    @include('partials.async-form')
 </body>
 </html>

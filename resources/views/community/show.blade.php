@@ -293,7 +293,7 @@
             {{-- Form Kirim Postingan Baru (Jika Member / Owner) --}}
             @auth
                 @if ($isMember || $isOwnerOrAdmin)
-                    <form action="{{ route('community.posts.store', $community) }}" method="POST" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 mb-8">
+                    <form data-async data-async-reload action="{{ route('community.posts.store', $community) }}" method="POST" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 mb-8">
                         @csrf
                         <div class="space-y-3">
                             <input type="text" name="title" placeholder="Judul diskusi (opsional)" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm text-slate-800 outline-none focus:border-blue-500">

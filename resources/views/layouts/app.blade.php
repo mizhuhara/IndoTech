@@ -652,8 +652,10 @@
         #it-footer {
             background: #ffffff;
             border-top: 1px solid #e2e8f0;
-            padding-top: 56px;
+            padding-top: 52px;
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
             font-family: 'Plus Jakarta Sans', sans-serif;
+            position: relative;
         }
         #it-footer-inner {
             max-width: 1200px;
@@ -665,11 +667,8 @@
             grid-template-columns: 1.4fr 1fr 1fr;
             gap: 48px;
         }
-        @media (max-width: 767px) {
-            .it-footer-grid { grid-template-columns: 1fr; gap: 32px; }
-        }
         .it-f-brand {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
             color: #0f172a;
             text-decoration: none;
@@ -678,9 +677,9 @@
         }
         .it-f-tagline {
             font-size: 13.5px;
-            font-weight: 500;
-            color: #475569;
-            margin-top: 5px;
+            font-weight: 600;
+            color: #2563eb;
+            margin-top: 4px;
             line-height: 1.45;
         }
         .it-f-desc {
@@ -688,30 +687,32 @@
             color: #64748b;
             margin-top: 10px;
             line-height: 1.65;
-            max-width: 290px;
+            max-width: 340px;
         }
         .it-social-row {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
         .it-si {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            border: 1.5px solid #cbd5e1;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1.5px solid #e2e8f0;
+            background: #f8fafc;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #64748b;
             text-decoration: none;
-            transition: all 0.15s;
+            transition: all 0.2s ease;
             line-height: 0;
         }
-        .it-si:hover { background: #f8fafc; }
+        .it-si:hover { background: #ffffff; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
         .it-si.li:hover { border-color: #0077b5; color: #0077b5; }
-        .it-si.tw:hover { border-color: #1da1f2; color: #1da1f2; }
+        .it-si.tw:hover { border-color: #0f172a; color: #0f172a; }
         .it-si.ig:hover { border-color: #e1306c; color: #e1306c; }
         .it-si.yt:hover { border-color: #ff0000; color: #ff0000; }
 
@@ -720,27 +721,41 @@
             font-weight: 700;
             color: #0f172a;
             text-transform: uppercase;
-            letter-spacing: 0.07em;
+            letter-spacing: 0.08em;
             margin: 0 0 16px;
         }
-        .it-f-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-        .it-f-links a { font-size: 14px; color: #475569; text-decoration: none; transition: color 0.15s; }
-        .it-f-links a:hover { color: #2563eb; }
+        .it-f-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+        .it-f-links a { 
+            font-size: 14px; 
+            color: #475569; 
+            text-decoration: none; 
+            transition: color 0.15s, transform 0.15s; 
+            display: inline-block;
+            padding: 3px 0;
+        }
+        .it-f-links a:hover { color: #2563eb; transform: translateX(2px); }
 
-        .it-contact-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+        .it-contact-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
         .it-ci {
             display: flex;
             align-items: center;
-            gap: 11px;
-            font-size: 14px;
+            gap: 12px;
+            font-size: 13.5px;
             color: #475569;
+            min-width: 0;
         }
-        .it-ci a { color: #475569; text-decoration: none; transition: color 0.15s; }
+        .it-ci a { 
+            color: #475569; 
+            text-decoration: none; 
+            transition: color 0.15s; 
+            word-break: break-word;
+            min-width: 0;
+        }
         .it-ci a:hover { color: #2563eb; }
         .it-ci-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -754,17 +769,108 @@
         .it-footer-bottom {
             margin-top: 48px;
             border-top: 1px solid #e2e8f0;
-            padding: 18px 0;
+            padding: 22px 0 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 14px;
         }
         .it-footer-copy { font-size: 12.5px; color: #94a3b8; margin: 0; }
-        .it-footer-legal { display: flex; align-items: center; gap: 18px; }
+        .it-footer-legal { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
         .it-footer-legal a { font-size: 12.5px; color: #94a3b8; text-decoration: none; transition: color 0.15s; }
         .it-footer-legal a:hover { color: #2563eb; }
+
+        /* Tablet Responsive (561px - 860px) */
+        @media (min-width: 561px) and (max-width: 860px) {
+            .it-footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 36px 32px;
+            }
+            .it-f-brand-col {
+                grid-column: 1 / -1;
+            }
+            .it-f-desc {
+                max-width: 540px;
+            }
+        }
+
+        /* Mobile Responsive (≤ 560px) - Semua Smartphone */
+        @media (max-width: 560px) {
+            #it-footer {
+                padding-top: 36px;
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+            #it-footer-inner {
+                padding: 0 18px;
+            }
+            .it-footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .it-f-brand {
+                font-size: 21px;
+            }
+            .it-f-tagline {
+                font-size: 13px;
+            }
+            .it-f-desc {
+                font-size: 13px;
+                max-width: 100%;
+                line-height: 1.6;
+            }
+            .it-social-row {
+                gap: 9px;
+                margin-top: 16px;
+            }
+            .it-si {
+                width: 36px;
+                height: 36px;
+            }
+            .it-f-col-title {
+                margin-bottom: 12px;
+                font-size: 12px;
+            }
+            .it-f-links {
+                gap: 6px;
+            }
+            .it-f-links a {
+                padding: 4px 0;
+                font-size: 13.5px;
+            }
+            .it-contact-list {
+                gap: 11px;
+            }
+            .it-ci {
+                font-size: 13px;
+                gap: 10px;
+            }
+            .it-ci-icon {
+                width: 30px;
+                height: 30px;
+            }
+            .it-footer-bottom {
+                margin-top: 32px;
+                padding: 20px 0 14px;
+                flex-direction: column-reverse;
+                align-items: center;
+                text-align: center;
+                gap: 16px;
+            }
+            .it-footer-legal {
+                justify-content: center;
+                gap: 14px 18px;
+            }
+            .it-footer-legal a {
+                font-size: 12px;
+                padding: 4px 2px;
+            }
+            .it-footer-copy {
+                font-size: 11.5px;
+                line-height: 1.6;
+                text-align: center;
+            }
+        }
 
         /* ---- HERO SECTION ---- */
         .it-hero {
@@ -1122,7 +1228,9 @@
     </head>
 
     <body class="bg-slate-50 text-slate-800 antialiased">
-        @include('partials.navbar')
+        @unless(View::hasSection('hide_navbar'))
+            @include('partials.navbar')
+        @endunless
 
         <main>
             @yield('content')

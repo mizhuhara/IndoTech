@@ -34,7 +34,7 @@
         </div>
 
         {{-- Form Body --}}
-        <form id="global-update-form" method="POST" class="flex flex-col flex-1 min-h-0">
+        <form id="global-update-form" method="POST" data-async data-async-reload class="flex flex-col flex-1 min-h-0">
             @csrf
             <input type="hidden" name="_method" id="global-update-method" value="PUT">
 

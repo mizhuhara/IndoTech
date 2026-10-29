@@ -7,7 +7,10 @@
 {{-- ===== HERO SECTION ===== --}}
 <div class="cmty-hero">
     <div class="cmty-hero-inner">
+<<<<<<< HEAD
 
+=======
+>>>>>>> eca7993e169e40c491504cfbd6ae7c9f786b71b8
         <h1 class="cmty-hero-title">Komunitas Tech Indonesia</h1>
         <p class="cmty-hero-sub">
             Terhubung, berbagi ilmu, dan berkolaborasi bersama ribuan talenta teknologi di seluruh Nusantara. Temukan ruang yang tumbuh yang relevan dengan kariermu.
@@ -1027,12 +1030,6 @@
     gap: 32px;
     text-align: center;
 }
-@media (max-width: 768px) {
-    .cmty-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-}
-@media (max-width: 400px) {
-    .cmty-stats-grid { grid-template-columns: 1fr 1fr; }
-}
 .cmty-stats-item { display: flex; flex-direction: column; gap: 6px; }
 .cmty-stats-num {
     font-size: 36px;
@@ -1045,6 +1042,265 @@
     color: #64748b;
     font-weight: 500;
     line-height: 1.4;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ============================================ */
+@media (max-width: 768px) {
+    .cmty-page-wrap {
+        padding: 24px 16px;
+    }
+    .cmty-section {
+        padding: 20px 16px;
+        border-radius: 14px;
+        margin-bottom: 20px;
+    }
+    .cmty-stats-section {
+        padding: 40px 16px;
+    }
+    .cmty-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px 16px;
+    }
+    .cmty-stats-num {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 640px) {
+    .cmty-hero {
+        padding: 32px 16px 0;
+    }
+    .cmty-hero-title {
+        font-size: 26px;
+        margin-bottom: 10px;
+        word-break: break-word;
+    }
+    .cmty-hero-sub {
+        font-size: 13.5px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .cmty-hero-search-form {
+        margin-bottom: 20px;
+        width: 100%;
+    }
+    .cmty-hero-search {
+        padding: 5px 5px 5px 14px;
+        gap: 8px;
+    }
+    .cmty-hero-search input {
+        font-size: 13px;
+        min-width: 0;
+    }
+    .cmty-hero-search button {
+        padding: 8px 18px;
+        font-size: 13px;
+    }
+
+    /* Category bar: Smooth swipeable row on mobile */
+    .cmty-cat-bar {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding: 0 4px;
+        gap: 2px;
+    }
+    .cmty-cat-bar::-webkit-scrollbar {
+        display: none;
+    }
+    .cmty-cat-pill {
+        padding: 8px 14px;
+        font-size: 12.5px;
+        flex-shrink: 0;
+    }
+
+    /* Section header stack */
+    .cmty-section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+    .cmty-section-title {
+        font-size: 16.5px;
+    }
+    .cmty-section-sub {
+        font-size: 12px;
+    }
+    .cmty-add-community-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 9px 16px;
+        font-size: 13px;
+    }
+
+    /* Discussion tabs segmented control */
+    .cmty-discuss-tabs {
+        width: 100%;
+        display: flex;
+        gap: 3px;
+        padding: 3px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .cmty-discuss-tabs::-webkit-scrollbar {
+        display: none;
+    }
+    .cmty-tab {
+        flex: 1;
+        text-align: center;
+        padding: 7px 6px;
+        font-size: 11.5px;
+    }
+
+    /* Discussion items on mobile */
+    .cmty-discuss-item {
+        gap: 10px;
+        padding: 14px 0;
+    }
+    .cmty-vote-btn {
+        width: 28px;
+        height: 24px;
+    }
+    .cmty-vote-count {
+        font-size: 11px;
+    }
+    .cmty-discuss-meta {
+        gap: 5px;
+        margin-bottom: 6px;
+    }
+    .cmty-discuss-avatar {
+        width: 22px;
+        height: 22px;
+        font-size: 8.5px;
+    }
+    .cmty-discuss-author {
+        font-size: 12px;
+    }
+    .cmty-discuss-role {
+        font-size: 11px;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .cmty-discuss-tag {
+        font-size: 10px;
+        padding: 1px 6px;
+        margin-left: 0;
+    }
+    .cmty-discuss-title {
+        font-size: 13.5px;
+        line-height: 1.4;
+        margin-bottom: 4px;
+    }
+    .cmty-discuss-excerpt {
+        font-size: 12px;
+        line-height: 1.5;
+        margin-bottom: 8px;
+    }
+    .cmty-discuss-footer {
+        gap: 10px;
+    }
+    .cmty-discuss-stat {
+        font-size: 11px;
+    }
+    .cmty-load-more-btn {
+        width: 100%;
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cmty-page-wrap {
+        padding: 16px 10px;
+    }
+    .cmty-section {
+        padding: 14px 12px;
+        border-radius: 12px;
+    }
+    .cmty-card {
+        padding: 13px;
+        gap: 10px;
+        border-radius: 12px;
+    }
+    .cmty-card-logo,
+    .cmty-card-logo-init {
+        width: 42px;
+        height: 42px;
+        font-size: 14px;
+        border-radius: 10px;
+    }
+    .cmty-badge-aktif {
+        font-size: 10px;
+        padding: 2px 7px;
+    }
+    .cmty-badge {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+    .cmty-card-name {
+        font-size: 14px;
+    }
+    .cmty-card-desc {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+    .cmty-card-footer {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-top: 8px;
+    }
+    .cmty-avatars {
+        flex-shrink: 0;
+    }
+    .cmty-avatar-more {
+        font-size: 10.5px;
+        margin-left: 6px;
+    }
+    .cmty-join-btn {
+        padding: 6px 14px;
+        font-size: 12px;
+        margin-left: auto;
+    }
+    .cmty-pagination {
+        padding: 20px 0 8px;
+    }
+    .cmty-pagination a.inline-flex,
+    .cmty-pagination span.inline-flex {
+        min-width: 30px;
+        height: 30px;
+        font-size: 11.5px;
+        padding: 0 6px;
+    }
+}
+
+@media (max-width: 380px) {
+    .cmty-hero-title {
+        font-size: 22px;
+    }
+    .cmty-hero-search {
+        padding: 4px 4px 4px 10px;
+        gap: 6px;
+    }
+    .cmty-hero-search button {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+    .cmty-discuss-role {
+        max-width: 100px;
+    }
+    .cmty-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
 }
 </style>
 

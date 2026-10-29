@@ -268,7 +268,7 @@
     </div>
 @endif
 
-<form id="article-edit-form" action="{{ route('admin.articles.update', $article->id) }}" method="POST" enctype="multipart/form-data">
+<form id="article-edit-form" action="{{ route('admin.articles.update', $article->id) }}" method="POST" enctype="multipart/form-data" data-async>
     @csrf
     @method('PUT')
 

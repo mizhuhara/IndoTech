@@ -3,7 +3,7 @@
         <div class="it-footer-grid">
 
             {{-- Column 1: Brand --}}
-            <div>
+            <div class="it-f-brand-col">
                 <a href="/" class="it-f-brand">IndoTech</a>
                 <p class="it-f-tagline">Bridging Indonesian Education and Global IT</p>
                 <p class="it-f-desc">
@@ -39,7 +39,7 @@
             </div>
 
             {{-- Column 2: Quick Links --}}
-            <div>
+            <div class="it-f-links-col">
                 <p class="it-f-col-title">Quick Links</p>
                 <ul class="it-f-links">
                     <li><a href="/">Home</a></li>
@@ -51,7 +51,7 @@
             </div>
 
             {{-- Column 3: Contact Us --}}
-            <div>
+            <div class="it-f-contact-col">
                 <p class="it-f-col-title">Contact Us</p>
                 <ul class="it-contact-list">
                     <li class="it-ci">
@@ -85,7 +85,7 @@
 
         {{-- Bottom Bar --}}
         <div class="it-footer-bottom">
-            <p class="it-footer-copy">© {{ date('Y') }} TechLink.id · Bridging Indonesian Education and Global IT</p>
+            <p class="it-footer-copy">© {{ date('Y') }} IndoTech · Bridging Indonesian Education and Global IT</p>
             <div class="it-footer-legal">
                 <a href="/privacy-policy">Privacy Policy</a>
                 <a href="/terms-of-service">Terms of Service</a>

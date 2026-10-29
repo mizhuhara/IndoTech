@@ -1,9 +1,264 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Add New School — IndoTech')
+@section('title', 'Tambah Sekolah Baru — IndoTech')
+
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<!-- Summernote Lite CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
+<style>
+    .leaflet-popup-content-wrapper {
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+        padding: 4px;
+    }
+    .leaflet-popup-content {
+        margin: 10px 14px;
+        font-family: inherit;
+        font-size: 12px;
+        line-height: 1.5;
+        color: #1e293b;
+    }
+    /* Summernote styling adjustments for clean Tailwind admin integration */
+    .note-editor.note-frame {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
+        overflow: hidden !important;
+    }
+    .note-toolbar {
+        background: #f8fafc !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        border-radius: 0 !important;
+        padding: 8px 10px !important;
+    }
+    /* Standard toolbar buttons (exclude color swatches and reset buttons) */
+    .note-toolbar .note-btn:not(.note-color-btn):not(.note-color-reset) {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        color: #334155 !important;
+        padding: 5px 9px !important;
+        font-size: 13px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
+        transition: all 0.15s ease !important;
+    }
+    .note-toolbar .note-btn:not(.note-color-btn):not(.note-color-reset):hover,
+    .note-toolbar .note-btn:not(.note-color-btn):not(.note-color-reset).active {
+        background: #eff6ff !important;
+        border-color: #bfdbfe !important;
+        color: #2563eb !important;
+    }
+
+    /* Recent Color button in toolbar */
+    .note-toolbar .note-current-color-button {
+        padding: 4px 6px !important;
+    }
+    .note-toolbar .note-current-color-button .note-recent-color {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 19px !important;
+        height: 19px !important;
+        border-radius: 3px !important;
+        font-weight: 800 !important;
+        font-size: 12px !important;
+        line-height: 1 !important;
+        border: 1px solid rgba(0, 0, 0, 0.25) !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+        font-style: normal !important;
+    }
+    .note-btn-group.note-color > .note-current-color-button {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        border-right: none !important;
+    }
+    .note-btn-group.note-color > .dropdown-toggle {
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+
+    /* Color Dropdown Menu styling */
+    .note-color .note-dropdown-menu {
+        min-width: 380px !important;
+        padding: 12px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.12), 0 8px 10px -6px rgba(0,0,0,0.08) !important;
+    }
+    .note-color .note-dropdown-menu > div {
+        display: flex !important;
+        gap: 16px !important;
+    }
+    .note-color .btn-background-color,
+    .note-color .btn-foreground-color {
+        flex: 1 !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .note-color .note-palette-title {
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.03em !important;
+        color: #475569 !important;
+        margin: 0 0 6px 0 !important;
+        padding-bottom: 4px !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        text-align: left !important;
+    }
+    .note-color .note-color-reset {
+        display: block !important;
+        width: 100% !important;
+        padding: 5px 8px !important;
+        margin: 0 0 8px 0 !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 6px !important;
+        color: #475569 !important;
+        cursor: pointer !important;
+        text-align: center !important;
+        box-shadow: none !important;
+        transition: all 0.15s ease !important;
+    }
+    .note-color .note-color-reset:hover {
+        background: #eff6ff !important;
+        border-color: #bfdbfe !important;
+        color: #2563eb !important;
+    }
+
+    /* Color Palette Grid & Swatches */
+    .note-color-palette {
+        line-height: 1 !important;
+    }
+    .note-color-palette .note-color-row {
+        display: flex !important;
+        flex-direction: row !important;
+        height: auto !important;
+        margin-bottom: 2px !important;
+        gap: 2px !important;
+    }
+    .note-color-palette .note-color-btn {
+        width: 18px !important;
+        height: 18px !important;
+        min-width: 18px !important;
+        min-height: 18px !important;
+        max-width: 18px !important;
+        max-height: 18px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 1px solid rgba(0, 0, 0, 0.15) !important;
+        border-radius: 3px !important;
+        box-shadow: none !important;
+        outline: none !important;
+        display: inline-block !important;
+        cursor: pointer !important;
+        transition: transform 0.12s ease, box-shadow 0.12s ease !important;
+    }
+    .note-color-palette .note-color-btn:hover {
+        transform: scale(1.35) !important;
+        z-index: 20 !important;
+        position: relative !important;
+        border-color: #ffffff !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Custom HTML5 color picker */
+    .note-color input[type="color"] {
+        height: 30px !important;
+        width: 100% !important;
+        padding: 1px 2px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        background: #ffffff !important;
+        cursor: pointer !important;
+        margin-top: 6px !important;
+        box-sizing: border-box !important;
+    }
+    .note-dropdown-menu {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1) !important;
+        padding: 6px !important;
+        z-index: 1050 !important;
+    }
+    .note-dropdown-item {
+        color: #334155 !important;
+        padding: 6px 10px !important;
+        border-radius: 6px !important;
+        font-size: 13px !important;
+    }
+    .note-dropdown-item:hover {
+        background: #eff6ff !important;
+        color: #2563eb !important;
+    }
+    .note-modal {
+        z-index: 1050 !important;
+    }
+    .note-modal-backdrop {
+        z-index: 1040 !important;
+    }
+    .note-modal .modal-content {
+        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1) !important;
+    }
+    .note-modal .modal-header {
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 16px 20px !important;
+    }
+    .note-modal .modal-footer {
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 14px 20px !important;
+    }
+    .note-modal .btn-primary {
+        background: #2563eb !important;
+        border-color: #2563eb !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 8px 16px !important;
+    }
+    .note-editable {
+        font-family: inherit !important;
+        font-size: 14px !important;
+        color: #1e293b !important;
+        line-height: 1.7 !important;
+        padding: 18px !important;
+        background-color: #ffffff !important;
+    }
+    .note-editable ul {
+        list-style-type: disc !important;
+        padding-left: 24px !important;
+    }
+    .note-editable ol {
+        list-style-type: decimal !important;
+        padding-left: 24px !important;
+    }
+    .note-editable h1 { font-size: 2rem !important; font-weight: 700 !important; margin-bottom: 0.5rem !important; }
+    .note-editable h2 { font-size: 1.5rem !important; font-weight: 700 !important; margin-bottom: 0.5rem !important; }
+    .note-editable h3 { font-size: 1.25rem !important; font-weight: 600 !important; margin-bottom: 0.5rem !important; }
+    .note-editable h4 { font-size: 1.125rem !important; font-weight: 600 !important; margin-bottom: 0.5rem !important; }
+    .note-editable p { margin-bottom: 0.75rem !important; }
+    .note-editable table { width: 100% !important; border-collapse: collapse !important; margin-bottom: 1rem !important; }
+    .note-editable table td, .note-editable table th { border: 1px solid #cbd5e1 !important; padding: 6px 10px !important; }
+    .note-editable blockquote { border-left: 4px solid #2563eb !important; padding-left: 16px !important; color: #64748b !important; font-style: italic !important; }
+    .note-statusbar {
+        border-top: 1px solid #f1f5f9 !important;
+        background: #f8fafc !important;
+    }
+</style>
+@endpush
 
 @section('content')
-<form method="POST" action="{{ route('admin.schools.store') }}" class="space-y-6 max-w-7xl mx-auto">
+<form id="school-create-form" method="POST" action="{{ route('admin.schools.store') }}" enctype="multipart/form-data" data-async data-async-reset class="space-y-6 max-w-7xl mx-auto">
     @csrf
 
     {{-- Top Back Link & Breadcrumb --}}
@@ -22,7 +277,7 @@
         {{-- LEFT COLUMN (8 cols) --}}
         <div class="lg:col-span-8 space-y-6">
 
-            {{-- Card 1: Basic Information --}}
+            {{-- Card 1: Informasi Dasar --}}
             <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
@@ -30,16 +285,17 @@
                         <rect x="3" y="4" width="18" height="16" rx="3"/>
                         <path stroke-linecap="round" d="M7 8h10M7 12h4m-4 4h7"/>
                     </svg>
-                    <h2 class="text-[17px] font-bold text-slate-900">Basic Information</h2>
+                    <h2 class="text-[17px] font-bold text-slate-900">Informasi Dasar</h2>
                 </div>
 
                 {{-- Fields Grid (2 cols) --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    {{-- School Name --}}
+                    {{-- Nama Sekolah --}}
                     <div>
-                        <label class="form-label">School Name</label>
+                        <label class="form-label">Nama Sekolah</label>
                         <input type="text" 
                                name="name" 
+                               id="schoolNameInput"
                                value="{{ old('name') }}" 
                                required
                                placeholder="Contoh: SMK Telkom Jakarta"
@@ -63,9 +319,9 @@
                         @enderror
                     </div>
 
-                    {{-- Institution Type --}}
+                    {{-- Jenis Institusi --}}
                     <div>
-                        <label class="form-label">Institution Type</label>
+                        <label class="form-label">Jenis Institusi</label>
                         <div class="relative">
                             <select name="institution_type" 
                                     class="input appearance-none cursor-pointer pr-10">
@@ -80,11 +336,12 @@
                         </div>
                     </div>
 
-                    {{-- Location --}}
+                    {{-- Lokasi --}}
                     <div>
-                        <label class="form-label">Location</label>
+                        <label class="form-label">Lokasi</label>
                         <input type="text" 
                                name="location" 
+                               id="schoolLocationInput"
                                value="{{ old('location') }}" 
                                required
                                placeholder="Contoh: Jakarta Barat, DKI Jakarta"
@@ -96,68 +353,93 @@
                 </div>
             </div>
 
-            {{-- Card 2: School Description --}}
+            {{-- Card 2: Deskripsi Sekolah --}}
             <div class="card">
                 {{-- Card Header with Blue Icon --}}
                 <div class="flex items-center gap-2.5 mb-5 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
-                    <h2 class="text-[17px] font-bold text-slate-900">School Description</h2>
+                    <h2 class="text-[17px] font-bold text-slate-900">Deskripsi Sekolah</h2>
                 </div>
 
                 <div>
-                    <label class="form-label">Profile & Curriculum Details</label>
+                    <label class="form-label">Profil & Detail Kurikulum</label>
                     <textarea name="description" 
-                              id="schoolDescription"
-                              rows="5"
-                              maxlength="1000"
-                              oninput="document.getElementById('charCount').textContent = this.value.length + ' / 1000 characters'"
-                              placeholder="Tuliskan deskripsi profil dan keunggulan kurikulum sekolah..."
-                              class="input p-4 leading-relaxed resize-none">{{ old('description') }}</textarea>
-                    
-                    <div class="flex justify-end mt-2">
-                        <span id="charCount" class="text-[12.5px] font-medium text-slate-500">
-                            0 / 1000 characters
-                        </span>
-                    </div>
+                              id="schoolDescription">{{ old('description') }}</textarea>
+                    @error('description')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
 
-            {{-- Card 3: Campus Gallery --}}
+            {{-- Card 3: Kompetensi Keahlian --}}
+            <div class="card">
+                <div class="flex items-center gap-2.5 mb-5 text-slate-900">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+                    </svg>
+                    <div>
+                        <h2 class="text-[17px] font-bold text-slate-900">Kompetensi Keahlian</h2>
+                        <p class="text-[12px] text-slate-500">Tambahkan program keahlian / jurusan yang tersedia di sekolah ini</p>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Daftar Kompetensi Keahlian</label>
+                    <div class="flex gap-2 mb-3">
+                        <input type="text" id="competencyInputField"
+                               placeholder="Contoh: Teknik Komputer & Jaringan"
+                               class="input flex-1"
+                               onkeydown="if(event.key==='Enter'){event.preventDefault();addCompetency();}">
+                        <button type="button" onclick="addCompetency()"
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-bold rounded-xl transition shrink-0">
+                            + Tambah
+                        </button>
+                    </div>
+                    <div id="competencyTags" class="flex flex-wrap gap-2 min-h-[40px]"></div>
+                    <p class="text-[11.5px] text-slate-400 mt-2">Tekan Enter atau klik tombol Tambah untuk menambahkan kompetensi. Klik × untuk menghapus.</p>
+                </div>
+            </div>
+
+            {{-- Card 4: Galeri Sekolah --}}
             <div class="card">
                 {{-- Card Header with Action --}}
-                <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-2.5 text-slate-900">
                         <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                             <rect x="3" y="3" width="18" height="18" rx="3"/>
                             <circle cx="8.5" cy="8.5" r="1.5"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
                         </svg>
-                        <h2 class="text-[17px] font-bold text-slate-900">Campus Gallery</h2>
+                        <div>
+                            <h2 class="text-[17px] font-bold text-slate-900">Galeri Sekolah</h2>
+                            <p class="text-[12px] text-slate-500">Unggah foto suasana sekolah, laboratorium IT, dan fasilitas pembelajaran</p>
+                        </div>
                     </div>
 
-                    <button type="button" 
-                            class="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-brand-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition">
-                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/>
+                    {{-- Upload Button Trigger --}}
+                    <label for="galleryInput" class="inline-flex items-center gap-1.5 text-[13.5px] font-bold text-brand-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100/80 px-3.5 py-2 rounded-xl transition cursor-pointer">
+                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                         </svg>
-                        Add Photo
-                    </button>
+                        Tambah Foto
+                    </label>
+                    <input type="file" name="gallery[]" id="galleryInput" multiple accept="image/*" class="hidden">
                 </div>
 
-                {{-- 4 Image Placeholders Grid --}}
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    @for ($i = 0; $i < 4; $i++)
-                        <div class="aspect-square rounded-2xl bg-[#f0f4f9] hover:bg-[#e4ebf5] border border-slate-200/60 flex items-center justify-center text-slate-400 cursor-pointer transition group">
-                            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" class="group-hover:scale-110 transition">
-                                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                <circle cx="8.5" cy="8.5" r="1.5"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
+                {{-- Gallery Grid Container --}}
+                <div id="galleryContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+                    {{-- Add Photo Slot Card --}}
+                    <label for="galleryInput" id="addPhotoSlot" class="aspect-square rounded-2xl bg-[#f0f4f9] hover:bg-[#e4ebf5] border-2 border-dashed border-slate-300 hover:border-blue-400 flex flex-col items-center justify-center text-slate-400 hover:text-blue-600 cursor-pointer transition group p-3 text-center">
+                        <div class="w-10 h-10 rounded-full bg-white group-hover:bg-blue-50 flex items-center justify-center text-slate-500 group-hover:text-blue-600 shadow-xs mb-1.5 transition">
+                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
                             </svg>
                         </div>
-                    @endfor
+                        <span class="text-[12px] font-bold">Tambah Foto</span>
+                        <span class="text-[10px] text-slate-400">JPG, PNG max 5MB</span>
+                    </label>
                 </div>
             </div>
 
@@ -166,52 +448,111 @@
         {{-- RIGHT COLUMN (4 cols) --}}
         <div class="lg:col-span-4 space-y-6">
 
-            {{-- Card 1: Logo & Branding --}}
+            {{-- Card 1: Logo & Profil --}}
             <div class="card flex flex-col items-center text-center">
-                <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Logo & Branding</h2>
+                <div class="w-full flex items-center justify-between mb-4">
+                    <h2 class="text-[17px] font-bold text-slate-900">Logo & Profil</h2>
+                    <span class="text-[11px] font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">Format Gambar</span>
+                </div>
 
                 {{-- Logo Preview Box --}}
-                <div class="w-full aspect-[4/3] rounded-2xl bg-[#f0f4f9] border border-slate-200/70 flex items-center justify-center p-6 mb-4 relative overflow-hidden">
-                    <div class="bg-white p-4 rounded-xl shadow-xs border border-slate-200/80 flex flex-col items-center justify-center">
-                        <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center text-brand-600 font-extrabold text-sm mb-1">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
-                                <path d="M2 12h20"/>
-                            </svg>
+                <div class="w-full aspect-square max-w-[200px] rounded-2xl bg-[#f0f4f9] border border-slate-200/80 flex items-center justify-center p-4 mb-4 relative overflow-hidden group shadow-inner">
+                    {{-- Actual Image Preview --}}
+                    <img id="logoPreviewImg" 
+                         src="" 
+                         alt="Preview Logo" 
+                         class="hidden w-full h-full object-contain rounded-xl transition duration-300">
+
+                    {{-- Default Icon Placeholder when no image --}}
+                    <div id="logoDefaultPlaceholder" class="flex flex-col items-center justify-center text-slate-400">
+                        <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-brand-600 font-extrabold text-lg mb-2 shadow-xs border border-blue-100/60">
+                            SMK
                         </div>
-                        <div class="text-[11px] font-bold text-slate-800">School Logo</div>
-                        <div class="text-[9px] text-slate-400">IndoTech System</div>
+                        <span class="text-[11px] font-semibold text-slate-500">Belum ada logo</span>
                     </div>
+
+                    {{-- Hover Overlay to Change --}}
+                    <label for="logoInput" class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center text-white cursor-pointer gap-1.5 backdrop-blur-xs">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/>
+                        </svg>
+                        <span class="text-xs font-bold">Pilih Foto</span>
+                    </label>
                 </div>
 
-                <div class="font-bold text-slate-900 text-[14px]">
+                <div id="logoFileName" class="font-bold text-slate-900 text-[13.5px] truncate max-w-full px-2">
                     Belum ada file terpilih
                 </div>
-                <p class="text-[12.5px] text-slate-500 mt-0.5 mb-5">
-                    JPG, PNG or SVG. Max size of 2MB.
+                <p class="text-[12px] text-slate-500 mt-0.5 mb-4">
+                    JPG, PNG, WebP atau SVG. Maksimal 5MB.
                 </p>
 
-                {{-- Upload New Logo Button --}}
-                <label class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#f0f4f9] hover:bg-[#e4ebf5] text-slate-800 font-semibold text-[13.5px] cursor-pointer transition">
+                {{-- Upload Button --}}
+                <label for="logoInput" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-blue-50 hover:bg-blue-100 text-brand-600 font-bold text-[13.5px] cursor-pointer transition">
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"/>
                     </svg>
-                    Upload Logo
-                    <input type="file" name="logo" class="hidden" accept="image/*">
+                    Pilih Logo
+                    <input type="file" id="logoInput" name="logo" class="hidden" accept="image/*">
                 </label>
             </div>
 
             {{-- Card 2: Map Location --}}
-            <div class="card">
-                <h2 class="text-[17px] font-bold text-slate-900 mb-4">Map Location</h2>
+            <div class="card space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-[17px] font-bold text-slate-900">Peta Lokasi Sekolah</h2>
+                    <span class="text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full flex items-center gap-1 border border-emerald-200/60">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Indonesia Saja
+                    </span>
+                </div>
 
-                <div class="mb-4">
-                    <label class="form-label">Alamat Lengkap</label>
+                {{-- Address Input with Live Suggestions --}}
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-[12.5px] font-semibold text-slate-700">Alamat Lengkap</label>
+                        <span class="text-[11px] text-slate-400">Peta otomatis mencari wilayah Indonesia</span>
+                    </div>
                     <textarea name="address" 
-                              rows="3"
-                              placeholder="Masukkan alamat lengkap sekolah..."
-                              class="input p-4 leading-relaxed resize-none">{{ old('address') }}</textarea>
+                              id="schoolAddressInput"
+                              rows="2"
+                              autocomplete="off"
+                              placeholder="Ketik alamat jalan di Indonesia..."
+                              class="input p-3 text-[13px] leading-relaxed resize-none">{{ old('address') }}</textarea>
+
+                    <div id="addressSuggestions" class="hidden absolute top-full left-0 right-0 z-50 bg-white border border-slate-200 rounded-2xl shadow-xl mt-1.5 max-h-56 overflow-y-auto divide-y divide-slate-100"></div>
+                    <div id="locationStatus" class="hidden text-xs mt-1.5 font-medium flex items-center gap-1.5"></div>
+                </div>
+
+                {{-- Interactive Leaflet Map --}}
+                <div class="relative rounded-2xl overflow-hidden border border-slate-200 shadow-xs">
+                    <div id="schoolMap" class="w-full h-56 bg-slate-100 z-0"></div>
+                    <div class="absolute bottom-2 left-2 z-10 bg-white/95 px-2.5 py-1 rounded-lg text-[11px] font-semibold text-slate-700 shadow-xs border border-slate-200/80 pointer-events-none flex items-center gap-1">
+                        <span>🇮🇩</span>
+                        <span>Wilayah Indonesia • Geser pin untuk atur titik</span>
+                    </div>
+                </div>
+
+                <input type="hidden" name="latitude" id="latitudeInput" value="{{ old('latitude') }}">
+                <input type="hidden" name="longitude" id="longitudeInput" value="{{ old('longitude') }}">
+                <input type="hidden" name="map_link" id="mapLinkInput" value="{{ old('map_link') }}">
+
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-[12px] flex items-center justify-between text-slate-600">
+                    <div class="flex items-center gap-1.5 truncate max-w-[70%]">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2.2" class="shrink-0">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
+                        </svg>
+                        <span id="coordinateDisplay" class="font-mono font-medium truncate">Titik peta akan otomatis muncul</span>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" onclick="getCurrentLocation()" class="text-brand-600 hover:underline font-bold text-[11.5px] cursor-pointer">GPS Saya</button>
+                        <span class="text-slate-300">•</span>
+                        <button type="button" onclick="openInGoogleMaps()" class="text-slate-600 hover:text-blue-600 font-bold text-[11.5px] flex items-center gap-0.5 cursor-pointer">
+                            Maps
+                            <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -223,7 +564,7 @@
     <div class="pt-6 border-t border-slate-200/80 flex items-center justify-end gap-4">
         <a href="{{ route('admin.schools.index') }}" 
            class="px-6 py-2.5 text-[14px] font-semibold text-slate-600 hover:text-slate-900 transition">
-            Cancel
+            Batal
         </a>
 
         <button type="submit" 
@@ -236,4 +577,361 @@
     </div>
 
 </form>
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+<script>
+    // ---- Summernote for School Description (Identical to Article Admin) ----
+    $(document).ready(function() {
+        $('#schoolDescription').summernote({
+            placeholder: 'Tuliskan profil sekolah, visi misi, program unggulan, dan detail kurikulum...',
+            tabsize: 2,
+            height: 380,
+            minHeight: 250,
+            maxHeight: 700,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph', 'height']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video', 'hr']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+            fontNames: ['Plus Jakarta Sans', 'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
+            fontNamesIgnoreCheck: ['Plus Jakarta Sans'],
+            callbacks: {
+                onChange: function(contents) {
+                    $('#schoolDescription').val(contents);
+                }
+            }
+        });
+
+        // Ensure initial recent-color swatches are visible
+        $('.note-current-color-button .note-recent-color').each(function() {
+            var $el = $(this);
+            var $btn = $el.closest('.note-current-color-button');
+            var bg = $btn.attr('data-backcolor') || '#FFFF00';
+            var fg = $btn.attr('data-forecolor') || '#000000';
+            $el.css({ 'background-color': bg, 'color': fg });
+        });
+
+        // Listen for color changes in the palette to update the recent color preview
+        $(document).on('click', '.note-color-btn, .note-color-reset', function() {
+            var $btn = $(this);
+            var eventName = $btn.data('event');
+            var value = $btn.data('value');
+            var $container = $btn.closest('.note-color');
+            var $recent = $container.find('.note-recent-color');
+            if (eventName === 'backColor') {
+                $recent.css('background-color', value === 'transparent' ? 'transparent' : value);
+            } else if (eventName === 'foreColor' || eventName === 'removeFormat') {
+                $recent.css('color', value === 'foreColor' ? '#000000' : value);
+            }
+        });
+    });
+
+    // ---- Competency Tags ----
+    function addCompetency() {
+        const input = document.getElementById('competencyInputField');
+        const value = input.value.trim();
+        if (!value) return;
+
+        const existing = Array.from(document.querySelectorAll('#competencyTags .competency-tag input[type=hidden]')).map(i => i.value.toLowerCase());
+        if (existing.includes(value.toLowerCase())) {
+            input.value = '';
+            input.focus();
+            return;
+        }
+
+        const container = document.getElementById('competencyTags');
+        const tag = document.createElement('span');
+        tag.className = 'competency-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 border border-blue-200 text-blue-700 text-[12.5px] font-semibold rounded-xl';
+        tag.innerHTML = `
+            ${value}
+            <input type="hidden" name="competencies[]" value="${value}">
+            <button type="button" onclick="removeCompetencyTag(this)" class="text-blue-400 hover:text-red-500 transition ml-0.5 leading-none">
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+        `;
+        container.appendChild(tag);
+        input.value = '';
+        input.focus();
+    }
+
+    function removeCompetencyTag(button) {
+        button.closest('.competency-tag').remove();
+    }
+
+    // Logo live preview
+    const logoInput = document.getElementById('logoInput');
+    const logoPreviewImg = document.getElementById('logoPreviewImg');
+    const logoDefaultPlaceholder = document.getElementById('logoDefaultPlaceholder');
+    const logoFileName = document.getElementById('logoFileName');
+
+    if (logoInput) {
+        logoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    logoPreviewImg.src = evt.target.result;
+                    logoPreviewImg.classList.remove('hidden');
+                    if (logoDefaultPlaceholder) logoDefaultPlaceholder.classList.add('hidden');
+                    if (logoFileName) logoFileName.textContent = file.name;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Gallery upload and preview
+    const galleryInput = document.getElementById('galleryInput');
+    const galleryContainer = document.getElementById('galleryContainer');
+    const addPhotoSlot = document.getElementById('addPhotoSlot');
+
+    if (galleryInput) {
+        galleryInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        const card = document.createElement('div');
+                        card.className = 'gallery-item relative aspect-square rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden group shadow-xs animate-fade-in';
+                        card.innerHTML = `
+                            <img src="${evt.target.result}" alt="Foto Galeri" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2">
+                                <button type="button" onclick="removeGalleryItem(this)" class="p-2 rounded-xl bg-red-600/90 hover:bg-red-600 text-white shadow-md transition cursor-pointer" title="Hapus foto ini">
+                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        `;
+                        galleryContainer.insertBefore(card, addPhotoSlot);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    }
+
+    function removeGalleryItem(button) {
+        const item = button.closest('.gallery-item');
+        if (item) {
+            item.remove();
+        }
+    }
+
+    // ---- Leaflet Map ----
+    let map, marker;
+    const latInput = document.getElementById('latitudeInput');
+    const lngInput = document.getElementById('longitudeInput');
+    const coordinateDisplay = document.getElementById('coordinateDisplay');
+    const mapLinkInput = document.getElementById('mapLinkInput');
+    const addressInput = document.getElementById('schoolAddressInput');
+    const locationInput = document.getElementById('schoolLocationInput');
+    const nameInput = document.getElementById('schoolNameInput');
+    const addressSuggestions = document.getElementById('addressSuggestions');
+    const locationStatus = document.getElementById('locationStatus');
+
+    const INDONESIA_BOUNDS = L.latLngBounds(L.latLng(-11.5, 94.5), L.latLng(6.5, 141.5));
+    const defaultLat = -6.2088, defaultLng = 106.8456;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!document.getElementById('schoolMap')) return;
+
+        map = L.map('schoolMap', {
+            maxBounds: INDONESIA_BOUNDS,
+            maxBoundsViscosity: 1.0,
+            minZoom: 4, maxZoom: 19
+        }).setView([defaultLat, defaultLng], 10);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19, attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        const pinIcon = L.icon({
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+        });
+
+        marker = L.marker([defaultLat, defaultLng], { draggable: true, icon: pinIcon }).addTo(map);
+        marker.bindPopup('<b>Sekolah Baru</b><br>Titik Lokasi').openPopup();
+
+        marker.on('dragend', function(e) {
+            let pos = e.target.getLatLng();
+            if (INDONESIA_BOUNDS.contains(pos)) {
+                updateCoordinates(pos.lat, pos.lng);
+                reverseGeocode(pos.lat, pos.lng);
+            } else {
+                marker.setLatLng([defaultLat, defaultLng]);
+            }
+        });
+
+        map.on('click', function(e) {
+            if (INDONESIA_BOUNDS.contains(e.latlng)) {
+                marker.setLatLng(e.latlng);
+                map.panTo(e.latlng);
+                updateCoordinates(e.latlng.lat, e.latlng.lng);
+                reverseGeocode(e.latlng.lat, e.latlng.lng);
+            }
+        });
+
+        if (addressInput) {
+            addressInput.addEventListener('input', () => triggerAutoSearch('address'));
+            addressInput.addEventListener('focus', () => {
+                if (addressInput.value.trim().length >= 2) triggerAutoSearch('address');
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#addressSuggestions') && e.target !== addressInput) {
+                hideSuggestions();
+            }
+        });
+    });
+
+    function updateCoordinates(lat, lng, updateMapLink = true) {
+        if (latInput) latInput.value = lat.toFixed(7);
+        if (lngInput) lngInput.value = lng.toFixed(7);
+        if (coordinateDisplay) coordinateDisplay.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+        if (updateMapLink && mapLinkInput) {
+            mapLinkInput.value = `https://www.google.com/maps?q=${lat.toFixed(7)},${lng.toFixed(7)}`;
+        }
+    }
+
+    let geocodeTimer = null;
+
+    function triggerAutoSearch(targetField) {
+        clearTimeout(geocodeTimer);
+        let query = targetField === 'address' ? (addressInput ? addressInput.value.trim() : '') : (locationInput ? locationInput.value.trim() : '');
+        if (!query || query.length < 2) { hideSuggestions(); return; }
+
+        if (locationStatus) {
+            locationStatus.className = 'text-xs mt-1.5 font-medium flex items-center gap-1.5 text-blue-600';
+            locationStatus.innerHTML = '<span>Mencari lokasi di Indonesia...</span>';
+            locationStatus.classList.remove('hidden');
+        }
+
+        geocodeTimer = setTimeout(() => performSmartGeocode(query, targetField), 400);
+    }
+
+    async function performSmartGeocode(query, targetField, isSilent = false) {
+        let results = [];
+        const candidates = [query, query + ', Indonesia', (nameInput?.value || '') + ', ' + (locationInput?.value || '') + ', Indonesia'].filter(Boolean);
+
+        for (const candidate of candidates) {
+            if (!candidate || candidate.trim().length < 2) continue;
+            try {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(candidate)}&countrycodes=id&viewbox=94.5,-11.5,141.5,6.5&bounded=1&limit=6`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    const valid = data.filter(item => {
+                        const lat = parseFloat(item.lat), lon = parseFloat(item.lon);
+                        return lat >= -11.5 && lat <= 6.5 && lon >= 94.5 && lon <= 141.5;
+                    });
+                    if (valid.length > 0) { results = valid; break; }
+                }
+            } catch (err) {}
+        }
+
+        if (results.length > 0) {
+            renderSuggestions(results);
+            const top = results[0];
+            const lat = parseFloat(top.lat), lon = parseFloat(top.lon);
+            if (map && marker) {
+                map.flyTo([lat, lon], 14, { duration: 0.9 });
+                marker.setLatLng([lat, lon]);
+                updateCoordinates(lat, lon);
+                marker.bindPopup(`<b>${nameInput?.value || 'Lokasi'}</b><br>${top.display_name}`).openPopup();
+            }
+            if (locationStatus && !isSilent) {
+                locationStatus.className = 'text-xs mt-1.5 font-medium flex items-center gap-1.5 text-emerald-600';
+                locationStatus.innerHTML = `<span>Ditemukan: <b>${top.display_name.split(',')[0]}</b></span>`;
+            }
+        } else {
+            hideSuggestions();
+            if (locationStatus && !isSilent) {
+                locationStatus.className = 'text-xs mt-1.5 font-medium text-slate-400';
+                locationStatus.innerHTML = '<span>Lokasi tidak ditemukan di Indonesia</span>';
+            }
+        }
+    }
+
+    function renderSuggestions(results) {
+        if (!addressSuggestions) return;
+        addressSuggestions.innerHTML = '';
+        results.forEach(item => {
+            const option = document.createElement('div');
+            option.className = 'p-3 hover:bg-blue-50 cursor-pointer text-[12.5px] text-slate-700 hover:text-blue-700 transition flex items-start gap-2.5';
+            option.innerHTML = `<span class="text-base shrink-0 mt-0.5">🇮🇩</span><span class="line-clamp-2 leading-relaxed">${item.display_name}</span>`;
+            option.addEventListener('click', () => {
+                if (addressInput) addressInput.value = item.display_name;
+                hideSuggestions();
+                const lat = parseFloat(item.lat), lon = parseFloat(item.lon);
+                if (map && marker) {
+                    map.flyTo([lat, lon], 16, { duration: 0.9 });
+                    marker.setLatLng([lat, lon]);
+                    updateCoordinates(lat, lon);
+                    marker.bindPopup(`<b>${nameInput?.value || 'Lokasi'}</b><br>${item.display_name}`).openPopup();
+                }
+            });
+            addressSuggestions.appendChild(option);
+        });
+        addressSuggestions.classList.remove('hidden');
+    }
+
+    function hideSuggestions() {
+        if (addressSuggestions) addressSuggestions.classList.add('hidden');
+    }
+
+    function reverseGeocode(lat, lng) {
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&countrycodes=id`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.display_name && addressInput && !addressInput.value.trim()) {
+                    addressInput.value = data.display_name;
+                }
+            })
+            .catch(() => {});
+    }
+
+    function getCurrentLocation() {
+        if (!navigator.geolocation) { alert('Browser tidak mendukung GPS.'); return; }
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                const lat = pos.coords.latitude, lng = pos.coords.longitude;
+                if (INDONESIA_BOUNDS.contains([lat, lng])) {
+                    if (map && marker) {
+                        map.flyTo([lat, lng], 16, { duration: 1.0 });
+                        marker.setLatLng([lat, lng]);
+                        updateCoordinates(lat, lng);
+                        reverseGeocode(lat, lng);
+                    }
+                } else {
+                    alert('Posisi GPS Anda berada di luar wilayah Indonesia.');
+                }
+            },
+            function(err) { alert('Gagal deteksi lokasi: ' + err.message); },
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
+    }
+
+    function openInGoogleMaps() {
+        const lat = latInput ? latInput.value : '', lng = lngInput ? lngInput.value : '';
+        if (lat && lng) {
+            window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+        } else if (addressInput && addressInput.value.trim()) {
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressInput.value.trim())}`, '_blank');
+        }
+    }
+</script>
+@endpush
 @endsection
