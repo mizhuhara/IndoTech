@@ -11,6 +11,15 @@ class EmailVerificationController extends Controller
 {
     public function notice(Request $request): View|RedirectResponse
     {
+        // Jika akun sudah active (disetujui admin), otomatis tandai terverifikasi dan masuk ke dashboard
+        if (strtolower((string) $request->user()->status) === 'active') {
+            if (! $request->user()->hasVerifiedEmail()) {
+                $request->user()->markEmailAsVerified();
+            }
+
+            return redirect()->route('dashboard');
+        }
+
         if ($request->user()->role === 'user') {
             if (! $request->user()->hasVerifiedEmail()) {
                 $request->user()->markEmailAsVerified();

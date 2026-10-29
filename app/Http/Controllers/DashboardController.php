@@ -297,39 +297,58 @@ class DashboardController extends Controller
 
     public function school(): View
     {
-        $owned = School::where('user_id', auth()->id())->get();
+        $owned = School::where('user_id', auth()->id())->first();
 
         $cards = [];
-        if ($owned->isNotEmpty()) {
+        if ($owned) {
+            $statusLabel = match (strtolower($owned->status ?? 'pending')) {
+                'active' => '✅ Aktif & Terverifikasi',
+                'pending' => '⏳ Menunggu Verifikasi Admin',
+                'inactive' => '❌ Belum Aktif',
+                default => $owned->status,
+            };
+
             $cards[] = [
-                'label' => 'Sekolah Saya',
-                'value' => $owned->first()->name,
-                'sub' => 'Status: '.$owned->first()->status,
-                'action' => 'Kelola',
-                'url' => route('admin.schools.index'),
+                'label' => 'Profil Sekolah',
+                'value' => $owned->name,
+                'sub' => 'Status: '.$statusLabel,
+                'action' => 'Edit Informasi Sekolah',
+                'url' => route('admin.schools.edit', $owned->id),
+                'cta_style' => 'primary',
+            ];
+
+            $cards[] = [
+                'label' => 'Lihat Profil Publik',
+                'value' => $owned->city ? "{$owned->city}, {$owned->province}" : 'Lokasi belum diisi',
+                'sub' => $owned->institution_type ?? 'SMK IT',
+                'action' => 'Lihat Halaman Sekolah',
+                'url' => route('admin.schools.show', $owned->id),
+                'cta_style' => 'secondary',
             ];
         } else {
             $cards[] = [
-                'label' => 'Sekolah Saya',
-                'value' => 'Belum ada data',
-                'sub' => 'Data sekolah Anda sedang diproses.',
-                'action' => 'Lihat',
-                'url' => route('admin.schools.index'),
+                'label' => 'Profil Sekolah',
+                'value' => 'Belum Ada Data',
+                'sub' => 'Isi informasi sekolah Anda agar profil sekolah tampil di IndoTech.',
+                'action' => '+ Tambah Data Sekolah',
+                'url' => route('admin.schools.create'),
+                'cta_style' => 'primary',
             ];
         }
 
         $schoolArticleCount = Article::where('user_id', auth()->id())->count();
         $cards[] = [
-            'label' => 'Artikel Saya',
-            'value' => $schoolArticleCount > 0 ? number_format($schoolArticleCount) : '0',
-            'sub' => $schoolArticleCount > 0 ? 'Artikel Terbitan Anda' : 'Belum ada artikel',
-            'action' => 'Kelola',
+            'label' => 'Artikel Sekolah',
+            'value' => $schoolArticleCount > 0 ? number_format($schoolArticleCount).' Artikel' : 'Belum Ada Artikel',
+            'sub' => $schoolArticleCount > 0 ? 'Artikel yang telah diterbitkan' : 'Mulai tulis artikel untuk sekolah Anda',
+            'action' => 'Kelola Artikel',
             'url' => route('admin.articles.index'),
+            'cta_style' => 'secondary',
         ];
 
         return view('admin.dashboards.institution', [
             'title' => 'Dashboard Sekolah',
-            'subtitle' => 'Kelola data sekolah milik Anda.',
+            'subtitle' => 'Kelola data dan informasi sekolah milik Anda.',
             'cards' => $cards,
         ]);
     }

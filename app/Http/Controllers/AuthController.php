@@ -174,7 +174,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        if ($user->role === 'user') {
+        if ($user->role === 'user' || strtolower((string) $user->status) === 'active') {
             if (! $user->hasVerifiedEmail()) {
                 $user->markEmailAsVerified();
             }
