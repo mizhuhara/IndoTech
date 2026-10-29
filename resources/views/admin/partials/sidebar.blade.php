@@ -67,7 +67,7 @@
                     'roles' => ['super_admin', 'admin', 'school'],
                 ],
                 [
-                    'label' => 'Universities',
+                    'label' => $userRole === 'university' ? 'Informasi Kampus' : 'Universities',
                     'icon' => 'university',
                     'active' => request()->routeIs('admin.univ.*'),
                     'href' => route('admin.univ.index'),
@@ -99,14 +99,22 @@
                     'icon' => 'events',
                     'active' => request()->routeIs('admin.events.*'),
                     'href' => route('admin.events.index'),
-                    'roles' => ['super_admin', 'admin'],
+                    'roles' => ['super_admin', 'admin', 'school', 'university'],
                 ],
                 [
                     'label' => 'Articles',
                     'icon' => 'articles',
                     'active' => request()->routeIs('admin.articles.*'),
                     'href' => route('admin.articles.index'),
-                    'roles' => ['super_admin', 'admin', 'school'],
+                    'roles' => ['super_admin', 'admin', 'school', 'university'],
+                ],
+                [
+                    'label' => 'Lihat Website',
+                    'icon' => 'globe',
+                    'active' => false,
+                    'href' => '/',
+                    'target' => '_blank',
+                    'roles' => ['super_admin', 'admin', 'school', 'university', 'company'],
                 ],
                 [
                     'label' => 'Community',
@@ -176,6 +184,7 @@
                 </div>
             @else
                 <a href="{{ $item['href'] }}"
+                   @if(!empty($item['target'])) target="{{ $item['target'] }}" rel="noopener" @endif
                    class="flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 relative group
                           {{ $item['active']
                               ? 'bg-blue-50/80 text-brand-600 font-semibold'
@@ -209,10 +218,16 @@
                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
                         @elseif ($item['icon'] === 'reports')
                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/></svg>
+                        @elseif ($item['icon'] === 'globe')
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2a14.5 14.5 0 0 0 0 20M12 2a14.5 14.5 0 0 1 0 20M2 12h20"/></svg>
                         @endif
                     </span>
 
                     <span class="flex-1 tracking-tight">{{ $item['label'] }}</span>
+
+                    @if (!empty($item['target']))
+                        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="text-slate-400 group-hover:text-slate-600 transition-colors shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                    @endif
 
                     @if (! empty($item['arrow']))
                         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-slate-400 group-hover:text-slate-600"><path d="m8 10 4 4 4-4"/></svg>
@@ -230,7 +245,7 @@
                 <span class="text-slate-400 group-hover:text-red-500 transition-colors">
                     <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </span>
-                <span class="font-medium">Logout</span>
+                <span class="font-medium">Keluar</span>
             </button>
         </form>
     </div>

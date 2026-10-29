@@ -4,44 +4,78 @@
 
 @section('content')
 <div class="space-y-6">
+
+    {{-- Top Action Header --}}
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                {{ $isSchool ? 'Manajemen Event Sekolah' : 'Verifikasi & Manajemen Event' }}
+            </h1>
+            <p class="text-xs text-slate-500 mt-0.5">
+                {{ $isSchool ? 'Kelola agenda kegiatan, workshop, atau webinar yang diselenggarakan oleh sekolah Anda.' : 'Kelola dan verifikasi pengajuan event dari sekolah, universitas, maupun perusahaan mitra.' }}
+            </p>
+        </div>
+
+        <div>
+            <a href="{{ route('admin.events.create') }}" 
+               class="inline-flex items-center gap-2 h-10 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm transition">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>Buat Event Baru</span>
+            </a>
+        </div>
+    </div>
+
     {{-- Main Container Card --}}
     <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-xs space-y-6">
 
         {{-- Filter Toolbar: Segmented Pills + Search --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             
-            {{-- Left: Filter By Pills --}}
-            <div class="flex items-center gap-3 overflow-x-auto pb-1 md:pb-0">
-                <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0 select-none">
-                    FILTER BY:
-                </span>
+            @if(!$isSchool)
+                {{-- Left: Filter By Pills (Admin only) --}}
+                <div class="flex items-center gap-3 overflow-x-auto pb-1 md:pb-0">
+                    <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0 select-none">
+                        FILTER BY:
+                    </span>
 
-                <div class="inline-flex items-center p-1 bg-slate-100/90 rounded-xl gap-1 shrink-0">
-                    {{-- All Types --}}
-                    <a href="{{ route('admin.events.index', array_filter(['type' => 'all', 'q' => request('q')])) }}" 
-                       class="px-4 py-1.5 rounded-lg text-xs font-bold transition {{ $activeType === 'all' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
-                        All Types
-                    </a>
+                    <div class="inline-flex items-center p-1 bg-slate-100/90 rounded-xl gap-1 shrink-0">
+                        {{-- All Types --}}
+                        <a href="{{ route('admin.events.index', array_filter(['type' => 'all', 'q' => request('q')])) }}" 
+                           class="px-4 py-1.5 rounded-lg text-xs font-bold transition {{ $activeType === 'all' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                            All Types
+                        </a>
 
-                    {{-- School --}}
-                    <a href="{{ route('admin.events.index', array_filter(['type' => 'school', 'q' => request('q')])) }}" 
-                       class="px-4 py-1.5 rounded-lg text-xs font-bold transition {{ $activeType === 'school' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
-                        School
-                    </a>
+                        {{-- School --}}
+                        <a href="{{ route('admin.events.index', array_filter(['type' => 'school', 'q' => request('q')])) }}" 
+                           class="px-4 py-1.5 rounded-lg text-xs font-bold transition {{ $activeType === 'school' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                            School
+                        </a>
 
-                    {{-- University --}}
-                    <a href="{{ route('admin.events.index', array_filter(['type' => 'university', 'q' => request('q')])) }}" 
-                       class="px-4 py-1.5 rounded-lg text-xs font-bold transition {{ $activeType === 'university' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
-                        University
-                    </a>
+                        {{-- University --}}
+                        <a href="{{ route('admin.events.index', array_filter(['type' => 'university', 'q' => request('q')])) }}" 
+                           class="px-4 py-1.5 rounded-lg text-xs font-bold transition {{ $activeType === 'university' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                            University
+                        </a>
 
-                    {{-- Company --}}
-                    <a href="{{ route('admin.events.index', array_filter(['type' => 'company', 'q' => request('q')])) }}" 
-                       class="px-4 py-1.5 rounded-lg text-xs font-bold transition {{ $activeType === 'company' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
-                        Company
-                    </a>
+                        {{-- Company --}}
+                        <a href="{{ route('admin.events.index', array_filter(['type' => 'company', 'q' => request('q')])) }}" 
+                           class="px-4 py-1.5 rounded-lg text-xs font-bold transition {{ $activeType === 'company' ? 'bg-white text-blue-600 shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                            Company
+                        </a>
+                    </div>
                 </div>
-            </div>
+            @else
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                        Event Milik Sekolah Anda
+                    </span>
+                </div>
+            @endif
 
             {{-- Right: Search Input --}}
             <form method="GET" action="{{ route('admin.events.index') }}" class="w-full md:w-auto shrink-0">
@@ -56,7 +90,7 @@
                     <input type="text" 
                            name="q" 
                            value="{{ $searchQuery }}" 
-                           placeholder="Search events..." 
+                           placeholder="Cari event..." 
                            class="w-full md:w-64 bg-slate-50/70 border border-slate-200/90 rounded-xl pl-9 pr-4 py-2 text-xs font-medium text-slate-700 placeholder-slate-400 outline-none focus:border-blue-500 focus:bg-white transition">
                 </div>
             </form>
@@ -127,7 +161,7 @@
                                 @endif
                             </td>
 
-                            {{-- Action Buttons (Eye Detail Icon Link + Approve + Reject) --}}
+                            {{-- Action Buttons --}}
                             <td class="py-4 pl-4 text-right">
                                 <div class="flex items-center justify-end gap-2">
                                     {{-- Eye Detail Link Button --}}
@@ -140,30 +174,43 @@
                                         </svg>
                                     </a>
 
-                                    {{-- Approve Form --}}
-                                    <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST" data-async data-async-reload class="inline">
-                                        @csrf
-                                        <button type="submit" 
-                                                class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/90 font-bold text-xs px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition shadow-2xs">
-                                            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M20 6L9 17l-5-5"/>
-                                            </svg>
-                                            <span>Approve</span>
-                                        </button>
-                                    </form>
+                                    {{-- Edit Event Button --}}
+                                    <a href="{{ route('admin.events.edit', $event['id']) }}" 
+                                       title="Edit Event"
+                                       class="bg-slate-100 hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-200 font-bold text-xs p-2 rounded-lg inline-flex items-center justify-center transition shadow-2xs">
+                                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                    </a>
 
-                                    {{-- Reject Form --}}
-                                    <form action="{{ route('admin.events.reject', $event['id']) }}" method="POST" data-async data-async-reload class="inline">
-                                        @csrf
-                                        <button type="submit" 
-                                                class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 font-bold text-xs px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition shadow-2xs">
-                                            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M18 6L6 18M6 6l12 12"/>
-                                            </svg>
-                                            <span>Reject</span>
-                                        </button>
-                                    </form>
+                                    @if(!$isSchool)
+                                        {{-- Approve Form (Admin only) --}}
+                                        <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST" data-async data-async-reload class="inline">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/90 font-bold text-xs px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition shadow-2xs">
+                                                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M20 6L9 17l-5-5"/>
+                                                </svg>
+                                                <span>Approve</span>
+                                            </button>
+                                        </form>
 
+                                        {{-- Reject Form (Admin only) --}}
+                                        <form action="{{ route('admin.events.reject', $event['id']) }}" method="POST" data-async data-async-reload class="inline">
+                                            @csrf
+                                            <button type="submit" 
+                                                    class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/90 font-bold text-xs px-3 py-1.5 rounded-lg inline-flex items-center gap-1 transition shadow-2xs">
+                                                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M18 6L6 18M6 6l12 12"/>
+                                                </svg>
+                                                <span>Reject</span>
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                    {{-- Delete Event Button --}}
                                     <form id="delete-form-{{ $event['id'] }}" method="POST" action="{{ route('admin.events.destroy', $event['id']) }}" class="inline">
                                         @csrf
                                         @method('DELETE')
@@ -176,15 +223,6 @@
                                             </svg>
                                         </button>
                                     </form>
-
-                                    {{-- More Actions Dropdown/Menu --}}
-                                    <a href="{{ route('admin.events.show', $event['id']) }}" class="p-1.5 rounded-lg hover:text-slate-800 hover:bg-slate-100 transition" title="Detail Event">
-                                        <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="1"/>
-                                            <circle cx="12" cy="5" r="1"/>
-                                            <circle cx="12" cy="19" r="1"/>
-                                        </svg>
-                                    </a>
                                 </div>
                             </td>
                         </tr>

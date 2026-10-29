@@ -9,8 +9,16 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function edit(Request $request): View
+    public function edit(Request $request): View|RedirectResponse
     {
+        if ($request->user()->role === 'school') {
+            return redirect()->route('dashboard.school');
+        }
+
+        if ($request->user()->role === 'university') {
+            return redirect()->route('dashboard.university');
+        }
+
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
