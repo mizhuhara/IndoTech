@@ -163,20 +163,20 @@
                         @endif
 
                         @if ($isMember)
-                            <form action="{{ route('community.leave', $community) }}" method="POST"
-                                  onsubmit="return confirm('Keluar dari komunitas ini?')">
+                            <form id="form-leave-community" action="{{ route('community.leave', $community) }}" method="POST" class="hidden">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit"
-                                        class="group relative inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-red-600 hover:text-red-700 hover:bg-red-50/60 hover:border-red-200 shadow-sm transition"
-                                        title="Keluar dari Komunitas"
-                                        aria-label="Keluar dari Komunitas">
-                                    <svg class="w-4.5 h-4.5 text-red-600 group-hover:text-red-700 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                    </svg>
-                                    <span class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900 px-2 py-0.5 text-[11px] font-medium text-white opacity-0 shadow transition group-hover:opacity-100 z-20">Keluar dari Komunitas</span>
-                                </button>
                             </form>
+                            <button type="button"
+                                    onclick="openLeaveModal()"
+                                    class="group relative inline-flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-red-600 hover:text-red-700 hover:bg-red-50/60 hover:border-red-200 shadow-sm transition"
+                                    title="Keluar dari Komunitas"
+                                    aria-label="Keluar dari Komunitas">
+                                <svg class="w-4.5 h-4.5 text-red-600 group-hover:text-red-700 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                <span class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900 px-2 py-0.5 text-[11px] font-medium text-white opacity-0 shadow transition group-hover:opacity-100 z-20">Keluar dari Komunitas</span>
+                            </button>
                         @endif
                     @else
                         <a href="{{ route('login') }}"
@@ -203,10 +203,7 @@
         {{-- Ruang Chat Komunitas Banner --}}
         <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 transition">
             <div class="space-y-2.5">
-                <div class="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100/80 px-2.5 py-0.5 rounded-full text-xs font-semibold text-blue-700">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
-                    Live Chat &amp; Berbagi Berkas
-                </div>
+
                 <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Ruang Chat Komunitas</h2>
                 <p class="text-slate-600 text-sm max-w-xl leading-relaxed">
                     Terhubung langsung dengan anggota lain secara real-time. Bagikan teks, emoji, foto, video, dokumen, hingga satu folder penuh sekaligus!
@@ -340,4 +337,83 @@
         </div>
     </div>
 </div>
+
+@if ($isMember)
+{{-- ===== MODAL: KONFIRMASI KELUAR KOMUNITAS ===== --}}
+<div id="modal-confirm-leave" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-leave-title">
+    {{-- Backdrop blur --}}
+    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeLeaveModal()"></div>
+
+    {{-- Dialog Box --}}
+    <div class="relative bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-100 z-10 animate-in fade-in zoom-in-95 duration-150">
+        {{-- Close 'X' Button --}}
+        <button type="button"
+                onclick="closeLeaveModal()"
+                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center transition"
+                aria-label="Tutup">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+
+        {{-- Exit Red Icon --}}
+        <div class="w-14 h-14 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4 border border-red-100 shadow-sm">
+            <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+        </div>
+
+        {{-- Title & Description --}}
+        <h3 id="modal-leave-title" class="text-lg font-extrabold text-slate-900 mb-2">Keluar dari Komunitas?</h3>
+        <p class="text-sm text-slate-600 mb-4 leading-relaxed">
+            Apakah Anda yakin ingin keluar dari komunitas <strong class="text-slate-900">{{ $community->name }}</strong>?
+        </p>
+
+        {{-- Subtle warning box --}}
+        <div class="bg-red-50/60 border border-red-100 rounded-xl p-3 text-xs text-red-700 text-left mb-6 flex items-start gap-2.5 leading-relaxed">
+            <svg class="w-4 h-4 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <span>Anda akan kehilangan akses ke ruang chat dan berkas privat komunitas. Anda dapat bergabung kembali kapan saja sesuai aturan komunitas.</span>
+        </div>
+
+        {{-- Action Buttons --}}
+        <div class="flex items-center gap-3">
+            <button type="button"
+                    onclick="closeLeaveModal()"
+                    class="flex-1 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition">
+                Batal
+            </button>
+            <button type="button"
+                    onclick="document.getElementById('form-leave-community').submit()"
+                    class="flex-1 py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-semibold text-sm shadow-sm transition">
+                Ya, Keluar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function openLeaveModal() {
+    const modal = document.getElementById('modal-confirm-leave');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+function closeLeaveModal() {
+    const modal = document.getElementById('modal-confirm-leave');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeLeaveModal();
+    }
+});
+</script>
+@endif
 @endsection

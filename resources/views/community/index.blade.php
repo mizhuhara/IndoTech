@@ -7,6 +7,10 @@
 {{-- ===== HERO SECTION ===== --}}
 <div class="cmty-hero">
     <div class="cmty-hero-inner">
+<<<<<<< HEAD
+
+=======
+>>>>>>> eca7993e169e40c491504cfbd6ae7c9f786b71b8
         <h1 class="cmty-hero-title">Komunitas Tech Indonesia</h1>
         <p class="cmty-hero-sub">
             Terhubung, berbagi ilmu, dan berkolaborasi bersama ribuan talenta teknologi di seluruh Nusantara. Temukan ruang yang tumbuh yang relevan dengan kariermu.
@@ -195,143 +199,7 @@
                 @endif
             </div>
 
-            {{-- Diskusi Terhangat --}}
-            <div class="cmty-section cmty-discuss-section">
-                <div class="cmty-section-header">
-                    <div>
-                        <h2 class="cmty-section-title">Diskusi Terhangat</h2>
-                        <p class="cmty-section-sub">Pertanyaan, inspirasi, tips, jawab-kepo, dan diskusi produk industri terkini.</p>
-                    </div>
-                    <div class="cmty-discuss-tabs">
-                        <button class="cmty-tab active" onclick="switchTab(this, 'trending')">Trending</button>
-                        <button class="cmty-tab" onclick="switchTab(this, 'terbaru')">Terbaru</button>
-                        <button class="cmty-tab" onclick="switchTab(this, 'belum')">Belum Terjawab</button>
-                    </div>
-                </div>
-
-                <div class="cmty-discuss-list" id="discuss-list">
-                    @php
-                        $discussions = [
-                            [
-                                'id' => 1,
-                                'author' => 'Bambang Wicaksono',
-                                'role' => 'Lead Backend Engineer at PT Indo Vision',
-                                'avatar_color' => '#2563eb',
-                                'initials' => 'BW',
-                                'tag' => '#Arsitektur',
-                                'title' => 'Pengalaman migrasi monolitik ke event-driven architecture di tech startup lokal: Tantangan operasional & audit log',
-                                'excerpt' => 'Setelah 5 tahun menjalankan codebase PHP dengan arsitektur monolith dan library event BPS Nasii saat kamu tahu ketika ada masalah dari konsistensi data.',
-                                'upvotes' => 156,
-                                'comments' => 48,
-                                'time' => '1 hr Dilihat',
-                            ],
-                            [
-                                'id' => 2,
-                                'author' => 'Annisa Nurai',
-                                'role' => 'Satu yang lagi baru',
-                                'avatar_color' => '#ec4899',
-                                'initials' => 'AN',
-                                'tag' => '#KarierTech',
-                                'title' => 'Roadmap belajar Data Science untuk fresh graduate tahun 2025: Portofolio nyata vs Sertifikasi mana yang lebih dianggap?',
-                                'excerpt' => 'Banyak saran online yang saling bertentangan. Sertifikasi global expert AWS ML Specialty atau OCP Professional Data Engineer lebih dari Github project open-source dan to-do web.',
-                                'upvotes' => 243,
-                                'comments' => 91,
-                                'time' => '3 hr Dilihat',
-                            ],
-                            [
-                                'id' => 3,
-                                'author' => 'Ilham Hartun',
-                                'role' => 'Product Future Designer',
-                                'avatar_color' => '#10b981',
-                                'initials' => 'IH',
-                                'tag' => '#DesignSystem',
-                                'title' => 'Menjaga sinkronisasi token warna di Figma & Tailwind v4 untuk tim multidisiplin',
-                                'excerpt' => 'Siapa ada yang cara bagus itu mengelola desain token dalam konteks pembuatan token desain tanpa automasi export ke style-dictionary.',
-                                'upvotes' => 89,
-                                'comments' => 31,
-                                'time' => '1.5 hr Dilihat',
-                            ],
-                        ];
-                    @endphp
-
-                    @foreach($discussions as $disc)
-                        <div class="cmty-discuss-item">
-                            <div class="cmty-discuss-left">
-                                <div class="cmty-discuss-vote">
-                                    <button class="cmty-vote-btn" aria-label="Upvote">
-                                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-                                        </svg>
-                                    </button>
-                                    <span class="cmty-vote-count">{{ $disc['upvotes'] }}</span>
-                                </div>
-                            </div>
-                            <div class="cmty-discuss-body">
-                                <div class="cmty-discuss-meta">
-                                    <div class="cmty-discuss-avatar" style="background:{{ $disc['avatar_color'] }}">{{ $disc['initials'] }}</div>
-                                    <span class="cmty-discuss-author">{{ $disc['author'] }}</span>
-                                    <span class="cmty-discuss-role">• {{ $disc['role'] }}</span>
-                                    <span class="cmty-discuss-tag">{{ $disc['tag'] }}</span>
-                                </div>
-                                <h4 class="cmty-discuss-title">{{ $disc['title'] }}</h4>
-                                <p class="cmty-discuss-excerpt">{{ $disc['excerpt'] }}</p>
-                                <div class="cmty-discuss-footer">
-                                    <span class="cmty-discuss-stat">
-                                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                                        </svg>
-                                        {{ $disc['comments'] }} Komentar
-                                    </span>
-                                    <span class="cmty-discuss-stat">
-                                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                                        </svg>
-                                        {{ $disc['time'] }}
-                                    </span>
-                                    <button class="cmty-discuss-bookmark" aria-label="Bookmark">
-                                        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="cmty-load-more-wrap">
-                    <button class="cmty-load-more-btn" id="load-more-btn">
-                        Muat Lebih Banyak Diskusi
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- ===== STATS SECTION ===== --}}
-<div class="cmty-stats-section">
-    <div class="cmty-stats-inner">
-        <div class="cmty-stats-grid">
-            <div class="cmty-stats-item">
-                <span class="cmty-stats-num">180+</span>
-                <span class="cmty-stats-label">Komunitas Aktif Terdaftar</span>
-            </div>
-            <div class="cmty-stats-item">
-                <span class="cmty-stats-num">95,000+</span>
-                <span class="cmty-stats-label">Pengembang &amp; Desainer</span>
-            </div>
-            <div class="cmty-stats-item">
-                <span class="cmty-stats-num">34</span>
-                <span class="cmty-stats-label">Provinsi Terjangkau</span>
-            </div>
-            <div class="cmty-stats-item">
-                <span class="cmty-stats-num">500+</span>
-                <span class="cmty-stats-label">Meetup &amp; Webinar Tahunan</span>
-            </div>
-        </div>
-    </div>
-</div>
+           
 
 <style>
 /* ============================================
