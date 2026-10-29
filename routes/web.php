@@ -190,7 +190,11 @@ Route::middleware(['admin', 'verified', 'throttle:120,1'])->group(function () {
 
     // Admin Event Verification Routes
     Route::get('/admin/events', [AdminEventController::class, 'index'])->name('admin.events.index');
+    Route::get('/admin/events/create', [AdminEventController::class, 'create'])->name('admin.events.create');
+    Route::post('/admin/events', [AdminEventController::class, 'store'])->name('admin.events.store');
     Route::get('/admin/events/{id}', [AdminEventController::class, 'show'])->name('admin.events.show');
+    Route::get('/admin/events/{id}/edit', [AdminEventController::class, 'edit'])->name('admin.events.edit');
+    Route::put('/admin/events/{id}', [AdminEventController::class, 'update'])->name('admin.events.update');
     Route::post('/admin/events/{event}/registrations/{registration}/check-in', [AdminEventController::class, 'toggleAttendance'])
         ->name('admin.events.registrations.check-in');
     Route::post('/admin/events/{id}/approve', [AdminEventController::class, 'approve'])->name('admin.events.approve');

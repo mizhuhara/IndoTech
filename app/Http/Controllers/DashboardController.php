@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Company;
+use App\Models\Event;
 use App\Models\JobListing;
 use App\Models\School;
 use App\Models\University;
@@ -346,6 +347,16 @@ class DashboardController extends Controller
             'cta_style' => 'secondary',
         ];
 
+        $schoolEventCount = Event::where('user_id', auth()->id())->count();
+        $cards[] = [
+            'label' => 'Event & Workshop',
+            'value' => $schoolEventCount > 0 ? number_format($schoolEventCount).' Event' : 'Belum Ada Event',
+            'sub' => $schoolEventCount > 0 ? 'Agenda kegiatan yang diselenggarakan' : 'Publikasikan event atau webinar sekolah Anda',
+            'action' => 'Kelola Event',
+            'url' => route('admin.events.index'),
+            'cta_style' => 'secondary',
+        ];
+
         return view('admin.dashboards.institution', [
             'title' => 'Dashboard Sekolah',
             'subtitle' => 'Kelola data dan informasi sekolah milik Anda.',
@@ -355,17 +366,69 @@ class DashboardController extends Controller
 
     public function university(): View
     {
+        $owned = University::where('user_id', auth()->id())->first();
+
+        $cards = [];
+        if ($owned) {
+            $statusLabel = match (strtolower($owned->status ?? 'pending')) {
+                'active' => '✅ Aktif & Terverifikasi',
+                'pending' => '⏳ Menunggu Verifikasi Admin',
+                'inactive' => '❌ Belum Aktif',
+                default => $owned->status,
+            };
+
+            $cards[] = [
+                'label' => 'Profil Universitas',
+                'value' => $owned->name,
+                'sub' => 'Status: '.$statusLabel,
+                'action' => 'Edit Informasi Universitas',
+                'url' => route('admin.univ.edit', $owned->id),
+                'cta_style' => 'primary',
+            ];
+
+            $cards[] = [
+                'label' => 'Lihat Profil Publik',
+                'value' => $owned->city ? "{$owned->city}, {$owned->province}" : ($owned->location ?? 'Lokasi belum diisi'),
+                'sub' => $owned->type ?? 'Perguruan Tinggi',
+                'action' => 'Lihat Halaman Universitas',
+                'url' => route('admin.univ.show', $owned->id),
+                'cta_style' => 'secondary',
+            ];
+        } else {
+            $cards[] = [
+                'label' => 'Profil Universitas',
+                'value' => 'Belum Ada Data',
+                'sub' => 'Isi informasi universitas Anda agar profil kampus tampil di IndoTech.',
+                'action' => '+ Tambah Data Universitas',
+                'url' => route('admin.univ.create'),
+                'cta_style' => 'primary',
+            ];
+        }
+
+        $univArticleCount = Article::where('user_id', auth()->id())->count();
+        $cards[] = [
+            'label' => 'Artikel Kampus',
+            'value' => $univArticleCount > 0 ? number_format($univArticleCount).' Artikel' : 'Belum Ada Artikel',
+            'sub' => $univArticleCount > 0 ? 'Artikel yang telah diterbitkan' : 'Mulai tulis artikel untuk kampus Anda',
+            'action' => 'Kelola Artikel',
+            'url' => route('admin.articles.index'),
+            'cta_style' => 'secondary',
+        ];
+
+        $univEventCount = Event::where('user_id', auth()->id())->count();
+        $cards[] = [
+            'label' => 'Event & Workshop',
+            'value' => $univEventCount > 0 ? number_format($univEventCount).' Event' : 'Belum Ada Event',
+            'sub' => $univEventCount > 0 ? 'Agenda kegiatan yang diselenggarakan' : 'Publikasikan event atau webinar kampus Anda',
+            'action' => 'Kelola Event',
+            'url' => route('admin.events.index'),
+            'cta_style' => 'secondary',
+        ];
+
         return view('admin.dashboards.institution', [
             'title' => 'Dashboard Universitas',
-            'subtitle' => 'Kelola data universitas milik Anda.',
-            'cards' => [
-                [
-                    'label' => 'Universitas Saya',
-                    'value' => 'Kelola',
-                    'action' => 'Buka',
-                    'url' => route('admin.univ.index'),
-                ],
-            ],
+            'subtitle' => 'Kelola data dan informasi kampus milik Anda.',
+            'cards' => $cards,
         ]);
     }
 

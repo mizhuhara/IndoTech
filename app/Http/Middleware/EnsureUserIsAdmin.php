@@ -24,8 +24,8 @@ class EnsureUserIsAdmin
         }
 
         $manageable = [
-            'school' => ['/admin/schools', '/admin/articles'],
-            'university' => ['/admin/univ'],
+            'school' => ['/admin/schools', '/admin/articles', '/admin/events'],
+            'university' => ['/admin/univ', '/admin/articles', '/admin/events'],
             'company' => ['/admin/company'],
         ];
 

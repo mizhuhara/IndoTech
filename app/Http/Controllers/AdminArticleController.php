@@ -206,7 +206,7 @@ class AdminArticleController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+        abort_if(! in_array(auth()->user()->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
 
         $article = $this->findVisibleArticle($id);
         $title = $article->title;
@@ -217,13 +217,13 @@ class AdminArticleController extends Controller
     }
 
     /**
-     * Query articles yang boleh dilihat user: super_admin semua, role school hanya miliknya.
+     * Query articles yang boleh dilihat user: super_admin semua, role school/university hanya miliknya.
      */
     private function visibleArticles()
     {
         $user = auth()->user();
 
-        if ($user && $user->role === 'school') {
+        if ($user && in_array($user->role, ['school', 'university'], true)) {
             return Article::where('user_id', $user->id);
         }
 
@@ -242,7 +242,7 @@ class AdminArticleController extends Controller
     {
         $user = auth()->user();
 
-        if (! in_array($user->role, ['super_admin', 'admin', 'school'], true)) {
+        if (! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true)) {
             abort(403, 'Akses ditolak. Akun ini tidak dapat menambah artikel.');
         }
     }

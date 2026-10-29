@@ -208,15 +208,102 @@
 
         <div class="h-7 w-[1px] bg-slate-200 mx-1"></div>
 
-        {{-- Admin Profile Badge --}}
-        <div class="flex items-center gap-3 pl-1">
-            <div class="text-right hidden sm:block">
-                <div class="text-[13px] font-bold text-slate-900 leading-tight">{{ Auth::user()->name }}</div>
-                <div class="text-[11px] text-slate-500 capitalize">{{ str_replace('-', ' ', Auth::user()->role) }}</div>
-            </div>
-            <div class="w-9 h-9 rounded-full bg-brand-600 text-white flex items-center justify-center shadow-sm">
-                <span class="text-[13px] font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+        {{-- Admin Profile Badge & Dropdown --}}
+        <div class="relative" id="admin-user-nav">
+            <button type="button" id="admin-user-btn" aria-haspopup="true" aria-expanded="false" class="flex items-center gap-3 pl-1 group text-left cursor-pointer focus:outline-none">
+                <div class="text-right hidden sm:block">
+                    <div class="text-[13px] font-bold text-slate-900 leading-tight group-hover:text-brand-600 transition-colors">{{ Auth::user()->name }}</div>
+                    <div class="text-[11px] text-slate-500 capitalize">
+                        @php
+                            $adminRoleLabels = [
+                                'super_admin' => 'Super Admin',
+                                'admin' => 'Admin',
+                                'school' => 'Sekolah',
+                                'school_admin' => 'Admin Sekolah',
+                                'university' => 'Universitas',
+                                'company' => 'Perusahaan',
+                                'user' => 'Pengguna',
+                            ];
+                        @endphp
+                        {{ $adminRoleLabels[Auth::user()->role] ?? ucfirst(str_replace(['-', '_'], ' ', Auth::user()->role)) }}
+                    </div>
+                </div>
+                @if(Auth::user()->avatar_url)
+                    <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-full object-cover shadow-sm ring-2 ring-slate-100 group-hover:ring-brand-200 transition-all">
+                @else
+                    <div class="w-9 h-9 rounded-full bg-brand-600 text-white flex items-center justify-center shadow-sm group-hover:bg-brand-700 transition-colors">
+                        <span class="text-[13px] font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                    </div>
+                @endif
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 group-hover:text-slate-600 transition-transform duration-150"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+
+            {{-- Dropdown Menu --}}
+            <div id="admin-user-menu" class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200/90 py-1.5 z-50 animate-fade-in" style="display:none;">
+                <div class="px-3.5 py-2 border-b border-slate-100 mb-1">
+                    <p class="text-xs font-bold text-slate-900 truncate">{{ Auth::user()->name }}</p>
+                    <p class="text-[11px] text-slate-500 truncate">{{ Auth::user()->email }}</p>
+                </div>
+
+                {{-- Dashboard link --}}
+                <a href="{{ $homeRoute }}" class="flex items-center gap-2.5 px-3.5 py-2 text-[13px] font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                    <span>Dashboard</span>
+                </a>
+
+                {{-- Only show "Profil Saya" if NOT role school --}}
+                @if(Auth::user()->role !== 'school')
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 px-3.5 py-2 text-[13px] font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21a8 8 0 0 1 16 0"/></svg>
+                        <span>Profil Saya</span>
+                    </a>
+                @endif
+
+                {{-- Lihat Website --}}
+                <a href="/" target="_blank" class="flex items-center gap-2.5 px-3.5 py-2 text-[13px] font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-600 transition-colors">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2a14.5 14.5 0 0 0 0 20M12 2a14.5 14.5 0 0 1 0 20M2 12h20"/></svg>
+                    <span>Lihat Website</span>
+                    <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="ml-auto text-slate-400"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
+                </a>
+
+                <div class="my-1 border-t border-slate-100"></div>
+
+                {{-- Logout --}}
+                <form method="POST" data-async data-async-follow action="{{ route('logout') }}" class="m-0">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center gap-2.5 px-3.5 py-2 text-[13px] font-medium text-rose-600 hover:bg-rose-50 transition-colors text-left cursor-pointer">
+                        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3m7 14 5-5-5-5m5 5H9"/></svg>
+                        <span>Keluar</span>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </header>
+
+<script>
+    (function() {
+        var btn = document.getElementById('admin-user-btn');
+        var menu = document.getElementById('admin-user-menu');
+        if (btn && menu) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var isHidden = menu.style.display === 'none';
+                menu.style.display = isHidden ? 'block' : 'none';
+                btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+            });
+            document.addEventListener('click', function(e) {
+                if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                    menu.style.display = 'none';
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    menu.style.display = 'none';
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+    })();
+</script>

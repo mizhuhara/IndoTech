@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\EventRegistration;
+use App\Models\School;
+use App\Models\University;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AdminEventController extends Controller
@@ -15,17 +18,20 @@ class AdminEventController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Event::query();
+        $user = $request->user();
+        $isInstitution = $user && in_array($user->role, ['school', 'university'], true);
+        $isSchool = $user && $user->role === 'school';
+        $query = $this->visibleEvents();
 
         // Status filter
         $status = strtolower($request->query('status', 'all'));
-        if ($status !== 'all' && in_array($status, ['pending', 'approved', 'rejected'])) {
+        if ($status !== 'all' && in_array($status, ['pending', 'approved', 'rejected'], true)) {
             $query->where('status', ucfirst($status));
         }
 
-        // Type filter
+        // Type filter (only for admin users, not institution roles)
         $activeType = strtolower($request->query('type', 'all'));
-        if ($activeType !== 'all') {
+        if (! $isInstitution && $activeType !== 'all') {
             $query->whereRaw('LOWER(organizer_type) = ?', [$activeType]);
         }
 
@@ -42,16 +48,115 @@ class AdminEventController extends Controller
 
         $events = $query->orderByDesc('id')->paginate(10)->withQueryString();
 
+        $visible = $this->visibleEvents();
+
         return view('admin.events.index', [
             'events' => $events,
             'activeType' => $activeType,
             'activeStatus' => $status,
             'searchQuery' => $searchQuery,
-            'totalEntries' => Event::count(),
-            'pendingCount' => Event::where('status', 'Pending')->count(),
-            'approvedCount' => Event::where('status', 'Approved')->count(),
-            'rejectedCount' => Event::where('status', 'Rejected')->count(),
+            'isSchool' => $isInstitution,
+            'totalEntries' => (clone $visible)->count(),
+            'pendingCount' => (clone $visible)->where('status', 'Pending')->count(),
+            'approvedCount' => (clone $visible)->where('status', 'Approved')->count(),
+            'rejectedCount' => (clone $visible)->where('status', 'Rejected')->count(),
         ]);
+    }
+
+    /**
+     * Show form for creating a new event.
+     */
+    public function create(): View
+    {
+        $user = auth()->user();
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+
+        $school = $user->role === 'school' ? School::where('user_id', $user->id)->first() : null;
+        $univ = $user->role === 'university' ? University::where('user_id', $user->id)->first() : null;
+        $isInstitution = in_array($user->role, ['school', 'university'], true);
+
+        return view('admin.events.create', [
+            'school' => $school,
+            'univ' => $univ,
+            'isSchool' => $isInstitution,
+        ]);
+    }
+
+    /**
+     * Store a newly created event in storage.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:100'],
+            'mode' => ['required', 'string', 'in:Online,In-Person,Hybrid'],
+            'price' => ['nullable', 'string', 'max:50'],
+            'date' => ['required', 'string', 'max:100'],
+            'time' => ['nullable', 'string', 'max:100'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'total_quota' => ['nullable', 'integer', 'min:1'],
+            'contact_email' => ['nullable', 'email', 'max:255'],
+            'contact_phone' => ['nullable', 'string', 'max:50'],
+            'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+        ]);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = Storage::url($request->file('image')->store('events', 'public'));
+        }
+
+        if ($user->role === 'school') {
+            $school = School::where('user_id', $user->id)->first();
+            $organizer = $school ? $school->name : $user->name;
+            $organizerType = 'School';
+            $status = 'Pending';
+            $isVerified = false;
+        } elseif ($user->role === 'university') {
+            $univ = University::where('user_id', $user->id)->first();
+            $organizer = $univ ? $univ->name : $user->name;
+            $organizerType = 'University';
+            $status = 'Pending';
+            $isVerified = false;
+        } else {
+            $organizer = $request->input('organizer', $user->name);
+            $organizerType = $request->input('organizer_type', 'Company');
+            $status = 'Approved';
+            $isVerified = true;
+        }
+
+        $event = Event::create([
+            'user_id' => $user->id,
+            'title' => $validated['title'],
+            'organizer' => $organizer,
+            'organizer_type' => $organizerType,
+            'category' => $validated['category'],
+            'mode' => $validated['mode'],
+            'price' => ! empty($validated['price']) ? $validated['price'] : 'Free',
+            'date' => $validated['date'],
+            'short_date' => $validated['date'],
+            'full_date' => $validated['date'],
+            'time' => ! empty($validated['time']) ? $validated['time'] : '09:00 - 15:00 (WIB)',
+            'location' => ! empty($validated['location']) ? $validated['location'] : ($validated['mode'] === 'Online' ? 'Online Webinar' : null),
+            'quota' => ! empty($validated['total_quota']) ? "{$validated['total_quota']} Peserta" : null,
+            'total_quota' => ! empty($validated['total_quota']) ? $validated['total_quota'] : null,
+            'contact_email' => ! empty($validated['contact_email']) ? $validated['contact_email'] : $user->email,
+            'contact_phone' => $validated['contact_phone'] ?? null,
+            'description' => $validated['description'] ?? null,
+            'image' => $imagePath ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=500&fit=crop',
+            'status' => $status,
+            'is_verified' => $isVerified,
+        ]);
+
+        $msg = in_array($user->role, ['school', 'university'], true)
+            ? "Event '{$event->title}' berhasil dibuat dan sedang menunggu verifikasi admin."
+            : "Event '{$event->title}' berhasil dipublikasikan.";
+
+        return redirect()->route('admin.events.index')->with('success', $msg);
     }
 
     /**
@@ -59,11 +164,11 @@ class AdminEventController extends Controller
      */
     public function show(Request $request, int $id): View|RedirectResponse
     {
-        $event = Event::find($id);
+        $event = $this->visibleEvents()->find($id);
 
         if (! $event) {
             return redirect()->route('admin.events.index')
-                ->with('error', 'Event tidak ditemukan.');
+                ->with('error', 'Event tidak ditemukan atau Anda tidak memiliki akses.');
         }
 
         $query = $event->registrations()->with('user');
@@ -83,11 +188,94 @@ class AdminEventController extends Controller
             'event' => $event,
             'registrations' => $registrations,
             'searchQuery' => $request->query('q', ''),
+            'isSchool' => auth()->user()?->role === 'school',
         ]);
     }
 
+    /**
+     * Show form for editing an existing event.
+     */
+    public function edit(int $id): View
+    {
+        $user = auth()->user();
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+
+        $event = $this->findVisibleEvent($id);
+        $school = $user->role === 'school' ? School::where('user_id', $user->id)->first() : null;
+        $univ = $user->role === 'university' ? University::where('user_id', $user->id)->first() : null;
+        $isInstitution = in_array($user->role, ['school', 'university'], true);
+
+        return view('admin.events.edit', [
+            'event' => $event,
+            'school' => $school,
+            'univ' => $univ,
+            'isSchool' => $isInstitution,
+        ]);
+    }
+
+    /**
+     * Update the specified event in storage.
+     */
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $user = $request->user();
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+
+        $event = $this->findVisibleEvent($id);
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'string', 'max:100'],
+            'mode' => ['required', 'string', 'in:Online,In-Person,Hybrid'],
+            'price' => ['nullable', 'string', 'max:50'],
+            'date' => ['required', 'string', 'max:100'],
+            'time' => ['nullable', 'string', 'max:100'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'total_quota' => ['nullable', 'integer', 'min:1'],
+            'contact_email' => ['nullable', 'email', 'max:255'],
+            'contact_phone' => ['nullable', 'string', 'max:50'],
+            'description' => ['nullable', 'string'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+        ]);
+
+        $payload = [
+            'title' => $validated['title'],
+            'category' => $validated['category'],
+            'mode' => $validated['mode'],
+            'price' => ! empty($validated['price']) ? $validated['price'] : 'Free',
+            'date' => $validated['date'],
+            'short_date' => $validated['date'],
+            'full_date' => $validated['date'],
+            'time' => ! empty($validated['time']) ? $validated['time'] : $event->time,
+            'location' => ! empty($validated['location']) ? $validated['location'] : ($validated['mode'] === 'Online' ? 'Online Webinar' : null),
+            'quota' => ! empty($validated['total_quota']) ? "{$validated['total_quota']} Peserta" : null,
+            'total_quota' => ! empty($validated['total_quota']) ? $validated['total_quota'] : null,
+            'contact_email' => ! empty($validated['contact_email']) ? $validated['contact_email'] : $event->contact_email,
+            'contact_phone' => $validated['contact_phone'] ?? $event->contact_phone,
+            'description' => $validated['description'] ?? $event->description,
+        ];
+
+        if ($request->hasFile('image')) {
+            $payload['image'] = Storage::url($request->file('image')->store('events', 'public'));
+        }
+
+        if (! in_array($user->role, ['school', 'university'], true) && $request->filled('organizer')) {
+            $payload['organizer'] = $request->input('organizer');
+            $payload['organizer_type'] = $request->input('organizer_type', $event->organizer_type);
+        }
+
+        $event->update($payload);
+
+        return redirect()->route('admin.events.index')
+            ->with('success', "Event '{$event->title}' berhasil diperbarui.");
+    }
+
+    /**
+     * Toggle participant check-in attendance.
+     */
     public function toggleAttendance(Event $event, EventRegistration $registration): RedirectResponse
     {
+        $this->findVisibleEvent($event->id);
         abort_unless($registration->event_id === $event->id, 404);
 
         $checkedIn = $registration->checked_in_at === null;
@@ -102,10 +290,12 @@ class AdminEventController extends Controller
     }
 
     /**
-     * Approve an event request.
+     * Approve an event request (Admin/Super Admin only).
      */
     public function approve(int $id): RedirectResponse
     {
+        abort_if(! in_array(auth()->user()->role, ['super_admin', 'admin'], true), 403, 'Akses ditolak. Hanya admin yang dapat memverifikasi event.');
+
         $event = Event::findOrFail($id);
         $event->update([
             'status' => 'Approved',
@@ -117,10 +307,12 @@ class AdminEventController extends Controller
     }
 
     /**
-     * Reject an event request.
+     * Reject an event request (Admin/Super Admin only).
      */
     public function reject(int $id): RedirectResponse
     {
+        abort_if(! in_array(auth()->user()->role, ['super_admin', 'admin'], true), 403, 'Akses ditolak. Hanya admin yang dapat menolak event.');
+
         $event = Event::findOrFail($id);
         $event->update([
             'status' => 'Rejected',
@@ -136,11 +328,38 @@ class AdminEventController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        $event = Event::findOrFail($id);
+        $user = auth()->user();
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+
+        $event = $this->findVisibleEvent($id);
         $title = $event->title;
         $event->delete();
 
         return redirect()->route('admin.events.index')
             ->with('success', "Event '{$title}' berhasil dihapus dari database.");
+    }
+
+    /**
+     * Query events visible to the current user:
+     * - role school / university: only their own events
+     * - super_admin / admin: all events
+     */
+    private function visibleEvents()
+    {
+        $user = auth()->user();
+
+        if ($user && in_array($user->role, ['school', 'university'], true)) {
+            return Event::where('user_id', $user->id);
+        }
+
+        return Event::query();
+    }
+
+    /**
+     * Retrieve visible event with ownership check (throws 404 if not found or not owned).
+     */
+    private function findVisibleEvent(int $id): Event
+    {
+        return $this->visibleEvents()->findOrFail($id);
     }
 }

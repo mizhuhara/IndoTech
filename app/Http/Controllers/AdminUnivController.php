@@ -13,16 +13,26 @@ class AdminUnivController extends Controller
 {
     /**
      * Display a listing of universities with search/filter support.
+     * For university role: redirect directly to their university edit/create page.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
-        $query = $this->visibleUnivs();
+        $user = $request->user();
 
-        // Institusi hanya melihat data miliknya sendiri
-        if (in_array($request->user()->role, ['school', 'university', 'company'], true)) {
-            $query->where('user_id', $request->user()->id);
+        // Akun universitas langsung diarahkan ke data universitasnya
+        if ($user->role === 'university') {
+            $ownedUniv = University::where('user_id', $user->id)->first();
+
+            if ($ownedUniv) {
+                return redirect()->route('admin.univ.edit', $ownedUniv->id)
+                    ->with('info', 'Silakan perbarui informasi universitas Anda di bawah ini.');
+            }
+
+            return redirect()->route('admin.univ.create')
+                ->with('info', 'Lengkapi data universitas Anda untuk mulai menampilkan profil universitas.');
         }
 
+        $query = $this->visibleUnivs();
         if ($request->filled('search')) {
             $search = strtolower($request->input('search'));
             $query->where(function ($q) use ($search) {
@@ -78,10 +88,22 @@ class AdminUnivController extends Controller
 
     /**
      * Show the form for creating a new university.
+     * Role university boleh membuat jika belum punya data universitas.
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
-        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+        $user = auth()->user();
+
+        // Jika role university sudah punya universitas, arahkan ke edit
+        if ($user->role === 'university') {
+            $existing = University::where('user_id', $user->id)->first();
+            if ($existing) {
+                return redirect()->route('admin.univ.edit', $existing->id)
+                    ->with('info', 'Anda sudah memiliki data universitas. Silakan edit informasi berikut.');
+            }
+        }
+
+        $this->authorizeCreate();
 
         return view('admin.univ.create');
     }
@@ -91,7 +113,18 @@ class AdminUnivController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        abort_if($request->user()->role !== 'super_admin' && $request->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+        $user = $request->user();
+
+        // Role university: hanya boleh buat 1 universitas, dan otomatis terikat ke akunnya
+        if ($user->role === 'university') {
+            $existing = University::where('user_id', $user->id)->first();
+            if ($existing) {
+                return redirect()->route('admin.univ.edit', $existing->id)
+                    ->with('info', 'Anda sudah memiliki data universitas.');
+            }
+        } else {
+            $this->authorizeCreate();
+        }
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -117,7 +150,6 @@ class AdminUnivController extends Controller
         $words = explode(' ', $validated['name']);
         $logoText = strtoupper(substr($words[0] ?? 'UNIV', 0, 3));
 
-        $user = $request->user();
         $isInstitution = in_array($user->role, ['school', 'university', 'company'], true);
 
         // Institusi: 1 akun = 1 data, wajib pending sampai di-approve admin
@@ -164,7 +196,12 @@ class AdminUnivController extends Controller
             $data['gallery'] = $galleryUrls;
         }
 
-        University::create($data);
+        $univ = University::create($data);
+
+        if ($user->role === 'university') {
+            return redirect()->route('admin.univ.edit', $univ->id)
+                ->with('success', "Data universitas \"{$validated['name']}\" berhasil dibuat dan sedang menunggu verifikasi admin.");
+        }
 
         return redirect()->route('admin.univ.index')
             ->with('success', "Universitas \"{$validated['name']}\" berhasil ditambahkan.");
@@ -178,6 +215,15 @@ class AdminUnivController extends Controller
         $univ = $this->findVisibleUniv($id);
 
         return view('admin.univ.show', compact('univ'));
+    }
+
+    private function authorizeCreate(): void
+    {
+        $user = auth()->user();
+
+        if (! in_array($user->role, ['super_admin', 'admin', 'university'], true)) {
+            abort(403, 'Akses ditolak. Akun ini tidak dapat menambah data universitas.');
+        }
     }
 
     private function visibleUnivs()

@@ -59,27 +59,38 @@
 
             {{-- Action Buttons --}}
             <div class="flex items-center gap-2.5">
-                <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST" data-async data-async-reload>
-                    @csrf
-                    <button type="submit" 
-                            class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs inline-flex items-center gap-1.5 transition">
-                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M20 6L9 17l-5-5"/>
-                        </svg>
-                        <span>Approve Event</span>
-                    </button>
-                </form>
+                <a href="{{ route('admin.events.edit', $event['id']) }}"
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs inline-flex items-center gap-1.5 transition">
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    <span>Edit Event</span>
+                </a>
 
-                <form action="{{ route('admin.events.reject', $event['id']) }}" method="POST" data-async data-async-reload>
-                    @csrf
-                    <button type="submit"
-                            class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs inline-flex items-center gap-1.5 transition">
-                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path d="M18 6L6 18M6 6l12 12"/>
-                        </svg>
-                        <span>Reject</span>
-                    </button>
-                </form>
+                @if(!$isSchool)
+                    <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST" data-async data-async-reload>
+                        @csrf
+                        <button type="submit" 
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs inline-flex items-center gap-1.5 transition">
+                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span>Approve Event</span>
+                        </button>
+                    </form>
+
+                    <form action="{{ route('admin.events.reject', $event['id']) }}" method="POST" data-async data-async-reload>
+                        @csrf
+                        <button type="submit"
+                                class="bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs inline-flex items-center gap-1.5 transition">
+                            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path d="M18 6L6 18M6 6l12 12"/>
+                            </svg>
+                            <span>Reject</span>
+                        </button>
+                    </form>
+                @endif
 
                 {{-- Delete Form --}}
                 <form action="{{ route('admin.events.destroy', $event['id']) }}" method="POST"
