@@ -18,9 +18,33 @@
 <div class="max-w-7xl mx-auto px-4 pb-28 sm:pb-36">
 
     {{-- Filter Bar Toolbar --}}
-    <div class="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 mb-10 shadow-xs">
+    <div class="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 mb-10 shadow-xs space-y-3">
+
+        {{-- Row 1: Search Input --}}
+        <div class="relative flex items-center">
+            <svg class="absolute left-3.5 w-4 h-4 text-slate-400 pointer-events-none stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <circle cx="11" cy="11" r="7"/>
+                <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text"
+                   id="eduSearchInput"
+                   placeholder="Cari nama sekolah..."
+                   class="w-full h-11 pl-10 pr-10 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 placeholder-slate-400 focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:bg-white transition"
+                   oninput="applyEduFilter()">
+            <button type="button"
+                    id="eduSearchClear"
+                    onclick="document.getElementById('eduSearchInput').value=''; applyEduFilter();"
+                    class="absolute right-3.5 text-slate-400 hover:text-slate-600 hidden"
+                    aria-label="Hapus pencarian">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        {{-- Row 2: Filter Dropdowns + Category Switcher --}}
         <form id="educationFilterForm" onsubmit="event.preventDefault(); applyEduFilter();" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 items-center">
-            
+
             {{-- Location / Region Filter --}}
             <div class="relative flex items-center">
                 <svg class="absolute left-3.5 w-4 h-4 text-slate-400 pointer-events-none stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,6 +116,7 @@
     <div id="schoolGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($schools as $school)
             <div class="school-card bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col justify-between hover:shadow-xl hover:border-slate-300 transition-all duration-200 group"
+                 data-name="{{ $school['name'] }}"
                  data-location="{{ $school['location'] }}"
                  data-province="{{ $school['province'] ?? '' }}"
                  data-tags="{{ implode(',', $school['tags']) }}"
@@ -216,25 +241,35 @@
     });
 
     function applyEduFilter() {
+        const searchInput = document.getElementById('eduSearchInput');
+        const searchClear = document.getElementById('eduSearchClear');
+        const search = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const loc = document.getElementById('eduLocationSelect').value.toLowerCase();
         const skill = document.getElementById('eduSkillSelect').value.toLowerCase();
         const program = document.getElementById('eduProgramSelect').value.toLowerCase();
         const tefa = document.getElementById('eduTeFaSelect') ? document.getElementById('eduTeFaSelect').value.toLowerCase() : '';
 
+        // Toggle clear (×) button
+        if (searchClear) {
+            searchClear.classList.toggle('hidden', search.length === 0);
+        }
+
         const allCards = Array.from(document.querySelectorAll('.school-card'));
 
         filteredItems = allCards.filter(card => {
+            const cardName = (card.getAttribute('data-name') || '').toLowerCase();
             const cardLoc = card.getAttribute('data-location').toLowerCase();
             const cardProv = (card.getAttribute('data-province') || '').toLowerCase();
             const cardTags = card.getAttribute('data-tags').toLowerCase();
             const cardStatus = card.getAttribute('data-status').toLowerCase();
 
+            const matchSearch = !search || cardName.includes(search) || cardLoc.includes(search) || cardProv.includes(search) || cardTags.includes(search);
             const matchLoc = !loc || cardLoc.includes(loc) || cardProv.includes(loc);
             const matchSkill = !skill || cardTags.includes(skill);
             const matchProg = !program || cardStatus.includes(program);
             const matchTeFa = !tefa || cardTags.includes(tefa) || cardStatus.includes(tefa);
 
-            return matchLoc && matchSkill && matchProg && matchTeFa;
+            return matchSearch && matchLoc && matchSkill && matchProg && matchTeFa;
         });
 
         currentPage = 1;

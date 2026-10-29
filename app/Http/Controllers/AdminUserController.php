@@ -41,10 +41,40 @@ class AdminUserController extends Controller
         // Role filter
         if ($request->filled('role') && strtolower($request->query('role')) !== 'all') {
             $role = strtolower($request->query('role'));
-            $query->where('role', 'like', "%{$role}%");
+            if ($role === 'user') {
+                $query->where('role', 'user');
+            } elseif ($role === 'school') {
+                $query->where(function ($sub) {
+                    $sub->where('role', 'school')->orWhere('role', 'school_admin');
+                });
+            } elseif ($role === 'company') {
+                $query->where(function ($sub) {
+                    $sub->where('role', 'company')->orWhere('role', 'company_hr');
+                });
+            } elseif ($role === 'university') {
+                $query->where(function ($sub) {
+                    $sub->where('role', 'university')->orWhere('role', 'univ_rep');
+                });
+            } elseif ($role === 'admin' || $role === 'super_admin') {
+                $query->where(function ($sub) {
+                    $sub->where('role', 'super_admin')
+                        ->orWhere('role', 'admin')
+                        ->orWhere('role', 'superadmin');
+                });
+            } else {
+                $query->where('role', 'like', "%{$role}%");
+            }
         }
 
-        $query->orderByDesc('id');
+        // Sorting
+        $sort = $request->query('sort', 'latest');
+        match ($sort) {
+            'oldest' => $query->orderBy('id', 'asc'),
+            'name_asc' => $query->orderBy('name', 'asc'),
+            'name_desc' => $query->orderBy('name', 'desc'),
+            'role_asc' => $query->orderBy('role', 'asc')->orderByDesc('id'),
+            default => $query->orderByDesc('id'),
+        };
 
         $users = $query->paginate(8)->withQueryString();
 
@@ -61,6 +91,7 @@ class AdminUserController extends Controller
             'hiddenUsersCount' => $hiddenUsersCount,
             'activeRole' => $request->query('role', 'all'),
             'activeStatus' => $request->query('status', 'all'),
+            'activeSort' => $sort,
             'searchQuery' => $request->query('q', ''),
         ]);
     }

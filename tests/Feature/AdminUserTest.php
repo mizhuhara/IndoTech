@@ -217,4 +217,73 @@ class AdminUserTest extends TestCase
             'status' => 'active',
         ]);
     }
+
+    public function test_admin_can_filter_users_by_role(): void
+    {
+        $regularUser = User::factory()->create([
+            'name' => 'John Regular User',
+            'email' => 'john.regular@example.com',
+            'role' => 'user',
+        ]);
+
+        $schoolUser = User::factory()->create([
+            'name' => 'SMK IT Developer',
+            'email' => 'smkit@example.com',
+            'role' => 'school',
+        ]);
+
+        $companyUser = User::factory()->create([
+            'name' => 'PT Teknologi Unggul',
+            'email' => 'company@example.com',
+            'role' => 'company',
+        ]);
+
+        // Filter user biasa
+        $resUser = $this->actingAs($this->admin)->get(route('admin.users.index', ['role' => 'user']));
+        $resUser->assertOk();
+        $resUser->assertSee($regularUser->name);
+        $resUser->assertDontSee($schoolUser->name);
+        $resUser->assertDontSee($companyUser->name);
+
+        // Filter sekolah
+        $resSchool = $this->actingAs($this->admin)->get(route('admin.users.index', ['role' => 'school']));
+        $resSchool->assertOk();
+        $resSchool->assertSee($schoolUser->name);
+        $resSchool->assertDontSee($regularUser->name);
+        $resSchool->assertDontSee($companyUser->name);
+
+        // Filter company
+        $resCompany = $this->actingAs($this->admin)->get(route('admin.users.index', ['role' => 'company']));
+        $resCompany->assertOk();
+        $resCompany->assertSee($companyUser->name);
+        $resCompany->assertDontSee($regularUser->name);
+        $resCompany->assertDontSee($schoolUser->name);
+    }
+
+    public function test_admin_can_sort_users(): void
+    {
+        $userA = User::factory()->create([
+            'name' => 'Abby Anderson',
+            'email' => 'abby@example.com',
+            'role' => 'user',
+        ]);
+
+        $userZ = User::factory()->create([
+            'name' => 'Zack Snyder',
+            'email' => 'zack@example.com',
+            'role' => 'user',
+        ]);
+
+        // Sort name A-Z
+        $resAsc = $this->actingAs($this->admin)->get(route('admin.users.index', ['sort' => 'name_asc']));
+        $resAsc->assertOk();
+        $usersAsc = $resAsc->viewData('users');
+        $this->assertSame($userA->name, $usersAsc->first()->name);
+
+        // Sort name Z-A
+        $resDesc = $this->actingAs($this->admin)->get(route('admin.users.index', ['sort' => 'name_desc']));
+        $resDesc->assertOk();
+        $usersDesc = $resDesc->viewData('users');
+        $this->assertSame($userZ->name, $usersDesc->first()->name);
+    }
 }
