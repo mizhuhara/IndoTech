@@ -2,20 +2,20 @@
     <div id="it-navbar-inner">
 
         {{-- Logo --}}
-        <a href="/" id="it-logo">IndoTech</a>
+        <a href="/" id="it-logo">Indo<span>Tech</span></a>
 
         {{-- Desktop Nav --}}
         <nav id="it-nav">
-            <a href="/" class="{{ request()->is('/') ? 'it-active' : '' }}">Home</a>
-            <a href="/education" class="{{ request()->is('education*') || request()->is('campus*') ? 'it-active' : '' }}">Education</a>
-            <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industry</a>
-            <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Career</a>
-            <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Events</a>
-            <a href="/community" class="{{ (request()->is('community') || request()->is('community/create') || (request()->is('community/*') && !request()->routeIs('community.my*') && !request()->is('community/*/manage*'))) ? 'it-active' : '' }}">Community</a>
+            <a href="/" class="{{ request()->is('/') ? 'it-active' : '' }}">Beranda</a>
+            <a href="/education" class="{{ request()->is('education*') || request()->is('campus*') ? 'it-active' : '' }}">Pendidikan</a>
+            <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industri</a>
+            <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Karir</a>
+            <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Acara</a>
+            <a href="/community" class="{{ (request()->is('community') || request()->is('community/create') || (request()->is('community/*') && !request()->routeIs('community.my*') && !request()->is('community/*/manage*'))) ? 'it-active' : '' }}">Komunitas</a>
             @auth
                 <a href="{{ route('community.my') }}" class="{{ request()->routeIs('community.my*') || request()->is('community/*/manage*') ? 'it-active' : '' }}">Komunitas Saya</a>
             @endauth
-            <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">Knowledge Hub</a>
+            <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">Pusat Pengetahuan</a>
         </nav>
 
         {{-- Actions --}}
@@ -124,9 +124,19 @@
                     <div id="it-user-menu" class="it-user-menu" hidden>
                         <div class="it-user-head">
                             <span class="it-user-role">
-                                @if(Auth::user()->role === 'super_admin') Admin
-                                @else {{ ucfirst(str_replace('-', ' ', Auth::user()->role)) }}
-                                @endif
+                                @php
+                                    $roleLabels = [
+                                        'super_admin' => 'Super Admin',
+                                        'admin' => 'Admin',
+                                        'school' => 'Sekolah',
+                                        'school_admin' => 'Admin Sekolah',
+                                        'university' => 'Universitas',
+                                        'company' => 'Perusahaan',
+                                        'user' => 'Pengguna',
+                                    ];
+                                    $roleKey = Auth::user()->role;
+                                @endphp
+                                {{ $roleLabels[$roleKey] ?? ucfirst(str_replace(['-', '_'], ' ', $roleKey)) }}
                             </span>
                         </div>
                         <a href="{{ route('profile.edit') }}" class="it-user-item"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M4 21a8 8 0 0 1 16 0"/></svg> Profil Saya</a>
@@ -137,18 +147,19 @@
                         @endif
                         <form method="POST" data-async data-async-follow action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="it-user-item it-user-logout"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3m7 14 5-5-5-5m5 5H9"/></svg> Logout</button>
+                            <button type="submit" class="it-user-item it-user-logout"><svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M9 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3m7 14 5-5-5-5m5 5H9"/></svg> Keluar</button>
                         </form>
                     </div>
                 </div>
             @else
-                <a href="/login" class="it-btn-signin">Sign In</a>
-                <a href="/register" class="it-btn-signup">Sign Up</a>
+                <a href="/login" class="it-btn-signin">Masuk</a>
+                <a href="/register" class="it-btn-signup">Daftar</a>
             @endauth
 
             <button id="it-mobile-toggle" aria-label="Menu" aria-controls="it-mobile-menu" aria-expanded="false">
                 <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                    <path class="it-icon-bars" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                    <path class="it-icon-close" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" style="display:none;"/>
                 </svg>
             </button>
         </div>
@@ -156,38 +167,83 @@
 
     {{-- Mobile Menu --}}
     <div id="it-mobile-menu">
-        <a href="/" class="{{ request()->is('/') ? 'it-active' : '' }}">Home</a>
-        <a href="/education" class="{{ request()->is('education*') || request()->is('campus*') ? 'it-active' : '' }}">Education</a>
-        <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">Industry</a>
-        <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">Career</a>
-        <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">Events</a>
-        <a href="/community" class="{{ (request()->is('community') || request()->is('community/create') || (request()->is('community/*') && !request()->routeIs('community.my*') && !request()->is('community/*/manage*'))) ? 'it-active' : '' }}">Community</a>
         @auth
-            <a href="{{ route('community.my') }}" class="{{ request()->routeIs('community.my*') || request()->is('community/*/manage*') ? 'it-active' : '' }}">Komunitas Saya</a>
-            <a href="{{ route('chat.index') }}" class="it-mobile-chat-link {{ request()->is('community/*/chat*') || request()->is('chat*') ? 'it-active' : '' }}">
-                <span style="display:flex;align-items:center;gap:8px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#2563eb"><path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.512 3.736 7.202V22l3.385-1.859c.91.252 1.879.387 2.879.387 5.523 0 10-4.145 10-9.27S17.523 2 12 2zm1.045 12.443l-2.67-2.85-5.21 2.85 5.73-6.082 2.74 2.85 5.14-2.85-5.73 6.082z"/></svg>
-                    Chat Komunitas
-                </span>
-                @if(($navbarChatSummary['total_unread_count'] ?? 0) > 0)
-                    <span class="it-mobile-unread-badge">{{ $navbarChatSummary['total_unread_count'] > 99 ? '99+' : $navbarChatSummary['total_unread_count'] }}</span>
+            <div class="it-mobile-user-card">
+                @if(Auth::user()->avatar_url)
+                    <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-full object-cover shrink-0">
+                @else
+                    <span class="it-avatar" style="width:36px;height:36px;font-size:14px;">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
                 @endif
-            </a>
+                <div class="it-mobile-user-info">
+                    <div class="it-mobile-user-name">{{ Auth::user()->name }}</div>
+                    <span class="it-user-role" style="font-size:11px;padding:2px 8px;">
+                        {{ $roleLabels[$roleKey] ?? ucfirst(str_replace(['-', '_'], ' ', $roleKey)) }}
+                    </span>
+                </div>
+            </div>
         @endauth
-        <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">Knowledge Hub</a>
+
+        <nav class="it-mobile-links">
+            <a href="/" class="{{ request()->is('/') ? 'it-active' : '' }}">
+                <span>Beranda</span>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+            <a href="/education" class="{{ request()->is('education*') || request()->is('campus*') ? 'it-active' : '' }}">
+                <span>Pendidikan</span>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+            <a href="/industry" class="{{ request()->is('industry*') ? 'it-active' : '' }}">
+                <span>Industri</span>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+            <a href="/career" class="{{ request()->is('career*') ? 'it-active' : '' }}">
+                <span>Karir</span>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+            <a href="/events" class="{{ request()->is('events*') ? 'it-active' : '' }}">
+                <span>Acara</span>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+            <a href="/community" class="{{ (request()->is('community') || request()->is('community/create') || (request()->is('community/*') && !request()->routeIs('community.my*') && !request()->is('community/*/manage*'))) ? 'it-active' : '' }}">
+                <span>Komunitas</span>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+            @auth
+                <a href="{{ route('community.my') }}" class="{{ request()->routeIs('community.my*') || request()->is('community/*/manage*') ? 'it-active' : '' }}">
+                    <span>Komunitas Saya</span>
+                    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                </a>
+                <a href="{{ route('chat.index') }}" class="it-mobile-chat-link {{ request()->is('community/*/chat*') || request()->is('chat*') ? 'it-active' : '' }}">
+                    <span style="display:flex;align-items:center;gap:8px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#2563eb"><path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.512 3.736 7.202V22l3.385-1.859c.91.252 1.879.387 2.879.387 5.523 0 10-4.145 10-9.27S17.523 2 12 2zm1.045 12.443l-2.67-2.85-5.21 2.85 5.73-6.082 2.74 2.85 5.14-2.85-5.73 6.082z"/></svg>
+                        Chat Komunitas
+                    </span>
+                    @if(($navbarChatSummary['total_unread_count'] ?? 0) > 0)
+                        <span class="it-mobile-unread-badge">{{ $navbarChatSummary['total_unread_count'] > 99 ? '99+' : $navbarChatSummary['total_unread_count'] }}</span>
+                    @else
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    @endif
+                </a>
+            @endauth
+            <a href="/knowledge-hub" class="{{ request()->is('knowledge-hub*') ? 'it-active' : '' }}">
+                <span>Pusat Pengetahuan</span>
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+        </nav>
+
         <div class="it-mobile-btns">
             @auth
-                <a href="{{ route('profile.edit') }}" style="color:#2563eb;border:1.5px solid #2563eb;">Profil Saya</a>
+                <a href="{{ route('profile.edit') }}" class="it-mbtn-profile">Profil Saya</a>
                 @if (in_array(Auth::user()->role, ['super_admin', 'school', 'university', 'company']))
-                    <a href="/admin" style="color:#fff;background:#2563eb;">Dashboard</a>
+                    <a href="/admin" class="it-mbtn-dash">Dashboard</a>
                 @endif
                 <form method="POST" data-async data-async-follow action="{{ route('logout') }}" style="flex:1;">
                     @csrf
-                    <button type="submit" style="width:100%;color:#2563eb;border:1.5px solid #2563eb;border-radius:8px;padding:8px 12px;background:transparent;font-weight:600;font-size:14px;cursor:pointer;">Logout</button>
+                    <button type="submit" class="it-mbtn-logout">Keluar</button>
                 </form>
             @else
-                <a href="/login" style="color:#2563eb;border:1.5px solid #2563eb;">Sign In</a>
-                <a href="/register" style="color:#fff;background:#2563eb;">Sign Up</a>
+                <a href="/login" class="it-mbtn-signin">Masuk</a>
+                <a href="/register" class="it-mbtn-signup">Daftar</a>
             @endauth
         </div>
     </div>
@@ -197,14 +253,6 @@
     (function () {
         var mobileBtn = document.getElementById('it-mobile-toggle');
         var mobileMenu = document.getElementById('it-mobile-menu');
-        if (mobileBtn && mobileMenu) {
-            mobileBtn.addEventListener('click', function () {
-                var open = mobileMenu.classList.toggle('it-open');
-                mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-            });
-        }
-
-        // Dropdowns management
         var chatBtn = document.getElementById('it-chat-btn');
         var chatDropdown = document.getElementById('it-chat-dropdown');
         var chatBadge = document.getElementById('it-chat-badge');
@@ -222,12 +270,35 @@
             }
         }
 
+        function closeMobileMenu() {
+            if (mobileMenu && mobileMenu.classList.contains('it-open')) {
+                mobileMenu.classList.remove('it-open');
+                if (mobileBtn) {
+                    mobileBtn.setAttribute('aria-expanded', 'false');
+                    mobileBtn.classList.remove('it-open');
+                }
+            }
+        }
+
+        if (mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var open = mobileMenu.classList.toggle('it-open');
+                mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                mobileBtn.classList.toggle('it-open', open);
+                if (open) {
+                    closeAllDropdowns();
+                }
+            });
+        }
+
         // Chat dropdown toggle
         if (chatBtn && chatDropdown) {
             chatBtn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 var wasOpen = !chatDropdown.hidden;
                 closeAllDropdowns();
+                closeMobileMenu();
                 if (!wasOpen) {
                     chatDropdown.hidden = false;
                     chatBtn.setAttribute('aria-expanded', 'true');
@@ -242,6 +313,7 @@
                 e.stopPropagation();
                 var wasOpen = !userMenu.hidden;
                 closeAllDropdowns();
+                closeMobileMenu();
                 if (!wasOpen) {
                     userMenu.hidden = false;
                     userBtn.setAttribute('aria-expanded', 'true');
@@ -249,19 +321,32 @@
             });
         }
 
-        // Click outside closes dropdowns
+        // Click outside closes dropdowns and mobile menu
         document.addEventListener('click', function (e) {
             var inChat = chatBtn && (chatBtn.contains(e.target) || (chatDropdown && chatDropdown.contains(e.target)));
             var inUser = userBtn && (userBtn.contains(e.target) || (userMenu && userMenu.contains(e.target)));
+            var inMobile = mobileBtn && (mobileBtn.contains(e.target) || (mobileMenu && mobileMenu.contains(e.target)));
+
             if (!inChat && !inUser) {
                 closeAllDropdowns();
             }
+            if (!inMobile) {
+                closeMobileMenu();
+            }
         });
 
-        // Escape closes dropdowns
+        // Escape closes dropdowns and mobile menu
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 closeAllDropdowns();
+                closeMobileMenu();
+            }
+        });
+
+        // Auto close mobile menu if resized to desktop
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 1024) {
+                closeMobileMenu();
             }
         });
 

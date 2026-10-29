@@ -4,7 +4,7 @@
 
             {{-- Column 1: Brand --}}
             <div class="it-f-brand-col">
-                <a href="/" class="it-f-brand">IndoTech</a>
+                <a href="/" class="it-f-brand">Indo<span>Tech</span></a>
                 <p class="it-f-tagline">Bridging Indonesian Education and Global IT</p>
                 <p class="it-f-desc">
                     We connect Indonesian talent with global IT opportunities through education, training, and career pathways.
