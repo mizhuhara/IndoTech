@@ -338,8 +338,14 @@
 <div id="modal-confirm-kick" class="chat-modal" style="display: none; z-index: 130;">
     <div class="chat-modal-backdrop" onclick="closeKickConfirmModal()"></div>
     <div class="chat-modal-content chat-kick-confirm-content">
+        <button type="button" class="chat-modal-close" onclick="closeKickConfirmModal()" aria-label="Tutup">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
         <div class="chat-kick-icon-wrap">
-            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#dc2626" stroke-width="2">
+            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6"/>
             </svg>
         </div>
@@ -356,6 +362,42 @@
         <div class="chat-kick-actions">
             <button type="button" class="chat-btn-cancel-kick" onclick="closeKickConfirmModal()">Batal</button>
             <button type="button" id="btn-confirm-kick" class="chat-btn-confirm-kick">Ya, Keluarkan</button>
+        </div>
+    </div>
+</div>
+
+{{-- ===== MODAL: KONFIRMASI KELUAR KOMUNITAS (DARI CHAT) ===== --}}
+<div id="modal-confirm-leave-chat" class="chat-modal" style="display: none; z-index: 130;">
+    <div class="chat-modal-backdrop" onclick="closeChatLeaveModal()"></div>
+    <div class="chat-modal-content chat-kick-confirm-content">
+        <button type="button" class="chat-modal-close" onclick="closeChatLeaveModal()" aria-label="Tutup">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <div class="chat-kick-icon-wrap">
+            <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+        </div>
+        <h3 class="chat-kick-title">Keluar dari Komunitas?</h3>
+        <p class="chat-kick-desc">
+            Apakah Anda yakin ingin keluar dari komunitas <strong>{{ $community->name }}</strong>?
+        </p>
+        <div class="chat-kick-warning-box">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="flex-shrink-0 mt-0.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+            </svg>
+            <span>Anda akan kehilangan akses ke ruang chat dan berkas privat komunitas. Anda dapat bergabung kembali kapan saja sesuai aturan komunitas.</span>
+        </div>
+        <div class="chat-kick-actions">
+            <button type="button" class="chat-btn-cancel-kick" onclick="closeChatLeaveModal()">Batal</button>
+            <form action="{{ route('community.leave', $community) }}" method="POST" style="flex: 1.3; margin: 0;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="chat-btn-confirm-kick" style="width: 100%;">Ya, Keluar</button>
+            </form>
         </div>
     </div>
 </div>
@@ -437,6 +479,12 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
                     Keluarkan dari Grup
+                </button>
+                <button type="button" id="info-modal-leave-btn" class="chat-info-btn-leave" style="display: none;" onclick="openChatLeaveModal()">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    Keluar dari Komunitas
                 </button>
                 <button type="button" class="chat-info-btn-close" onclick="closeMemberInfoModal()">Tutup</button>
             </div>
@@ -1801,67 +1849,74 @@
     color: #ffffff;
 }
 
-/* Kick Confirm Modal */
+/* Kick & Leave Confirm Modal */
 .chat-kick-confirm-content {
-    width: 400px;
-    max-width: 90vw;
+    width: 410px;
+    max-width: 92vw;
     background: #ffffff;
-    border-radius: 20px;
-    padding: 24px;
+    border-radius: 24px;
+    padding: 26px 24px 22px;
     text-align: center;
+    position: relative;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(226, 232, 240, 0.9);
 }
 .chat-kick-icon-wrap {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 16px;
 }
 .chat-kick-title {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 800;
     color: #0f172a;
     margin: 0 0 8px;
+    letter-spacing: -0.01em;
 }
 .chat-kick-desc {
     font-size: 13.5px;
     color: #475569;
     line-height: 1.5;
-    margin: 0;
+    margin: 0 0 16px;
 }
 .chat-kick-warning-box {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
+    background: #fff5f5;
+    border: 1px solid #fee2e2;
     color: #991b1b;
     font-size: 12px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    margin: 14px 0 20px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin: 0 0 20px;
     text-align: left;
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
     line-height: 1.45;
 }
 .chat-kick-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 .chat-btn-cancel-kick {
     flex: 1;
-    padding: 10px 14px;
-    border-radius: 10px;
+    padding: 11px 16px;
+    border-radius: 12px;
     background: #f1f5f9;
     color: #475569;
-    border: 1px solid #cbd5e1;
-    font-size: 13px;
+    border: 1px solid #e2e8f0;
+    font-size: 13.5px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s ease;
+    font-family: inherit;
 }
 .chat-btn-cancel-kick:hover {
     background: #e2e8f0;
@@ -1869,16 +1924,17 @@
 }
 .chat-btn-confirm-kick {
     flex: 1.3;
-    padding: 10px 14px;
-    border-radius: 10px;
+    padding: 11px 16px;
+    border-radius: 12px;
     background: #dc2626;
     color: #ffffff;
     border: 1px solid #b91c1c;
-    font-size: 13px;
+    font-size: 13.5px;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
     transition: all 0.15s ease;
+    font-family: inherit;
 }
 .chat-btn-confirm-kick:hover {
     background: #b91c1c;
@@ -2120,6 +2176,28 @@
     font-family: inherit;
 }
 .chat-info-btn-kick:hover {
+    background: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
+}
+.chat-info-btn-leave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+}
+.chat-info-btn-leave:hover {
     background: #dc2626;
     color: #ffffff;
     border-color: #dc2626;
@@ -2399,10 +2477,11 @@
         max-height: 85dvh;
     }
     .chat-kick-confirm-content {
-        max-width: 100vw;
-        width: 100%;
-        border-radius: 20px 20px 0 0;
-        padding: 20px 18px 24px;
+        margin: auto;
+        border-radius: 24px;
+        max-width: calc(100vw - 32px);
+        width: 380px;
+        padding: 24px 20px;
     }
     .chat-member-info-content {
         max-width: 100vw;
@@ -3413,6 +3492,17 @@ function closeKickConfirmModal() {
     if (modal) modal.style.display = 'none';
 }
 
+function openChatLeaveModal() {
+    closeMemberInfoModal();
+    const modal = document.getElementById('modal-confirm-leave-chat');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeChatLeaveModal() {
+    const modal = document.getElementById('modal-confirm-leave-chat');
+    if (modal) modal.style.display = 'none';
+}
+
 function getUserDataForMessage(msg) {
     if (!msg) return null;
     const member = currentCommunityMembers.find(m => Number(m.id) === Number(msg.user_id));
@@ -3562,6 +3652,16 @@ function openMemberInfoModal(userData) {
         }
     }
 
+    // Leave button inside Info Modal (for oneself if not owner)
+    const leaveBtn = document.getElementById('info-modal-leave-btn');
+    if (leaveBtn) {
+        if (Number(userData.id) === Number(currentUserId) && !userData.is_owner) {
+            leaveBtn.style.display = 'flex';
+        } else {
+            leaveBtn.style.display = 'none';
+        }
+    }
+
     modal.style.display = 'flex';
 }
 
@@ -3696,6 +3796,18 @@ function escapeHtml(str) {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 }
+
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+        closeMembersModal();
+        closeMemberInfoModal();
+        closeKickConfirmModal();
+        closeChatLeaveModal();
+        closeImageLightbox();
+        closeFolderExplorer();
+        hideContextMenu();
+    }
+});
 </script>
 
 @endsection

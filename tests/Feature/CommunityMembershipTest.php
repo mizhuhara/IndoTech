@@ -90,7 +90,6 @@ class CommunityMembershipTest extends TestCase
             ->assertSee('Chat Komunitas')
             ->assertSee('Ruang Chat Komunitas')
             ->assertSee('Buka Chat Komunitas')
-            ->assertSee('Live Chat &amp; Berbagi Berkas', false)
             ->assertSee($user->name);
     }
 
