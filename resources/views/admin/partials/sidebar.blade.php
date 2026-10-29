@@ -4,6 +4,19 @@
         if ($userRole === 'school_admin') {
             $userRole = 'school';
         }
+        $dashboardRoute = match($userRole) {
+            'school' => route('dashboard.school'),
+            'university' => route('dashboard.university'),
+            'company' => route('dashboard.company'),
+            'user' => route('dashboard.user'),
+            default => route('admin.dashboard'),
+        };
+        $isDashboardActive = request()->routeIs('admin.dashboard') 
+            || request()->routeIs('dashboard.school') 
+            || request()->routeIs('dashboard.university') 
+            || request()->routeIs('dashboard.company') 
+            || request()->routeIs('dashboard.user')
+            || (request()->routeIs('dashboard') && !request()->routeIs('dashboard.*'));
         $pendingVerificationsCount = in_array($userRole, ['super_admin', 'admin'], true) 
             ? \App\Models\User::where('status', 'pending')->count() 
             : 0;
@@ -11,7 +24,7 @@
 
     {{-- Header / Brand --}}
     <div class="h-16 px-6 flex items-center border-b border-slate-200/80 shrink-0">
-        <a href="{{ $userRole === 'school' ? route('admin.schools.index') : route('admin.dashboard') }}" class="group flex items-center gap-2">
+        <a href="{{ $dashboardRoute }}" class="group flex items-center gap-2">
             <span class="text-[21px] font-black text-slate-900 tracking-tight leading-none group-hover:text-brand-600 transition-colors">
                 Indo<span class="text-brand-600">Tech</span>
             </span>
@@ -26,9 +39,9 @@
                 [
                     'label' => 'Dashboard',
                     'icon' => 'grid',
-                    'active' => request()->routeIs('admin.dashboard'),
-                    'href' => route('admin.dashboard'),
-                    'roles' => ['super_admin', 'admin', 'university', 'company'],
+                    'active' => $isDashboardActive,
+                    'href' => $dashboardRoute,
+                    'roles' => ['super_admin', 'admin', 'school', 'university', 'company'],
                 ],
                 [
                     'label' => 'Applications',
@@ -47,7 +60,7 @@
                     'roles' => ['super_admin', 'admin'],
                 ],
                 [
-                    'label' => 'School',
+                    'label' => $userRole === 'school' ? 'Informasi Sekolah' : 'School',
                     'icon' => 'school',
                     'active' => request()->routeIs('admin.schools.*'),
                     'href' => route('admin.schools.index'),

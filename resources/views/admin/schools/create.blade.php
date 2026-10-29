@@ -261,14 +261,37 @@
 <form id="school-create-form" method="POST" action="{{ route('admin.schools.store') }}" enctype="multipart/form-data" data-async data-async-reset class="space-y-6 max-w-7xl mx-auto">
     @csrf
 
+    {{-- Flash Messages --}}
+    @if (session('info'))
+        <div class="flex items-start gap-3 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-[13.5px]">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5 text-blue-500"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>{{ session('info') }}</span>
+        </div>
+    @endif
+    @if (session('success'))
+        <div class="flex items-start gap-3 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 text-[13.5px]">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5 text-green-500"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
     {{-- Top Back Link & Breadcrumb --}}
     <div>
-        <a href="{{ route('admin.schools.index') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 mb-2 transition">
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
-            </svg>
-            Kembali
-        </a>
+        @if (auth()->user()->role === 'school')
+            <a href="{{ route('dashboard.school') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 mb-2 transition">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Dashboard
+            </a>
+        @else
+            <a href="{{ route('admin.schools.index') }}" class="inline-flex items-center gap-2 text-[14px] font-semibold text-slate-700 hover:text-blue-600 mb-2 transition">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Kembali
+            </a>
+        @endif
     </div>
 
     {{-- Two Column Layout --}}

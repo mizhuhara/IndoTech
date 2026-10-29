@@ -91,16 +91,15 @@ class AdminVerificationController extends Controller
 
         DB::transaction(function () use ($user) {
             $user->status = 'active';
+            if (! $user->hasVerifiedEmail()) {
+                $user->email_verified_at = now();
+            }
             $user->save();
 
             $this->syncInstitutionStatus($user, 'Active');
         });
 
         $user->notify(new AccountApprovedNotification);
-
-        if (! $user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
-        }
 
         return back()->with('success', "Akun \"{$user->name}\" berhasil disetujui (Active).");
     }
