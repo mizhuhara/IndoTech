@@ -1,6 +1,9 @@
 <aside class="w-64 shrink-0 bg-white border-r border-slate-200/80 flex flex-col h-screen sticky top-0 z-40 select-none">
     @php 
         $userRole = auth()->user()?->role ?? 'user'; 
+        if ($userRole === 'school_admin') {
+            $userRole = 'school';
+        }
         $pendingVerificationsCount = in_array($userRole, ['super_admin', 'admin'], true) 
             ? \App\Models\User::where('status', 'pending')->count() 
             : 0;
@@ -8,7 +11,7 @@
 
     {{-- Header / Brand --}}
     <div class="h-16 px-6 flex items-center border-b border-slate-200/80 shrink-0">
-        <a href="{{ route('admin.dashboard') }}" class="group flex items-center gap-2">
+        <a href="{{ $userRole === 'school' ? route('admin.schools.index') : route('admin.dashboard') }}" class="group flex items-center gap-2">
             <span class="text-[21px] font-black text-slate-900 tracking-tight leading-none group-hover:text-brand-600 transition-colors">
                 Indo<span class="text-brand-600">Tech</span>
             </span>
@@ -25,7 +28,7 @@
                     'icon' => 'grid',
                     'active' => request()->routeIs('admin.dashboard'),
                     'href' => route('admin.dashboard'),
-                    'roles' => ['super_admin', 'admin', 'school', 'university', 'company'],
+                    'roles' => ['super_admin', 'admin', 'university', 'company'],
                 ],
                 [
                     'label' => 'Applications',

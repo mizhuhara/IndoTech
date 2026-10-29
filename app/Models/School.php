@@ -9,15 +9,17 @@ class School extends Model
 {
     protected $fillable = [
         'user_id', 'npsn', 'name', 'institution_type', 'city', 'province', 'location',
-        'address', 'status', 'logo_url', 'logo_text', 'logo_bg', 'email',
-        'website', 'phone', 'description', 'tags', 'total_students',
-        'industry_partners', 'founded', 'user_id',
+        'address', 'latitude', 'longitude', 'map_link', 'status', 'logo_url', 'logo_name',
+        'logo_text', 'logo_bg', 'email', 'website', 'phone', 'description', 'gallery',
+        'tags', 'competencies', 'total_students', 'industry_partners', 'founded',
     ];
 
     protected function casts(): array
     {
         return [
             'tags' => 'array',
+            'gallery' => 'array',
+            'competencies' => 'array',
         ];
     }
 
