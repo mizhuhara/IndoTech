@@ -13,7 +13,7 @@
 @endpush
 
 @section('content')
-<form method="POST" action="{{ route('admin.univ.store') }}" enctype="multipart/form-data" class="space-y-6 max-w-7xl mx-auto" id="univForm">
+<form method="POST" action="{{ route('admin.univ.store') }}" enctype="multipart/form-data" data-async data-async-reset class="space-y-6 max-w-7xl mx-auto" id="univForm">
     @csrf
 
     {{-- Top Back Link & Breadcrumb --}}

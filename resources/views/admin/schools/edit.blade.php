@@ -3,7 +3,7 @@
 @section('title', 'Edit School Information — IndoTech')
 
 @section('content')
-<form method="POST" action="{{ route('admin.schools.update', $school['id']) }}" class="space-y-6 max-w-7xl mx-auto">
+<form method="POST" action="{{ route('admin.schools.update', $school['id']) }}" data-async class="space-y-6 max-w-7xl mx-auto">
     @csrf
     @method('PUT')
 

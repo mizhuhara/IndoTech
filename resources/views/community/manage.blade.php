@@ -141,7 +141,7 @@
                     <p>Perbarui profil, visibilitas, status, serta tata tertib komunitas Anda.</p>
                 </div>
 
-                <form action="{{ route('community.manage.update', $community) }}" method="POST" enctype="multipart/form-data">
+                <form data-async data-async-reload action="{{ route('community.manage.update', $community) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -304,7 +304,7 @@
                                             @else
                                                 <div class="cmty-action-buttons">
                                                     {{-- Kick Button --}}
-                                                    <form action="{{ route('community.manage.kick', [$community, $m]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengeluarkan {{ $m->name }} dari komunitas?');">
+                                                    <form data-async data-async-reload action="{{ route('community.manage.kick', [$community, $m]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengeluarkan {{ $m->name }} dari komunitas?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="cmty-btn-kick" title="Keluarkan anggota">
@@ -313,7 +313,7 @@
                                                     </form>
 
                                                     {{-- Ban / Unban Toggle Button --}}
-                                                    <form action="{{ route('community.manage.ban', [$community, $m]) }}" method="POST" onsubmit="return confirm('{{ $isBanned ? "Buka blokir untuk {$m->name}?" : "Blokir {$m->name} dari komunitas?" }}');">
+                                                    <form data-async data-async-reload action="{{ route('community.manage.ban', [$community, $m]) }}" method="POST" onsubmit="return confirm('{{ $isBanned ? "Buka blokir untuk {$m->name}?" : "Blokir {$m->name} dari komunitas?" }}');">
                                                         @csrf
                                                         <button type="submit" class="cmty-btn-ban {{ $isBanned ? 'unban' : '' }}">
                                                             {{ $isBanned ? 'Buka Blokir' : 'Ban' }}
@@ -385,7 +385,7 @@
 
                                 <div class="cmty-post-actions-bar">
                                     @if($p->status === 'published')
-                                        <form action="{{ route('community.manage.post.moderate', [$community, $p]) }}" method="POST">
+                                        <form data-async data-async-reload action="{{ route('community.manage.post.moderate', [$community, $p]) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="action" value="hide">
@@ -394,7 +394,7 @@
                                             </button>
                                         </form>
                                     @else
-                                        <form action="{{ route('community.manage.post.moderate', [$community, $p]) }}" method="POST">
+                                        <form data-async data-async-reload action="{{ route('community.manage.post.moderate', [$community, $p]) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
                                             <input type="hidden" name="action" value="publish">
@@ -404,7 +404,7 @@
                                         </form>
                                     @endif
 
-                                    <form action="{{ route('community.manage.post.moderate', [$community, $p]) }}" method="POST" onsubmit="return confirm('Hapus permanen postingan ini?');">
+                                    <form data-async data-async-reload action="{{ route('community.manage.post.moderate', [$community, $p]) }}" method="POST" onsubmit="return confirm('Hapus permanen postingan ini?');">
                                         @csrf
                                         @method('PATCH')
                                         <input type="hidden" name="action" value="delete">

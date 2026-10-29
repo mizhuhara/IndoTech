@@ -3,7 +3,7 @@
 @section('title', 'Edit Internship Posting — Admin IndoTech')
 
 @section('content')
-<form action="{{ route('admin.internships.update', $internship['id']) }}" method="POST" class="space-y-6">
+<form action="{{ route('admin.internships.update', $internship['id']) }}" method="POST" data-async class="space-y-6">
     @csrf
     @method('PUT')
 

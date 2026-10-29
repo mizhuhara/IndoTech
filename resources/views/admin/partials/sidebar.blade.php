@@ -208,7 +208,7 @@
 
     {{-- Sidebar footer / Actions --}}
     <div class="p-3 border-t border-slate-100 shrink-0 bg-white space-y-1">
-        <form method="POST" action="{{ route('logout') }}" class="w-full m-0">
+        <form method="POST" data-async data-async-follow action="{{ route('logout') }}" class="w-full m-0">
             @csrf
             <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-[13px] font-medium text-slate-600 hover:text-red-600 hover:bg-red-50/80 transition-all duration-150 cursor-pointer text-left group">
                 <span class="text-slate-400 group-hover:text-red-500 transition-colors">

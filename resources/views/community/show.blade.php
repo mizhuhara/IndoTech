@@ -125,7 +125,7 @@
                 <div class="flex flex-col sm:flex-row gap-3 mt-8">
                     @auth
                         @if ($isMember)
-                            <form action="{{ route('community.leave', $community) }}" method="POST"
+                            <form data-async data-async-reload action="{{ route('community.leave', $community) }}" method="POST"
                                   onsubmit="return confirm('Keluar dari komunitas ini?')">
                                 @csrf
                                 @method('DELETE')
@@ -135,7 +135,7 @@
                                 </button>
                             </form>
                         @else
-                            <form action="{{ route('community.join', $community) }}" method="POST">
+                            <form data-async data-async-reload action="{{ route('community.join', $community) }}" method="POST">
                                 @csrf
                                 <button type="submit"
                                         class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-xl text-sm transition">
@@ -230,7 +230,7 @@
             {{-- Form Kirim Postingan Baru (Jika Member / Owner) --}}
             @auth
                 @if ($isMember || $isOwnerOrAdmin)
-                    <form action="{{ route('community.posts.store', $community) }}" method="POST" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 mb-8">
+                    <form data-async data-async-reload action="{{ route('community.posts.store', $community) }}" method="POST" class="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 mb-8">
                         @csrf
                         <div class="space-y-3">
                             <input type="text" name="title" placeholder="Judul diskusi (opsional)" class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm text-slate-800 outline-none focus:border-blue-500">

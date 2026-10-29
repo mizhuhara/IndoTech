@@ -148,7 +148,7 @@
                 <h2 class="text-base font-bold text-slate-900">Data Profil, Portofolio & CV</h2>
                 <p class="text-sm text-slate-500 mt-1">Perbarui foto profil, identitas, tautan portofolio, sosmed, dan berkas CV Anda.</p>
 
-                <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-5 space-y-4">
+                <form method="POST" data-async data-async-reload action="{{ route('profile.update') }}" enctype="multipart/form-data" class="mt-5 space-y-4">
                     @csrf
                     @method('PUT')
 
@@ -361,7 +361,7 @@
                     <h2 class="text-base font-bold text-slate-900">Ganti Password</h2>
                     <p class="text-sm text-slate-500 mt-1">Gunakan minimal 8 karakter dengan kombinasi yang kuat.</p>
 
-                    <form method="POST" action="{{ route('profile.password') }}" class="mt-5 space-y-4">
+                    <form method="POST" data-async data-async-reload action="{{ route('profile.password') }}" class="mt-5 space-y-4">
                         @csrf
                         @method('PUT')
 

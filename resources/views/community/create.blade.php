@@ -46,7 +46,7 @@
         </div>
     @endif
 
-    <form action="{{ route('community.store') }}" method="POST" enctype="multipart/form-data" class="cmty-form" id="create-community-form">
+    <form data-async data-async-follow action="{{ route('community.store') }}" method="POST" enctype="multipart/form-data" class="cmty-form" id="create-community-form">
         @csrf
 
         {{-- Section 1: Informasi Dasar --}}

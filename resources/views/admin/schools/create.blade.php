@@ -3,7 +3,7 @@
 @section('title', 'Add New School — IndoTech')
 
 @section('content')
-<form method="POST" action="{{ route('admin.schools.store') }}" class="space-y-6 max-w-7xl mx-auto">
+<form id="school-create-form" method="POST" action="{{ route('admin.schools.store') }}" data-async data-async-reset class="space-y-6 max-w-7xl mx-auto">
     @csrf
 
     {{-- Top Back Link & Breadcrumb --}}

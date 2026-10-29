@@ -267,7 +267,7 @@
     </div>
 @endif
 
-<form id="article-form" action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data">
+<form id="article-form" action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data" data-async data-async-reset>
     @csrf
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
