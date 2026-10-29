@@ -92,6 +92,11 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
+    public function communityMessages(): HasMany
+    {
+        return $this->hasMany(CommunityMessage::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

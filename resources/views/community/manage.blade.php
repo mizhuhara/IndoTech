@@ -14,12 +14,20 @@
                 </svg>
                 Kembali ke Komunitas Saya
             </a>
-            <a href="{{ route('community.show', $community) }}" class="cmty-manage-view-public" target="_blank">
-                <span>Lihat Halaman Publik</span>
-                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                </svg>
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('community.chat', $community) }}" class="cmty-manage-chat-btn" target="_blank">
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                    </svg>
+                    <span>Buka Chat Komunitas</span>
+                </a>
+                <a href="{{ route('community.show', $community) }}" class="cmty-manage-view-public" target="_blank">
+                    <span>Lihat Halaman Publik</span>
+                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                </a>
+            </div>
         </div>
 
         {{-- Alerts --}}
@@ -483,6 +491,24 @@
 }
 .cmty-manage-view-public:hover {
     background: #dbeafe;
+}
+.cmty-manage-chat-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #059669;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    transition: all 0.15s ease;
+}
+.cmty-manage-chat-btn:hover {
+    background: #d1fae5;
+    color: #047857;
 }
 
 /* Alerts */
