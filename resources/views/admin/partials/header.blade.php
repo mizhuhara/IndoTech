@@ -1,10 +1,21 @@
 <header class="bg-white border-b border-slate-200/80 px-6 sm:px-8 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-30 min-h-[66px]">
+    @php
+        $headerUserRole = auth()->user()?->role ?? 'user';
+        $homeRoute = match($headerUserRole) {
+            'school' => route('dashboard.school'),
+            'university' => route('dashboard.university'),
+            'company' => route('dashboard.company'),
+            'super_admin', 'admin' => route('admin.dashboard'),
+            default => route('dashboard'),
+        };
+    @endphp
+
     {{-- Left: Breadcrumb & Title Info --}}
     <div class="flex-1 min-w-0 pr-4">
         @if(View::hasSection('header_title'))
             <div class="flex flex-col">
                 <nav class="flex items-center gap-1.5 text-[12px] text-slate-400 font-medium leading-none mb-1">
-                    <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
+                    <a href="{{ $homeRoute }}" class="hover:text-blue-600 transition">Home</a>
                     <span class="text-slate-300">›</span>
                     <span class="text-slate-700 font-bold truncate">@yield('header_breadcrumb', View::yieldContent('header_title'))</span>
                 </nav>
@@ -154,7 +165,7 @@
             @endphp
             <div class="flex flex-col">
                 <nav class="flex items-center gap-1.5 text-[12px] text-slate-400 font-medium leading-none mb-1">
-                    <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600 transition">Home</a>
+                    <a href="{{ $homeRoute }}" class="hover:text-blue-600 transition">Home</a>
                     @if($parentName && $parentRoute)
                         <span class="text-slate-300">›</span>
                         <a href="{{ $parentRoute }}" class="hover:text-blue-600 transition">{{ $parentName }}</a>

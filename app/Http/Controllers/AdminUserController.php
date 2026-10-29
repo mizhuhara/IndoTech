@@ -159,6 +159,10 @@ class AdminUserController extends Controller
             $payload['password'] = Hash::make($validated['password']);
         }
 
+        if ($payload['status'] === 'active' && ! $user->hasVerifiedEmail()) {
+            $payload['email_verified_at'] = now();
+        }
+
         DB::transaction(function () use ($user, $payload) {
             $user->update($payload);
 

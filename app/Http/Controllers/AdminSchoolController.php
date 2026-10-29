@@ -13,9 +13,25 @@ class AdminSchoolController extends Controller
 {
     /**
      * Display a listing of schools with search/filter support.
+     * For school role: redirect directly to their school edit/create page.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
+        $user = $request->user();
+
+        // Akun sekolah langsung diarahkan ke data sekolahnya
+        if ($user->role === 'school') {
+            $ownedSchool = School::where('user_id', $user->id)->first();
+
+            if ($ownedSchool) {
+                return redirect()->route('admin.schools.edit', $ownedSchool->id)
+                    ->with('info', 'Silakan perbarui informasi sekolah Anda di bawah ini.');
+            }
+
+            return redirect()->route('admin.schools.create')
+                ->with('info', 'Lengkapi data sekolah Anda untuk mulai menampilkan profil sekolah.');
+        }
+
         $query = $this->visibleSchools();
 
         if ($request->filled('search')) {
@@ -54,15 +70,27 @@ class AdminSchoolController extends Controller
             'totalSchools' => (clone $visible)->count(),
             'activePartners' => (clone $visible)->where('status', 'Active')->count(),
             'newSubmissions' => (clone $visible)->where('status', 'Inactive')->count(),
-            'canManage' => in_array($request->user()->role, ['super_admin', 'admin'], true),
+            'canManage' => in_array($user->role, ['super_admin', 'admin'], true),
         ]);
     }
 
     /**
      * Show the form for creating a new school.
+     * Role school boleh membuat jika belum punya sekolah.
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
+        $user = auth()->user();
+
+        // Jika role school sudah punya sekolah, arahkan ke edit
+        if ($user->role === 'school') {
+            $existing = School::where('user_id', $user->id)->first();
+            if ($existing) {
+                return redirect()->route('admin.schools.edit', $existing->id)
+                    ->with('info', 'Anda sudah memiliki data sekolah. Silakan edit informasi berikut.');
+            }
+        }
+
         $this->authorizeCreate();
 
         return view('admin.schools.create');
@@ -73,9 +101,30 @@ class AdminSchoolController extends Controller
      */
     public function store(Request $request): RedirectResponse|JsonResponse
     {
-        $this->authorizeCreate();
+        $user = $request->user();
+
+        // Role school: hanya boleh buat 1 sekolah, dan otomatis terikat ke akunnya
+        if ($user->role === 'school') {
+            $existing = School::where('user_id', $user->id)->first();
+            if ($existing) {
+                return redirect()->route('admin.schools.edit', $existing->id)
+                    ->with('info', 'Anda sudah memiliki data sekolah.');
+            }
+        } else {
+            $this->authorizeCreate();
+        }
 
         $data = $this->validateSchool($request);
+
+        // Otomatis kaitkan user_id untuk akun sekolah
+        if ($user->role === 'school' && empty($data['user_id'])) {
+            $data['user_id'] = $user->id;
+        }
+
+        // Status default Pending untuk akun sekolah (menunggu verifikasi admin)
+        if ($user->role === 'school') {
+            $data['status'] = 'Pending';
+        }
 
         if ($request->hasFile('logo')) {
             $file = $request->file('logo');
@@ -101,12 +150,18 @@ class AdminSchoolController extends Controller
             $data['map_link'] = "https://www.google.com/maps?q={$data['latitude']},{$data['longitude']}";
         }
 
-        School::create($data);
+        $school = School::create($data);
 
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => "Sekolah \"{$data['name']}\" berhasil ditambahkan.",
             ], 201);
+        }
+
+        // Role school diarahkan ke halaman edit sekolah yang baru dibuat
+        if ($user->role === 'school') {
+            return redirect()->route('admin.schools.edit', $school->id)
+                ->with('success', "Data sekolah \"{$data['name']}\" berhasil disimpan. Anda bisa melengkapi informasi lebih lanjut di sini.");
         }
 
         return redirect()->route('admin.schools.index')
@@ -193,6 +248,12 @@ class AdminSchoolController extends Controller
             ]);
         }
 
+        // Role school dikembalikan ke halaman edit (bukan index) agar tetap di profil sekolahnya
+        if (in_array($user->role, ['school', 'university', 'company'], true)) {
+            return redirect()->route('admin.schools.edit', $school->id)
+                ->with('success', "Data sekolah \"{$data['name']}\" berhasil diperbarui.");
+        }
+
         return redirect()->route('admin.schools.index')
             ->with('success', "Data sekolah \"{$data['name']}\" berhasil diperbarui.");
     }
@@ -239,8 +300,9 @@ class AdminSchoolController extends Controller
     {
         $user = auth()->user();
 
-        if (in_array($user->role, ['school', 'university', 'company'], true)) {
-            abort(403, 'Akses ditolak. Akun institusi tidak dapat menambah data baru.');
+        // Role school boleh membuat sekolah pertama mereka; role lain (university, company) tidak
+        if (in_array($user->role, ['university', 'company'], true)) {
+            abort(403, 'Akses ditolak. Akun institusi tidak dapat menambah data sekolah.');
         }
     }
 
