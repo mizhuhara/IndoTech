@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Job Management — Admin IndoTech')
+@section('title', 'Manajemen Lowongan Pekerjaan — Admin IndoTech')
 
 @section('content')
 <div class="space-y-6">
@@ -13,7 +13,7 @@
             <input type="text" 
                    name="search"
                    value="{{ $search ?? '' }}" 
-                   placeholder="Search jobs, companies, or IDs..." 
+                   placeholder="Cari lowongan pekerjaan, posisi, atau kode ID..." 
                    class="w-full bg-transparent text-[13.5px] text-slate-800 placeholder-slate-400 focus:outline-none"
                    onchange="this.form.submit()">
         </form>
@@ -35,7 +35,7 @@
     <div class="flex items-center justify-end">
         <a href="{{ route('admin.jobs.create') }}" class="inline-flex items-center justify-center gap-2 bg-brand-600 hover:bg-blue-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg shadow-xs transition">
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.8"><path d="M12 5v14M5 12h14"/></svg>
-            <span>POST NEW JOB</span>
+            <span>TAMBAH LOWONGAN BARU</span>
         </a>
     </div>
 
@@ -43,31 +43,31 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         {{-- Total Postings --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs">
-            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">TOTAL POSTINGS</div>
+            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">TOTAL LOWONGAN</div>
             <div class="text-[32px] font-extrabold text-slate-900 tracking-tight leading-tight mt-2.5">{{ $totalPostings }}</div>
             <div class="mt-2.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-emerald-600">
                 <span class="font-bold">+12%</span>
-                <span class="text-slate-400 font-normal">from last month</span>
+                <span class="text-slate-400 font-normal">dari bulan lalu</span>
             </div>
         </div>
 
         {{-- Active Jobs --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs">
-            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">ACTIVE JOBS</div>
+            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">LOWONGAN AKTIF</div>
             <div class="text-[32px] font-extrabold text-slate-900 tracking-tight leading-tight mt-2.5">{{ $activeJobs }}</div>
             <div class="mt-2.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-emerald-600">
                 <span class="font-bold">+5%</span>
-                <span class="text-slate-400 font-normal">from last month</span>
+                <span class="text-slate-400 font-normal">dari bulan lalu</span>
             </div>
         </div>
 
         {{-- Applications --}}
         <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-2xs">
-            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">APPLICATIONS</div>
+            <div class="text-[11.5px] font-bold text-slate-400 uppercase tracking-wider">TOTAL PELAMAR</div>
             <div class="text-[32px] font-extrabold text-slate-900 tracking-tight leading-tight mt-2.5">{{ $applicationsCount }}</div>
             <div class="mt-2.5 flex items-center gap-1.5 text-[12.5px] font-semibold text-emerald-600">
                 <span class="font-bold">+24%</span>
-                <span class="text-slate-400 font-normal">from last month</span>
+                <span class="text-slate-400 font-normal">dari bulan lalu</span>
             </div>
         </div>
     </div>
@@ -80,19 +80,19 @@
             <div class="flex items-center gap-6 text-[13px] font-bold">
                 <a href="{{ route('admin.jobs.index', ['tab' => 'all']) }}" 
                    class="py-3.5 border-b-2 transition relative {{ $currentTab === 'all' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
-                    ALL JOBS
+                    SEMUA LOWONGAN
                 </a>
                 <a href="{{ route('admin.jobs.index', ['tab' => 'active']) }}" 
                    class="py-3.5 border-b-2 transition relative {{ $currentTab === 'active' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
-                    ACTIVE
+                    AKTIF
                 </a>
                 <a href="{{ route('admin.jobs.index', ['tab' => 'drafts']) }}" 
                    class="py-3.5 border-b-2 transition relative {{ $currentTab === 'drafts' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
-                    DRAFTS
+                    DRAF
                 </a>
                 <a href="{{ route('admin.jobs.index', ['tab' => 'closed']) }}" 
                    class="py-3.5 border-b-2 transition relative {{ $currentTab === 'closed' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-800' }}">
-                    CLOSED
+                    DITUTUP
                 </a>
             </div>
 
@@ -107,7 +107,7 @@
                 </button>
                 <a href="{{ route('admin.jobs.export', request()->query()) }}" class="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 transition cursor-pointer" title="Export Data ke Excel (CSV)">
                     <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M7.5 12 12 16.5m0 0 4.5-4.5M12 16.5v-13.5"/></svg>
-                    <span>EXPORT</span>
+                    <span>EKSPOR</span>
                 </a>
             </div>
         </div>
@@ -145,12 +145,12 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="border-b border-slate-100 text-[11px] font-bold uppercase tracking-wider text-slate-400 bg-slate-50/50">
-                        <th class="py-4 pl-6 pr-4 font-bold">JOB TITLE</th>
-                        <th class="py-4 px-4 font-bold">COMPANY / PROVIDER</th>
-                        <th class="py-4 px-4 font-bold">TYPE</th>
-                        <th class="py-4 px-4 font-bold">DATE POSTED</th>
+                        <th class="py-4 pl-6 pr-4 font-bold">JUDUL LOWONGAN</th>
+                        <th class="py-4 px-4 font-bold">PERUSAHAAN</th>
+                        <th class="py-4 px-4 font-bold">TIPE</th>
+                        <th class="py-4 px-4 font-bold">TANGGAL TAYANG</th>
                         <th class="py-4 px-4 font-bold">STATUS</th>
-                        <th class="py-4 pr-6 pl-4 font-bold text-right">ACTIONS</th>
+                        <th class="py-4 pr-6 pl-4 font-bold text-right">AKSI</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-[13.5px]">
@@ -175,26 +175,26 @@
                             </td>
                             <td class="py-4 px-4">
                                 @if ($job['status'] === 'Active')
-                                    <span class="font-bold text-emerald-600 text-[13px]">Active</span>
+                                    <span class="font-bold text-emerald-600 text-[13px]">Aktif</span>
                                 @elseif ($job['status'] === 'Paused')
-                                    <span class="font-bold text-amber-500 text-[13px]">Paused</span>
+                                    <span class="font-bold text-amber-500 text-[13px]">Dijeda</span>
                                 @elseif ($job['status'] === 'Draft')
-                                    <span class="font-bold text-slate-400 text-[13px]">Draft</span>
+                                    <span class="font-bold text-slate-400 text-[13px]">Draf</span>
                                 @else
-                                    <span class="font-bold text-red-500 text-[13px]">Closed</span>
+                                    <span class="font-bold text-red-500 text-[13px]">Ditutup</span>
                                 @endif
                             </td>
                             <td class="py-4 pr-6 pl-4 text-right">
                                 <div class="flex items-center justify-end gap-3 text-slate-400">
                                     {{-- View Icon --}}
-                                    <a href="{{ route('admin.jobs.show', $job['id']) }}" class="hover:text-slate-700 transition" title="View Job">
+                                    <a href="{{ route('admin.jobs.show', $job['id']) }}" class="hover:text-slate-700 transition" title="Lihat Detail Lowongan">
                                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.573 16.49 16.638 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                         </svg>
                                     </a>
                                     {{-- Edit Icon --}}
-                                    <a href="{{ route('admin.jobs.edit', $job['id']) }}" class="hover:text-blue-600 transition" title="Edit Job">
+                                    <a href="{{ route('admin.jobs.edit', $job['id']) }}" class="hover:text-blue-600 transition" title="Edit Lowongan">
                                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
                                         </svg>
@@ -206,7 +206,7 @@
                                         <button type="button" 
                                                 onclick="openDeleteModal('{{ $job['id'] }}', '{{ addslashes($job['title']) }}', '{{ addslashes($job['company']) }}')"
                                                 class="hover:text-red-600 transition cursor-pointer" 
-                                                title="Delete Job">
+                                                title="Hapus Lowongan">
                                             <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"/>
                                             </svg>
@@ -218,7 +218,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="py-8 text-center text-slate-400 text-[13.5px]">
-                                Tidak ada data job posting yang ditemukan.
+                                Tidak ada data lowongan pekerjaan yang ditemukan.
                             </td>
                         </tr>
                     @endforelse
@@ -229,7 +229,7 @@
         {{-- Footer Pagination --}}
         <div class="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-[13px] text-slate-500">
             <div>
-                Showing <span class="font-semibold text-slate-800">{{ $jobs->firstItem() ?? 0 }}</span> to <span class="font-semibold text-slate-800">{{ $jobs->lastItem() ?? 0 }}</span> of <span class="font-semibold text-slate-800">{{ $jobs->total() }}</span> jobs
+                Menampilkan <span class="font-semibold text-slate-800">{{ $jobs->firstItem() ?? 0 }}</span> sampai <span class="font-semibold text-slate-800">{{ $jobs->lastItem() ?? 0 }}</span> dari total <span class="font-semibold text-slate-800">{{ $jobs->total() }}</span> lowongan
             </div>
             <div>
                 {{ $jobs->links('pagination::simple-tailwind') }}
@@ -259,10 +259,10 @@
                 <label class="block text-slate-700 mb-1.5 font-bold">Status Lowongan</label>
                 <select name="status" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600 cursor-pointer">
                     <option value="all" {{ request('status') === 'all' ? 'selected' : '' }}>Semua Status</option>
-                    <option value="Active" {{ request('status') === 'Active' ? 'selected' : '' }}>Active</option>
-                    <option value="Paused" {{ request('status') === 'Paused' ? 'selected' : '' }}>Paused</option>
-                    <option value="Draft" {{ request('status') === 'Draft' ? 'selected' : '' }}>Draft</option>
-                    <option value="Closed" {{ request('status') === 'Closed' ? 'selected' : '' }}>Closed</option>
+                    <option value="Active" {{ request('status') === 'Active' ? 'selected' : '' }}>Aktif</option>
+                    <option value="Paused" {{ request('status') === 'Paused' ? 'selected' : '' }}>Dijeda</option>
+                    <option value="Draft" {{ request('status') === 'Draft' ? 'selected' : '' }}>Draf</option>
+                    <option value="Closed" {{ request('status') === 'Closed' ? 'selected' : '' }}>Ditutup</option>
                 </select>
             </div>
 
@@ -270,10 +270,10 @@
                 <label class="block text-slate-700 mb-1.5 font-bold">Tipe Pekerjaan</label>
                 <select name="type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 outline-none focus:border-blue-600 cursor-pointer">
                     <option value="all" {{ request('type') === 'all' ? 'selected' : '' }}>Semua Tipe</option>
-                    <option value="Full-time" {{ request('type') === 'Full-time' ? 'selected' : '' }}>Full-time</option>
-                    <option value="Part-time" {{ request('type') === 'Part-time' ? 'selected' : '' }}>Part-time</option>
-                    <option value="Internship" {{ request('type') === 'Internship' ? 'selected' : '' }}>Internship</option>
-                    <option value="Contract" {{ request('type') === 'Contract' ? 'selected' : '' }}>Contract</option>
+                    <option value="Full-time" {{ request('type') === 'Full-time' ? 'selected' : '' }}>Purna Waktu (Full-time)</option>
+                    <option value="Part-time" {{ request('type') === 'Part-time' ? 'selected' : '' }}>Paruh Waktu (Part-time)</option>
+                    <option value="Internship" {{ request('type') === 'Internship' ? 'selected' : '' }}>Magang / PKL (Internship)</option>
+                    <option value="Contract" {{ request('type') === 'Contract' ? 'selected' : '' }}>Kontrak</option>
                     <option value="Remote" {{ request('type') === 'Remote' ? 'selected' : '' }}>Remote</option>
                 </select>
             </div>

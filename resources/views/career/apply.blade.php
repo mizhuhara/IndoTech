@@ -423,12 +423,18 @@
                             Kualifikasi &amp; Persyaratan
                         </h3>
                         <ul class="ap-detail-list">
-                            @foreach($job['skills'] as $skill)
-                                <li>Memiliki pemahaman mendalam dan keahlian praktis dalam <strong>{{ $skill }}</strong>.</li>
-                            @endforeach
-                            <li>Kualifikasi tingkat pengalaman level <strong>{{ $job['experience'] }}</strong>.</li>
-                            <li>Dapat bekerja secara kolaboratif dalam tim dan memiliki inisiatif tinggi.</li>
-                            <li>Memiliki kemampuan analisa dan pemecahan masalah (troubleshooting) yang baik.</li>
+                            @if (!empty($job['requirements']) && is_array($job['requirements']))
+                                @foreach ($job['requirements'] as $req)
+                                    <li>{{ $req }}</li>
+                                @endforeach
+                            @else
+                                @foreach ($job['skills'] ?? [] as $skill)
+                                    <li>Menguasai <strong>{{ $skill }}</strong>.</li>
+                                @endforeach
+                                <li>Kualifikasi tingkat pengalaman level <strong>{{ $job['experience'] }}</strong>.</li>
+                                <li>Dapat bekerja secara kolaboratif dalam tim dan memiliki inisiatif tinggi.</li>
+                                <li>Memiliki kemampuan analisa dan pemecahan masalah (troubleshooting) yang baik.</li>
+                            @endif
                         </ul>
                     </div>
 
@@ -438,10 +444,16 @@
                             Tanggung Jawab Pekerjaan
                         </h3>
                         <ul class="ap-detail-list">
-                            <li>Membangun, mengembangkan, serta memelihara kode program agar tetap bersih, teruji, dan scalable.</li>
-                            <li>Melakukan troubleshooting dan perbaikan bug sistem yang didelegasikan.</li>
-                            <li>Bekerja sama erat dengan tim Product Manager dan UI/UX Designer untuk merealisasikan rencana fitur.</li>
-                            <li>Berpartisipasi aktif dalam kegiatan code review guna menjaga kualitas kode tim.</li>
+                            @if (!empty($job['responsibilities']) && is_array($job['responsibilities']))
+                                @foreach ($job['responsibilities'] as $resp)
+                                    <li>{{ $resp }}</li>
+                                @endforeach
+                            @else
+                                <li>Membangun, mengembangkan, serta memelihara kode program agar tetap bersih, teruji, dan scalable.</li>
+                                <li>Melakukan troubleshooting dan perbaikan bug sistem yang didelegasikan.</li>
+                                <li>Bekerja sama erat dengan tim Product Manager dan UI/UX Designer untuk merealisasikan rencana fitur.</li>
+                                <li>Berpartisipasi aktif dalam kegiatan code review guna menjaga kualitas kode tim.</li>
+                            @endif
                         </ul>
                     </div>
 

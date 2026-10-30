@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Company;
+use App\Models\School;
+use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -69,7 +72,20 @@ class AdminArticleController extends Controller
     {
         $this->authorizeCreate();
 
-        return view('admin.articles.create');
+        $user = auth()->user();
+        $company = $user && $user->role === 'company' ? Company::where('user_id', $user->id)->first() : null;
+        $school = $user && $user->role === 'school' ? School::where('user_id', $user->id)->first() : null;
+        $univ = $user && $user->role === 'university' ? University::where('user_id', $user->id)->first() : null;
+
+        $defaultAuthor = $company?->name ?? $school?->name ?? $univ?->name ?? ($user ? $user->name : 'Admin IndoTech');
+        $defaultRole = match ($user?->role) {
+            'company' => 'Perusahaan Mitra',
+            'school' => 'Sekolah Vokasi',
+            'university' => 'Perguruan Tinggi',
+            default => 'Admin IndoTech',
+        };
+
+        return view('admin.articles.create', compact('defaultAuthor', 'defaultRole'));
     }
 
     /**
@@ -110,6 +126,17 @@ class AdminArticleController extends Controller
         }
 
         $user = $request->user();
+        $company = $user && $user->role === 'company' ? Company::where('user_id', $user->id)->first() : null;
+        $school = $user && $user->role === 'school' ? School::where('user_id', $user->id)->first() : null;
+        $univ = $user && $user->role === 'university' ? University::where('user_id', $user->id)->first() : null;
+
+        $defaultAuthor = $company?->name ?? $school?->name ?? $univ?->name ?? ($user ? $user->name : 'Admin IndoTech');
+        $defaultRole = match ($user?->role) {
+            'company' => 'Perusahaan Mitra',
+            'school' => 'Sekolah Vokasi',
+            'university' => 'Perguruan Tinggi',
+            default => 'Admin IndoTech',
+        };
 
         $article = Article::create([
             'title' => $validated['title'],
@@ -118,8 +145,8 @@ class AdminArticleController extends Controller
             'content' => $validated['content'] ?? null,
             'category' => $validated['category'],
             'tags' => $tagsArray,
-            'author_name' => $validated['author_name'] ?? ($user ? $user->name : 'Admin IndoTech'),
-            'author_role' => $validated['author_role'] ?? ($user ? $user->role : null),
+            'author_name' => ! empty($validated['author_name']) ? $validated['author_name'] : $defaultAuthor,
+            'author_role' => ! empty($validated['author_role']) ? $validated['author_role'] : $defaultRole,
             'author_avatar' => $validated['author_avatar'] ?? null,
             'image' => $imageUrl,
             'image_caption' => $validated['image_caption'] ?? null,
@@ -206,7 +233,7 @@ class AdminArticleController extends Controller
      */
     public function destroy(int $id): RedirectResponse
     {
-        abort_if(! in_array(auth()->user()->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+        abort_if(! in_array(auth()->user()->role, ['super_admin', 'admin', 'school', 'university', 'company'], true), 403, 'Akses ditolak.');
 
         $article = $this->findVisibleArticle($id);
         $title = $article->title;
@@ -217,13 +244,13 @@ class AdminArticleController extends Controller
     }
 
     /**
-     * Query articles yang boleh dilihat user: super_admin semua, role school/university hanya miliknya.
+     * Query articles yang boleh dilihat user: super_admin semua, role school/university/company hanya miliknya.
      */
     private function visibleArticles()
     {
         $user = auth()->user();
 
-        if ($user && in_array($user->role, ['school', 'university'], true)) {
+        if ($user && in_array($user->role, ['school', 'university', 'company'], true)) {
             return Article::where('user_id', $user->id);
         }
 
@@ -242,7 +269,7 @@ class AdminArticleController extends Controller
     {
         $user = auth()->user();
 
-        if (! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true)) {
+        if (! in_array($user->role, ['super_admin', 'admin', 'school', 'university', 'company'], true)) {
             abort(403, 'Akses ditolak. Akun ini tidak dapat menambah artikel.');
         }
     }

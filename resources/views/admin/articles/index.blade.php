@@ -1,13 +1,13 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Article Management — Admin')
+@section('title', 'Manajemen Artikel — Admin')
 
 @section('content')
 {{-- Action Button --}}
 <div class="flex items-center justify-end mb-6">
     <a href="{{ route('admin.articles.create') }}" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-brand-600 text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
         <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        Create New Article
+        Buat Artikel Baru
     </a>
 </div>
 
@@ -23,10 +23,10 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     @php
         $stats = [
-            ['label' => 'Total Articles', 'value' => $totalArticles,  'icon' => 'articles'],
-            ['label' => 'Published',      'value' => $publishedCount, 'icon' => 'check'],
-            ['label' => 'Drafts',         'value' => $draftCount,     'icon' => 'draft'],
-            ['label' => 'Total Views',    'value' => $totalViews,     'icon' => 'views'],
+            ['label' => 'Total Artikel', 'value' => $totalArticles,  'icon' => 'articles'],
+            ['label' => 'Tayang (Published)', 'value' => $publishedCount, 'icon' => 'check'],
+            ['label' => 'Draf (Drafts)',      'value' => $draftCount,     'icon' => 'draft'],
+            ['label' => 'Total Dilihat',      'value' => $totalViews,     'icon' => 'views'],
         ];
     @endphp
     @foreach ($stats as $s)
@@ -54,21 +54,21 @@
 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-slate-100">
         <div>
-            <h2 class="text-[16px] font-bold text-slate-900">All Articles</h2>
-            <p class="text-[12.5px] text-slate-500">{{ $articles->total() }} article(s) total</p>
+            <h2 class="text-[16px] font-bold text-slate-900">Semua Artikel</h2>
+            <p class="text-[12.5px] text-slate-500">Total {{ $articles->total() }} artikel</p>
         </div>
         {{-- Search + filter --}}
         <form method="GET" action="{{ route('admin.articles.index') }}" class="flex items-center gap-2">
-            <input type="text" name="search" value="{{ $search }}" placeholder="Search articles…"
+            <input type="text" name="search" value="{{ $search }}" placeholder="Cari judul artikel..."
                    class="h-9 px-3 rounded-lg border border-slate-200 bg-white text-[13px] text-slate-600 outline-none focus:border-blue-500 w-52">
             <select name="tab" onchange="this.form.submit()"
                     class="h-9 px-3 rounded-lg border border-slate-200 bg-white text-[13px] text-slate-600 focus:outline-none focus:border-blue-500">
-                <option value="all"      {{ $currentTab === 'all'      ? 'selected' : '' }}>All Status</option>
-                <option value="published"{{ $currentTab === 'published' ? 'selected' : '' }}>Published</option>
-                <option value="draft"    {{ $currentTab === 'draft'    ? 'selected' : '' }}>Draft</option>
-                <option value="archived" {{ $currentTab === 'archived' ? 'selected' : '' }}>Archived</option>
+                <option value="all"      {{ $currentTab === 'all'      ? 'selected' : '' }}>Semua Status</option>
+                <option value="published"{{ $currentTab === 'published' ? 'selected' : '' }}>Tayang (Published)</option>
+                <option value="draft"    {{ $currentTab === 'draft'    ? 'selected' : '' }}>Draf (Draft)</option>
+                <option value="archived" {{ $currentTab === 'archived' ? 'selected' : '' }}>Arsip (Archived)</option>
             </select>
-            <button type="submit" class="h-9 px-3 rounded-lg bg-brand-600 text-white text-[13px] font-semibold hover:bg-blue-700 transition">Search</button>
+            <button type="submit" class="h-9 px-3 rounded-lg bg-brand-600 text-white text-[13px] font-semibold hover:bg-blue-700 transition">Cari</button>
         </form>
     </div>
 
@@ -76,12 +76,12 @@
         <table class="w-full text-left">
             <thead>
                 <tr class="bg-slate-50 text-[11.5px] uppercase tracking-wider text-slate-500">
-                    <th class="px-5 py-3 font-semibold">Title</th>
-                    <th class="px-5 py-3 font-semibold">Category</th>
-                    <th class="px-5 py-3 font-semibold">Author</th>
-                    <th class="px-5 py-3 font-semibold">Publish Date</th>
-                    <th class="px-5 py-3 font-semibold">Status</th>
-                    <th class="px-5 py-3 font-semibold text-right">Actions</th>
+                    <th class="px-5 py-3 font-semibold">JUDUL ARTIKEL</th>
+                    <th class="px-5 py-3 font-semibold">KATEGORI</th>
+                    <th class="px-5 py-3 font-semibold">PENULIS</th>
+                    <th class="px-5 py-3 font-semibold">TANGGAL PUBLIKASI</th>
+                    <th class="px-5 py-3 font-semibold">STATUS</th>
+                    <th class="px-5 py-3 font-semibold text-right">AKSI</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 text-[13.5px]">
@@ -93,7 +93,11 @@
                             'archived'  => 'bg-slate-100 text-slate-600 before:bg-slate-400',
                             default     => 'bg-orange-50 text-orange-600 before:bg-orange-500',
                         };
-                        $statusLabel = ucfirst($article->status);
+                        $statusLabel = match($article->status) {
+                            'published' => 'Tayang',
+                            'archived'  => 'Arsip',
+                            default     => 'Draf',
+                        };
                     @endphp
                     <tr class="hover:bg-slate-50/70 transition">
                         <td class="px-5 py-4 font-medium text-slate-900 max-w-[280px] truncate">{{ $article->title }}</td>
@@ -130,7 +134,7 @@
                         <td colspan="6" class="px-5 py-16 text-center text-slate-400">
                             <svg class="mx-auto mb-3 text-slate-300" width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1m2 13a2 2 0 0 1-2-2V7m2 13a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2m-4-3H9M7 16h6M7 12h6"/></svg>
                             <p class="text-[14px] font-medium">Belum ada artikel</p>
-                            <p class="text-[12.5px] mt-1">Klik <strong>Create New Article</strong> untuk membuat artikel pertama.</p>
+                            <p class="text-[12.5px] mt-1">Klik <strong>Buat Artikel Baru</strong> untuk membuat artikel pertama.</p>
                         </td>
                     </tr>
                 @endforelse
@@ -142,7 +146,7 @@
     @if ($articles->hasPages())
         <div class="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 border-t border-slate-100">
             <span class="text-[12.5px] text-slate-500">
-                Showing {{ $articles->firstItem() }} to {{ $articles->lastItem() }} of {{ $articles->total() }} entries
+                Menampilkan {{ $articles->firstItem() ?? 0 }} sampai {{ $articles->lastItem() ?? 0 }} dari total {{ $articles->total() }} artikel
             </span>
             <div class="flex items-center gap-1">
                 {{-- Prev --}}

@@ -158,9 +158,9 @@
                         </div>
                     </div>
 
-                    {{-- Description --}}
-                    <p class="text-slate-600 text-sm leading-relaxed mb-6 grow">
-                        {{ $company['description'] }}
+                    {{-- Description Excerpt --}}
+                    <p class="text-slate-600 text-sm leading-relaxed mb-6 grow line-clamp-3">
+                        {{ strip_tags($company['description'] ?? '') }}
                     </p>
                 </div>
 
@@ -272,7 +272,7 @@
                         </svg>
                         <span>Tentang Perusahaan</span>
                     </div>
-                    <p id="modalDescription" class="text-sm leading-relaxed text-slate-600 bg-slate-50/80 border border-slate-200/60 p-4 rounded-2xl"></p>
+                    <div id="modalDescription" class="prose prose-sm max-w-none text-sm leading-relaxed text-slate-600 bg-slate-50/80 border border-slate-200/60 p-4 rounded-2xl overflow-hidden [&_img]:rounded-xl [&_img]:max-w-full [&_img]:h-auto [&_p]:mb-2 [&_p:last-child]:mb-0"></div>
                 </div>
 
                 {{-- Key Metrics Cards (Grid of 3) --}}
@@ -504,7 +504,7 @@
         coverImg.onload = () => { coverImg.style.opacity = '1'; };
         if (coverImg.complete) coverImg.style.opacity = '1';
 
-        document.getElementById("modalDescription").innerText = company.full_description || company.description;
+        document.getElementById("modalDescription").innerHTML = company.full_description || company.description || '<p class="text-slate-400">Belum ada deskripsi profil.</p>';
         document.getElementById("modalEmployees").innerText = company.employees || "20-50 Karyawan";
         document.getElementById("modalFounded").innerText = company.founded || "2020";
         document.getElementById("modalRatingText").innerText = company.rating || "4.9";
@@ -529,7 +529,7 @@
         // Specialties list
         const specialtiesContainer = document.getElementById("modalSpecialties");
         specialtiesContainer.innerHTML = "";
-        const specs = company.specialties || [
+        const specs = (company.specialties && company.specialties.length > 0) ? company.specialties : [
             "Pengembangan Sistem Terdistribusi & Microservices",
             "Desain UI/UX & Pengalaman Pengguna Berstandar Global",
             "Integrasi Keamanan Informasi & Cloud Solutions"
@@ -549,13 +549,16 @@
         // Tech Stack
         const stackContainer = document.getElementById("modalTechStack");
         stackContainer.innerHTML = "";
-        if (company.tech_stack) {
-            company.tech_stack.forEach(tech => {
+        const stacks = (company.tech_stack && company.tech_stack.length > 0) ? company.tech_stack : [];
+        if (stacks.length > 0) {
+            stacks.forEach(tech => {
                 const pill = document.createElement("span");
                 pill.className = "text-xs font-bold bg-white text-slate-700 px-3 py-1 rounded-xl border border-slate-200 shadow-xs flex items-center gap-1.5";
                 pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>${tech}`;
                 stackContainer.appendChild(pill);
             });
+        } else {
+            stackContainer.innerHTML = '<span class="text-xs text-slate-400 italic">Belum ada data teknologi atau tech stack.</span>';
         }
 
         // Gallery section

@@ -434,17 +434,82 @@ class DashboardController extends Controller
 
     public function company(): View
     {
+        $user = auth()->user();
+        $owned = Company::where('user_id', $user->id)->first();
+
+        $cards = [];
+        if ($owned) {
+            $statusLabel = match (strtolower($owned->status ?? 'pending')) {
+                'active' => '✅ Aktif & Terverifikasi',
+                'pending' => '⏳ Menunggu Verifikasi Admin',
+                'inactive' => '❌ Belum Aktif',
+                default => $owned->status,
+            };
+
+            $cards[] = [
+                'label' => 'Profil Perusahaan',
+                'value' => $owned->name,
+                'sub' => 'Status: '.$statusLabel,
+                'action' => 'Edit Informasi Perusahaan',
+                'url' => route('admin.company.edit', $owned->id),
+                'cta_style' => 'primary',
+            ];
+
+            $cards[] = [
+                'label' => 'Lihat Profil Publik',
+                'value' => $owned->city ? "{$owned->city}, {$owned->province}" : ($owned->location ?? 'Lokasi belum diisi'),
+                'sub' => $owned->industry ?? 'Perusahaan Mitra',
+                'action' => 'Lihat Halaman Perusahaan',
+                'url' => route('admin.company.show', $owned->id),
+                'cta_style' => 'secondary',
+            ];
+        } else {
+            $cards[] = [
+                'label' => 'Profil Perusahaan',
+                'value' => 'Belum Ada Data',
+                'sub' => 'Isi informasi perusahaan Anda agar profil perusahaan dan lowongan kerja tampil di IndoTech.',
+                'action' => '+ Tambah Data Perusahaan',
+                'url' => route('admin.company.create'),
+                'cta_style' => 'primary',
+            ];
+        }
+
+        // Lowongan Kerja & Magang milik perusahaan
+        $jobQuery = JobListing::where(function ($q) use ($user, $owned) {
+            $q->where('user_id', $user->id);
+            if ($owned && ! empty($owned->name)) {
+                $q->orWhere('company', $owned->name);
+            }
+        });
+
+        $jobsCount = (clone $jobQuery)->count();
+        $activeJobsCount = (clone $jobQuery)->where('tab_status', 'active')->count();
+        $applicantsCount = (clone $jobQuery)->sum('applicants_count');
+
+        $cards[] = [
+            'label' => 'Lowongan Kerja & Magang',
+            'value' => $jobsCount > 0 ? number_format($jobsCount).' Lowongan ('.$activeJobsCount.' Aktif)' : 'Belum Ada Lowongan',
+            'sub' => $jobsCount > 0 ? 'Kelola lowongan pekerjaan dan program magang Anda' : 'Buat lowongan pekerjaan atau magang baru untuk talenta IndoTech',
+            'action' => $jobsCount > 0 ? 'Kelola Lowongan' : '+ Buat Lowongan Baru',
+            'url' => $jobsCount > 0 ? route('admin.jobs.index') : route('admin.jobs.create'),
+            'cta_style' => $jobsCount > 0 ? 'secondary' : 'primary',
+        ];
+
+        if ($jobsCount > 0) {
+            $cards[] = [
+                'label' => 'Total Pelamar',
+                'value' => number_format($applicantsCount).' Pelamar',
+                'sub' => 'Kandidat talenta yang melamar pada lowongan perusahaan Anda',
+                'action' => 'Lihat Pelamar',
+                'url' => route('admin.jobs.index'),
+                'cta_style' => 'secondary',
+            ];
+        }
+
         return view('admin.dashboards.institution', [
             'title' => 'Dashboard Perusahaan',
-            'subtitle' => 'Kelola data perusahaan milik Anda.',
-            'cards' => [
-                [
-                    'label' => 'Perusahaan Saya',
-                    'value' => 'Kelola',
-                    'action' => 'Buka',
-                    'url' => route('admin.company.index'),
-                ],
-            ],
+            'subtitle' => 'Kelola profil perusahaan, lowongan pekerjaan, dan program magang milik Anda.',
+            'cards' => $cards,
         ]);
     }
 

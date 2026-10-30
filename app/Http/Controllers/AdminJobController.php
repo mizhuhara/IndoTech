@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\JobListing;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,21 @@ class AdminJobController extends Controller
      */
     public function index(Request $request): View
     {
+        $user = $request->user();
+        $isCompany = $user && $user->role === 'company';
+        $company = $isCompany ? Company::where('user_id', $user->id)->first() : null;
+
         $query = JobListing::query();
+
+        // Scope to company's own jobs if role is company
+        if ($isCompany) {
+            $query->where(function ($q) use ($user, $company) {
+                $q->where('user_id', $user->id);
+                if ($company && ! empty($company->name)) {
+                    $q->orWhere('company', $company->name);
+                }
+            });
+        }
 
         // Tab filter (all, active, drafts, closed)
         $tab = $request->query('tab', 'all');
@@ -60,9 +75,19 @@ class AdminJobController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $totalPostings = number_format(JobListing::count());
-        $activeJobs = number_format(JobListing::where('tab_status', 'active')->count());
-        $applicationsCount = number_format(JobListing::sum('applicants_count'));
+        $statsQuery = JobListing::query();
+        if ($isCompany) {
+            $statsQuery->where(function ($q) use ($user, $company) {
+                $q->where('user_id', $user->id);
+                if ($company && ! empty($company->name)) {
+                    $q->orWhere('company', $company->name);
+                }
+            });
+        }
+
+        $totalPostings = number_format((clone $statsQuery)->count());
+        $activeJobs = number_format((clone $statsQuery)->where('tab_status', 'active')->count());
+        $applicationsCount = number_format((clone $statsQuery)->sum('applicants_count'));
 
         $hasActiveFilter = ($request->filled('status') && $request->query('status') !== 'all') ||
                            ($request->filled('type') && $request->query('type') !== 'all') ||
@@ -87,7 +112,20 @@ class AdminJobController extends Controller
      */
     public function export(Request $request): StreamedResponse
     {
+        $user = $request->user();
+        $isCompany = $user && $user->role === 'company';
+        $company = $isCompany ? Company::where('user_id', $user->id)->first() : null;
+
         $query = JobListing::query();
+
+        if ($isCompany) {
+            $query->where(function ($q) use ($user, $company) {
+                $q->where('user_id', $user->id);
+                if ($company && ! empty($company->name)) {
+                    $q->orWhere('company', $company->name);
+                }
+            });
+        }
 
         $tab = $request->query('tab', 'all');
         if ($tab === 'active') {
@@ -178,9 +216,13 @@ class AdminJobController extends Controller
     /**
      * Show form for creating a job posting.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('admin.jobs.create');
+        $user = $request->user();
+        $isCompany = $user && $user->role === 'company';
+        $company = $isCompany ? Company::where('user_id', $user->id)->first() : null;
+
+        return view('admin.jobs.create', compact('isCompany', 'company'));
     }
 
     /**
@@ -188,6 +230,10 @@ class AdminJobController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $user = $request->user();
+        $isCompany = $user && $user->role === 'company';
+        $company = $isCompany ? Company::where('user_id', $user->id)->first() : null;
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'department' => ['required', 'string', 'max:100'],
@@ -196,8 +242,14 @@ class AdminJobController extends Controller
             'experience' => ['nullable', 'string', 'max:100'],
             'salary_range' => ['nullable', 'string', 'max:100'],
             'description' => ['required', 'string'],
-            'requirements' => ['nullable', 'string'],
-            'company' => ['required', 'string', 'max:255'],
+            'requirements' => ['nullable', 'array'],
+            'requirements.*' => ['nullable', 'string', 'max:500'],
+            'responsibilities' => ['nullable', 'array'],
+            'responsibilities.*' => ['nullable', 'string', 'max:500'],
+            'skills' => ['nullable', 'array'],
+            'skills.*' => ['nullable', 'string', 'max:100'],
+            'deadline' => ['nullable', 'string', 'max:50'],
+            'company' => [$isCompany ? 'nullable' : 'required', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
             'company_size' => ['required', 'string', 'max:100'],
             'is_active' => ['nullable'],
@@ -207,9 +259,16 @@ class AdminJobController extends Controller
             'logo_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
         ]);
 
+        $companyName = $isCompany ? ($company?->name ?? ($validated['company'] ?? 'Perusahaan')) : $validated['company'];
+        $companyLogo = $isCompany ? ($company?->logo_url) : null;
+
         $isActive = $request->boolean('is_active', true);
         $status = $isActive ? 'Active' : 'Draft';
         $tabStatus = $isActive ? 'active' : 'drafts';
+
+        $requirementsArr = array_values(array_filter($request->input('requirements', []), fn ($v) => ! empty(trim($v))));
+        $responsibilitiesArr = array_values(array_filter($request->input('responsibilities', []), fn ($v) => ! empty(trim($v))));
+        $skillsArr = array_values(array_filter($request->input('skills', []), fn ($v) => ! empty(trim($v))));
 
         // Process image and logo
         if ($request->hasFile('image_file')) {
@@ -234,7 +293,16 @@ class AdminJobController extends Controller
             $logoUrl = $imageUrl;
         }
 
+        if (empty($imageUrl) && ! empty($companyLogo)) {
+            $imageUrl = $companyLogo;
+        }
+
+        if (empty($logoUrl) && ! empty($companyLogo)) {
+            $logoUrl = $companyLogo;
+        }
+
         $job = JobListing::create([
+            'user_id' => $user?->id,
             'title' => $validated['title'],
             'department' => $validated['department'],
             'type' => $validated['type'],
@@ -242,8 +310,11 @@ class AdminJobController extends Controller
             'experience' => $validated['experience'] ?? 'Mid',
             'salary_range' => $validated['salary_range'] ?? null,
             'description' => $validated['description'],
-            'requirements' => $validated['requirements'] ?? null,
-            'company' => $validated['company'],
+            'requirements' => ! empty($requirementsArr) ? $requirementsArr : null,
+            'responsibilities' => ! empty($responsibilitiesArr) ? $responsibilitiesArr : null,
+            'skills' => ! empty($skillsArr) ? $skillsArr : null,
+            'deadline' => $validated['deadline'] ?? null,
+            'company' => $companyName,
             'location' => $validated['location'],
             'location_full' => $validated['location'],
             'company_size' => $validated['company_size'],
@@ -255,15 +326,16 @@ class AdminJobController extends Controller
         ]);
 
         return redirect()->route('admin.jobs.index')
-            ->with('success', "Job posting \"{$job->title}\" berhasil dipublikasikan ke database!");
+            ->with('success', "Lowongan pekerjaan \"{$job->title}\" berhasil dipublikasikan!");
     }
 
     /**
      * Show detail of a job posting.
      */
-    public function show(int $id): View
+    public function show(Request $request, int $id): View
     {
         $job = JobListing::findOrFail($id);
+        $this->authorizeJobAccess($job, $request);
 
         return view('admin.jobs.show', compact('job'));
     }
@@ -271,11 +343,16 @@ class AdminJobController extends Controller
     /**
      * Show edit form for job posting.
      */
-    public function edit(int $id): View
+    public function edit(Request $request, int $id): View
     {
         $job = JobListing::findOrFail($id);
+        $this->authorizeJobAccess($job, $request);
 
-        return view('admin.jobs.edit', compact('job'));
+        $user = $request->user();
+        $isCompany = $user && $user->role === 'company';
+        $company = $isCompany ? Company::where('user_id', $user->id)->first() : null;
+
+        return view('admin.jobs.edit', compact('job', 'isCompany', 'company'));
     }
 
     /**
@@ -284,6 +361,11 @@ class AdminJobController extends Controller
     public function update(Request $request, int $id): RedirectResponse
     {
         $job = JobListing::findOrFail($id);
+        $this->authorizeJobAccess($job, $request);
+
+        $user = $request->user();
+        $isCompany = $user && $user->role === 'company';
+        $company = $isCompany ? Company::where('user_id', $user->id)->first() : null;
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -293,8 +375,14 @@ class AdminJobController extends Controller
             'experience' => ['nullable', 'string', 'max:100'],
             'salary_range' => ['nullable', 'string', 'max:100'],
             'description' => ['required', 'string'],
-            'requirements' => ['nullable', 'string'],
-            'company' => ['required', 'string', 'max:255'],
+            'requirements' => ['nullable', 'array'],
+            'requirements.*' => ['nullable', 'string', 'max:500'],
+            'responsibilities' => ['nullable', 'array'],
+            'responsibilities.*' => ['nullable', 'string', 'max:500'],
+            'skills' => ['nullable', 'array'],
+            'skills.*' => ['nullable', 'string', 'max:100'],
+            'deadline' => ['nullable', 'string', 'max:50'],
+            'company' => [$isCompany ? 'nullable' : 'required', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
             'company_size' => ['required', 'string', 'max:100'],
             'is_active' => ['nullable'],
@@ -304,9 +392,15 @@ class AdminJobController extends Controller
             'logo_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
         ]);
 
+        $companyName = $isCompany ? ($company?->name ?? ($job->company ?: 'Perusahaan')) : $validated['company'];
+
         $isActive = $request->boolean('is_active', false);
         $status = $isActive ? 'Active' : 'Draft';
         $tabStatus = $isActive ? 'active' : 'drafts';
+
+        $requirementsArr = array_values(array_filter($request->input('requirements', []), fn ($v) => ! empty(trim($v))));
+        $responsibilitiesArr = array_values(array_filter($request->input('responsibilities', []), fn ($v) => ! empty(trim($v))));
+        $skillsArr = array_values(array_filter($request->input('skills', []), fn ($v) => ! empty(trim($v))));
 
         // Process image
         if ($request->hasFile('image_file')) {
@@ -337,7 +431,7 @@ class AdminJobController extends Controller
             $logoUrl = $imageUrl;
         }
 
-        $job->update([
+        $jobData = [
             'title' => $validated['title'],
             'department' => $validated['department'],
             'type' => $validated['type'],
@@ -345,8 +439,11 @@ class AdminJobController extends Controller
             'experience' => ! empty($validated['experience']) ? $validated['experience'] : $job->experience,
             'salary_range' => $validated['salary_range'] ?? null,
             'description' => $validated['description'],
-            'requirements' => $validated['requirements'] ?? null,
-            'company' => $validated['company'],
+            'requirements' => ! empty($requirementsArr) ? $requirementsArr : null,
+            'responsibilities' => ! empty($responsibilitiesArr) ? $responsibilitiesArr : null,
+            'skills' => ! empty($skillsArr) ? $skillsArr : null,
+            'deadline' => $validated['deadline'] ?? null,
+            'company' => $companyName,
             'location' => $validated['location'],
             'location_full' => $validated['location'],
             'company_size' => $validated['company_size'],
@@ -355,22 +452,47 @@ class AdminJobController extends Controller
             'status' => $status,
             'tab_status' => $tabStatus,
             'is_active' => $isActive,
-        ]);
+        ];
+
+        if (! $job->user_id && $user) {
+            $jobData['user_id'] = $user->id;
+        }
+
+        $job->update($jobData);
 
         return redirect()->route('admin.jobs.index')
-            ->with('success', "Job posting \"{$job->title}\" berhasil diperbarui di database.");
+            ->with('success', "Lowongan pekerjaan \"{$job->title}\" berhasil diperbarui.");
     }
 
     /**
      * Remove job posting from MySQL.
      */
-    public function destroy(int $id): RedirectResponse
+    public function destroy(Request $request, int $id): RedirectResponse
     {
         $job = JobListing::findOrFail($id);
+        $this->authorizeJobAccess($job, $request);
+
         $title = $job->title;
         $job->delete();
 
         return redirect()->route('admin.jobs.index')
-            ->with('success', "Job listing \"{$title}\" berhasil dihapus dari database.");
+            ->with('success', "Lowongan pekerjaan \"{$title}\" berhasil dihapus.");
+    }
+
+    /**
+     * Authorize access to a job listing.
+     */
+    protected function authorizeJobAccess(JobListing $job, Request $request): void
+    {
+        $user = $request->user();
+        if ($user && $user->role === 'company') {
+            $company = Company::where('user_id', $user->id)->first();
+            $isOwner = ($job->user_id && $job->user_id === $user->id) ||
+                       ($company && ! empty($company->name) && $job->company === $company->name);
+
+            if (! $isOwner) {
+                abort(403, 'Anda tidak memiliki hak akses untuk lowongan pekerjaan ini.');
+            }
+        }
     }
 }

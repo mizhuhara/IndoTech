@@ -16,6 +16,8 @@ class JobListing extends Model
     protected $casts = [
         'skills' => 'array',
         'tags' => 'array',
+        'requirements' => 'array',
+        'responsibilities' => 'array',
         'is_active' => 'boolean',
         'total_views' => 'integer',
         'applicants_count' => 'integer',
@@ -95,6 +97,11 @@ class JobListing extends Model
     public function applications()
     {
         return $this->hasMany(JobApplication::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function getApplyTypeAttribute(): string

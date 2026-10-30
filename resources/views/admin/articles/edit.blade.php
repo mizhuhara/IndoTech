@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit Article — Admin')
+@section('title', 'Edit Artikel — Admin')
 
 @push('styles')
 <!-- jQuery -->
@@ -248,18 +248,18 @@
 {{-- Actions --}}
 <div class="flex items-center justify-end mb-6 gap-3">
     <a href="{{ route('admin.articles.index') }}" class="inline-flex items-center h-10 px-4 rounded-lg border border-slate-200 bg-white text-slate-600 text-[13.5px] font-semibold hover:bg-slate-50 transition">
-        Cancel
+        Batal
     </a>
     <button type="submit" form="article-edit-form" class="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-brand-600 text-white text-[13.5px] font-semibold hover:bg-blue-700 shadow-sm transition">
         <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zm3 0v5h8V4M7 15h10m-10 4h10"/></svg>
-        Update Article
+        Perbarui Artikel
     </button>
 </div>
 
 {{-- Validation errors --}}
 @if ($errors->any())
     <div class="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-[13.5px]">
-        <p class="font-semibold mb-1">Please fix the following errors:</p>
+        <p class="font-semibold mb-1">Mohon perbaiki kesalahan berikut:</p>
         <ul class="list-disc list-inside space-y-0.5">
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -280,35 +280,35 @@
             {{-- Article Title --}}
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                 <label for="title" class="block text-[13.5px] font-semibold text-slate-800 mb-2">
-                    Article Title <span class="text-red-500">*</span>
+                    Judul Artikel <span class="text-red-500">*</span>
                 </label>
-                <input id="title" name="title" type="text" required placeholder="Enter article title"
+                <input id="title" name="title" type="text" required placeholder="Masukkan judul artikel..."
                        value="{{ old('title', $article->title) }}"
                        oninput="autoSlug(this.value)"
                        class="w-full h-11 px-3.5 rounded-lg border border-slate-300 text-[14px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
 
                 {{-- Slug --}}
-                <label for="slug" class="block text-[13.5px] font-semibold text-slate-800 mt-5 mb-2">Slug</label>
+                <label for="slug" class="block text-[13.5px] font-semibold text-slate-800 mt-5 mb-2">Slug URL</label>
                 <div class="flex items-center h-11 rounded-lg border border-slate-300 bg-white overflow-hidden focus-within:border-brand-600 focus-within:ring-2 focus-within:ring-blue-500/20 transition">
                     <span class="h-full px-3.5 flex items-center text-[13px] text-slate-400 bg-slate-50 border-r border-slate-200 whitespace-nowrap">indotech.com/blog/</span>
-                    <input id="slug" name="slug" type="text" placeholder="article-slug" value="{{ old('slug', $article->slug) }}"
+                    <input id="slug" name="slug" type="text" placeholder="slug-artikel" value="{{ old('slug', $article->slug) }}"
                            data-touched="true"
                            class="h-full flex-1 min-w-0 px-3.5 text-[14px] text-slate-900 placeholder-slate-400 outline-none bg-transparent">
                 </div>
-                <p class="text-[12px] text-slate-400 mt-1.5">You can change the slug manually.</p>
+                <p class="text-[12px] text-slate-400 mt-1.5">Anda dapat mengubah slug URL ini secara manual.</p>
             </div>
 
             {{-- Excerpt --}}
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                <label for="excerpt" class="block text-[13.5px] font-semibold text-slate-800 mb-2">Excerpt / Summary</label>
-                <textarea id="excerpt" name="excerpt" rows="3" placeholder="Short summary of the article…"
+                <label for="excerpt" class="block text-[13.5px] font-semibold text-slate-800 mb-2">Ringkasan / Sinopsis Artikel</label>
+                <textarea id="excerpt" name="excerpt" rows="3" placeholder="Ringkasan singkat isi artikel…"
                           class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20 resize-none">{{ old('excerpt', $article->excerpt) }}</textarea>
             </div>
 
             {{-- Content (Summernote) --}}
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                 <label for="content" class="block text-[13.5px] font-semibold text-slate-800 mb-2">
-                    Content <span class="text-red-500">*</span>
+                    Konten Lengkap Artikel <span class="text-red-500">*</span>
                 </label>
                 <textarea id="content" name="content">{{ old('content', $article->content) }}</textarea>
             </div>
@@ -319,22 +319,22 @@
 
             {{-- Publish Status --}}
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                <label for="status" class="block text-[13.5px] font-semibold text-slate-800 mb-2">Publish Status <span class="text-red-500">*</span></label>
+                <label for="status" class="block text-[13.5px] font-semibold text-slate-800 mb-2">Status Publikasi <span class="text-red-500">*</span></label>
                 <div class="relative">
                     <select id="status" name="status"
                             class="w-full h-11 px-3.5 pr-9 rounded-lg border border-slate-300 bg-white text-[14px] text-slate-900 appearance-none outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
-                        @foreach (['published' => 'Published', 'draft' => 'Draft', 'archived' => 'Archived'] as $val => $label)
+                        @foreach (['published' => 'Published (Tayang)', 'draft' => 'Draft (Draf)', 'archived' => 'Archived (Arsip)'] as $val => $label)
                             <option value="{{ $val }}" {{ old('status', $article->status) === $val ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                     <svg class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m8 10 4 4 4-4"/></svg>
                 </div>
-                <p class="text-[12px] text-slate-400 mt-2">Last updated: {{ $article->updated_at->diffForHumans() }}</p>
+                <p class="text-[12px] text-slate-400 mt-2">Terakhir diperbarui: {{ $article->updated_at->diffForHumans() }}</p>
             </div>
 
             {{-- Category --}}
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                <label for="category" class="block text-[13.5px] font-semibold text-slate-800 mb-2">Category <span class="text-red-500">*</span></label>
+                <label for="category" class="block text-[13.5px] font-semibold text-slate-800 mb-2">Kategori Artikel <span class="text-red-500">*</span></label>
                 <div class="relative">
                     <select id="category" name="category"
                             class="w-full h-11 px-3.5 pr-9 rounded-lg border border-slate-300 bg-white text-[14px] text-slate-900 appearance-none outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
@@ -348,38 +348,38 @@
 
             {{-- Author --}}
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <h3 class="text-[14px] font-bold text-slate-800">Author Info</h3>
+                <h3 class="text-[14px] font-bold text-slate-800">Informasi Penulis</h3>
                 <div>
-                    <label for="author_name" class="form-label-sm">Author Name</label>
+                    <label for="author_name" class="form-label-sm">Nama Penulis</label>
                     <input id="author_name" name="author_name" type="text" value="{{ old('author_name', $article->author_name) }}"
-                           placeholder="e.g. Budi Santoso"
+                           placeholder="mis. Budi Santoso"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
                 </div>
                 <div>
-                    <label for="author_role" class="form-label-sm">Author Role</label>
+                    <label for="author_role" class="form-label-sm">Profesi / Peran Penulis</label>
                     <input id="author_role" name="author_role" type="text" value="{{ old('author_role', $article->author_role) }}"
-                           placeholder="e.g. Senior Software Engineer"
+                           placeholder="mis. Senior Software Engineer"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
                 </div>
                 <div>
-                    <label for="read_time" class="form-label-sm">Read Time</label>
+                    <label for="read_time" class="form-label-sm">Estimasi Waktu Baca</label>
                     <input id="read_time" name="read_time" type="text" value="{{ old('read_time', $article->read_time) }}"
-                           placeholder="e.g. 5 min read"
+                           placeholder="mis. 5 menit baca"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
                 </div>
             </div>
 
             {{-- Featured Image --}}
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                <label class="block text-[13.5px] font-semibold text-slate-800 mb-2">Featured Image</label>
+                <label class="block text-[13.5px] font-semibold text-slate-800 mb-2">Gambar Utama / Thumbnail</label>
                 <div class="flex items-center space-x-4 mb-2">
-                    <label class="inline-flex items-center">
-                        <input type="radio" name="image_source" value="url" checked class="mr-1">
-                        URL
+                    <label class="inline-flex items-center text-[13px] text-slate-700 cursor-pointer">
+                        <input type="radio" name="image_source" value="url" checked class="mr-1.5 accent-blue-600">
+                        Tautan URL
                     </label>
-                    <label class="inline-flex items-center">
-                        <input type="radio" name="image_source" value="upload" class="mr-1">
-                        Upload
+                    <label class="inline-flex items-center text-[13px] text-slate-700 cursor-pointer">
+                        <input type="radio" name="image_source" value="upload" class="mr-1.5 accent-blue-600">
+                        Unggah Berkas
                     </label>
                 </div>
                 <div id="image-url-field" class="mb-2">
@@ -389,19 +389,19 @@
                     <input id="image" name="image" type="url" value="{{ old('image', $article->image) }}"
                            placeholder="https://images.unsplash.com/…"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
-                    <p class="text-[12px] text-slate-400 mt-1.5">Paste a public image URL for the article thumbnail.</p>
+                    <p class="text-[12px] text-slate-400 mt-1.5">Tempel tautan URL gambar publik untuk thumbnail artikel.</p>
                 </div>
                 <div id="image-upload-field" class="hidden mb-2">
                     <input id="image_file" name="image_file" type="file" accept="image/*"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
-                    <p class="text-[12px] text-slate-400 mt-1.5">Upload an image file for the article thumbnail.</p>
+                    <p class="text-[12px] text-slate-400 mt-1.5">Unggah berkas foto gambar untuk thumbnail artikel (maks 2MB).</p>
                 </div>
                 <div class="mt-4 pt-4 border-t border-slate-100">
-                    <label for="image_caption" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Judul / Keterangan Gambar (Image Title / Caption)</label>
+                    <label for="image_caption" class="block text-[13px] font-semibold text-slate-700 mb-1.5">Keterangan / Caption Gambar</label>
                     <input id="image_caption" name="image_caption" type="text" value="{{ old('image_caption', $article->image_caption) }}"
-                           placeholder="Masukkan judul atau caption gambar (contoh: Ilustrasi perkembangan ekosistem AI modern)"
+                           placeholder="Masukkan caption gambar (contoh: Dokumentasi sesi workshop IndoTech)"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
-                    <p class="text-[12px] text-slate-400 mt-1.5">Judul atau keterangan gambar akan ditampilkan di bawah foto utama artikel.</p>
+                    <p class="text-[12px] text-slate-400 mt-1.5">Keterangan gambar akan ditampilkan tepat di bawah foto utama artikel.</p>
                 </div>
                 <script>
                     document.querySelectorAll('input[name="image_source"]').forEach(function(el){
@@ -420,13 +420,18 @@
 
             {{-- Meta & SEO --}}
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
-                <h3 class="text-[14px] font-bold text-slate-800">Meta & SEO</h3>
+                <h3 class="text-[14px] font-bold text-slate-800">Pengaturan Meta & SEO</h3>
                 <div>
-                    <label for="tags" class="form-label">Tags (comma separated)</label>
+                    <label for="tags" class="form-label">Tag / Kata Kunci (pisahkan dengan koma)</label>
                     <input id="tags" name="tags" type="text"
                            value="{{ old('tags', is_array($article->tags) ? implode(', ', $article->tags) : $article->tags) }}"
-                           placeholder="e.g. AI, Technology, Laravel"
+                           placeholder="mis. AI, Teknologi, Laravel"
                            class="w-full h-10 px-3.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20">
+                </div>
+                <div>
+                    <label for="meta_description" class="form-label">Deskripsi Meta (SEO)</label>
+                    <textarea id="meta_description" name="meta_description" rows="3" placeholder="Deskripsi singkat artikel untuk mesin pencari..."
+                              class="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-[13.5px] text-slate-900 placeholder-slate-400 bg-white outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-blue-500/20 resize-none">{{ old('meta_description', $article->meta_description) }}</textarea>
                 </div>
             </div>
         </div>
@@ -461,6 +466,27 @@
             callbacks: {
                 onChange: function(contents, $editable) {
                     $('#content').val(contents);
+                },
+                onImageUpload: function(files) {
+                    var formData = new FormData();
+                    formData.append('file', files[0]);
+                    formData.append('_token', '{{ csrf_token() }}');
+                    $.ajax({
+                        url: '{{ route('admin.editor.upload') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            $('#content').summernote('insertImage', data.url);
+                        },
+                        error: function(xhr) {
+                            var msg = xhr.responseJSON && xhr.responseJSON.message 
+                                ? xhr.responseJSON.message 
+                                : 'Gagal mengunggah gambar. Pastikan format berkas JPG, PNG, atau WebP (maksimal 25MB).';
+                            alert(msg);
+                        }
+                    });
                 }
             }
         });
