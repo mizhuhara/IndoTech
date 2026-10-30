@@ -42,7 +42,7 @@ class CommunityController extends Controller
         };
 
         return view('community.index', [
-            'communities' => $query->paginate(12)->withQueryString(),
+            'communities' => $query->paginate(6)->withQueryString(),
             'totalMembers' => Community::where('status', 'active')->sum('members'),
             'totalGroups' => Community::where('status', 'active')->count(),
             'activeSort' => $sort,

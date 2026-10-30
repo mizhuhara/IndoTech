@@ -41,7 +41,7 @@ class CareerController extends Controller
                 });
             }
 
-            $seekers = $seekerQuery->latest()->get();
+            $seekers = $seekerQuery->latest('id')->paginate(6)->withQueryString();
 
             return view('career.kerja', [
                 'seekers' => $seekers,
@@ -92,7 +92,7 @@ class CareerController extends Controller
                 }
             }
 
-            $jobs = $query->inRandomOrder()->get();
+            $jobs = $query->latest('id')->paginate(6)->withQueryString();
         }
 
         return view('career.index', [
@@ -194,7 +194,7 @@ class CareerController extends Controller
             });
         }
 
-        return $query->inRandomOrder()->get();
+        return $query->latest('id')->paginate(6)->withQueryString();
     }
 
     public function apply(string $type, int $id): View

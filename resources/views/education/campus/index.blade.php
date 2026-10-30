@@ -18,7 +18,31 @@
 <div class="max-w-7xl mx-auto px-4 pb-28 sm:pb-36">
 
     {{-- Filter Bar Toolbar --}}
-    <div class="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 mb-10 shadow-xs">
+    <div class="bg-white border border-slate-200 rounded-xl p-3 sm:p-4 mb-10 shadow-xs space-y-3">
+
+        {{-- Row 1: Search Input --}}
+        <div class="relative flex items-center">
+            <svg class="absolute left-3.5 w-4 h-4 text-slate-400 pointer-events-none stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <circle cx="11" cy="11" r="7"/>
+                <path stroke-linecap="round" d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text"
+                   id="campusSearchInput"
+                   placeholder="Cari nama perguruan tinggi / universitas..."
+                   class="w-full h-11 pl-10 pr-10 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 placeholder-slate-400 focus:outline-hidden focus:border-blue-600 focus:ring-2 focus:ring-blue-100 focus:bg-white transition"
+                   oninput="applyCampusFilter()">
+            <button type="button"
+                    id="campusSearchClear"
+                    onclick="document.getElementById('campusSearchInput').value=''; applyCampusFilter();"
+                    class="absolute right-3.5 text-slate-400 hover:text-slate-600 hidden"
+                    aria-label="Hapus pencarian">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        {{-- Row 2: Filter Dropdowns + Category Switcher --}}
         <form id="campusFilterForm" onsubmit="event.preventDefault(); applyCampusFilter();" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-center">
             
             {{-- Location / Region Filter --}}
@@ -80,6 +104,8 @@
     <div id="campusGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($campuses as $campus)
             <div class="campus-card bg-white border border-slate-200 rounded-2xl overflow-hidden flex flex-col justify-between hover:shadow-xl hover:border-slate-300 transition-all duration-200 group"
+                 data-name="{{ $campus['name'] }}"
+                 data-faculty="{{ $campus['faculty'] ?? '' }}"
                  data-location="{{ $campus['location'] }}"
                  data-province="{{ $campus['province'] ?? '' }}"
                  data-tags="{{ implode(',', $campus['tags']) }}"
@@ -171,7 +197,7 @@
                 <path d="m21 21-4.35-4.35"></path>
             </svg>
             <h4 class="text-base font-bold text-slate-800 mb-1">Tidak Ada Kampus Ditemukan</h4>
-            <p class="text-sm text-slate-500">Coba sesuaikan filter lokasi atau jurusan IT Anda.</p>
+            <p class="text-sm text-slate-500">Coba sesuaikan kata kunci pencarian atau filter lokasi dan jurusan IT Anda.</p>
         </div>
     </div>
 
@@ -205,23 +231,34 @@
     });
 
     function applyCampusFilter() {
+        const searchInput = document.getElementById('campusSearchInput');
+        const searchClear = document.getElementById('campusSearchClear');
+        const search = searchInput ? searchInput.value.toLowerCase().trim() : '';
         const loc = document.getElementById('campusLocationSelect').value.toLowerCase();
         const skill = document.getElementById('campusSkillSelect').value.toLowerCase();
         const program = document.getElementById('campusProgramSelect').value.toLowerCase();
 
+        // Toggle clear (×) button
+        if (searchClear) {
+            searchClear.classList.toggle('hidden', search.length === 0);
+        }
+
         const allCards = Array.from(document.querySelectorAll('.campus-card'));
 
         filteredCampusItems = allCards.filter(card => {
-            const cardLoc = card.getAttribute('data-location').toLowerCase();
+            const cardName = (card.getAttribute('data-name') || '').toLowerCase();
+            const cardFaculty = (card.getAttribute('data-faculty') || '').toLowerCase();
+            const cardLoc = (card.getAttribute('data-location') || '').toLowerCase();
             const cardProv = (card.getAttribute('data-province') || '').toLowerCase();
-            const cardTags = card.getAttribute('data-tags').toLowerCase();
-            const cardStatus = card.getAttribute('data-status').toLowerCase();
+            const cardTags = (card.getAttribute('data-tags') || '').toLowerCase();
+            const cardStatus = (card.getAttribute('data-status') || '').toLowerCase();
 
+            const matchSearch = !search || cardName.includes(search) || cardFaculty.includes(search) || cardLoc.includes(search) || cardProv.includes(search) || cardTags.includes(search);
             const matchLoc = !loc || cardLoc.includes(loc) || cardProv.includes(loc);
-            const matchSkill = !skill || cardTags.includes(skill);
+            const matchSkill = !skill || cardTags.includes(skill) || cardFaculty.includes(skill);
             const matchProg = !program || cardStatus.includes(program);
 
-            return matchLoc && matchSkill && matchProg;
+            return matchSearch && matchLoc && matchSkill && matchProg;
         });
 
         currentCampusPage = 1;
@@ -296,8 +333,9 @@
         currentCampusPage = page;
         renderCampusPage();
 
+        const scrollTarget = document.getElementById('campusSearchInput') || document.getElementById('campusFilterForm');
         window.scrollTo({
-            top: document.getElementById('campusFilterForm').offsetTop - 80,
+            top: scrollTarget.offsetTop - 80,
             behavior: 'smooth'
         });
     }
