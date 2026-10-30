@@ -199,12 +199,73 @@
         </button>
 
         {{-- Notifications --}}
-        <button type="button" class="relative p-2 rounded-full text-slate-500 hover:bg-slate-100 transition" aria-label="Notifications">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.5-1.5V11a5.5 5.5 0 0 0-4-5.3V5a1.5 1.5 0 0 0-3 0v.7a5.5 5.5 0 0 0-4 5.3v4.5L6 17h5m4 0v1a3 3 0 0 1-6 0v-1"/>
-            </svg>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-        </button>
+        @php
+            $isAdminArea = in_array($headerUserRole, ['super_admin', 'admin'], true);
+            $pendingVerifications = $isAdminArea
+                ? \App\Models\User::whereIn('role', ['school', 'university', 'company'])->where('status', 'pending')->count()
+                : 0;
+            $pendingEvents = $isAdminArea
+                ? \App\Models\Event::where('status', 'Pending')->count()
+                : 0;
+            $pendingApplications = $isAdminArea
+                ? \App\Models\JobApplication::where('status', 'pending')->count()
+                : 0;
+            $notificationTotal = $pendingVerifications + $pendingEvents + $pendingApplications;
+        @endphp
+        @if($isAdminArea)
+            <div class="relative" id="admin-notif-nav">
+                <button type="button" id="admin-notif-btn" aria-haspopup="true" aria-expanded="false" class="relative p-2 rounded-full text-slate-500 hover:bg-slate-100 transition" aria-label="Notifications">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.5-1.5V11a5.5 5.5 0 0 0-4-5.3V5a1.5 1.5 0 0 0-3 0v.7a5.5 5.5 0 0 0-4 5.3v4.5L6 17h5m4 0v1a3 3 0 0 1-6 0v-1"/>
+                    </svg>
+                    @if($notificationTotal > 0)
+                        <span class="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-4 text-center ring-2 ring-white">{{ $notificationTotal > 99 ? '99+' : $notificationTotal }}</span>
+                    @endif
+                </button>
+
+                <div id="admin-notif-menu" class="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-slate-200/90 py-1.5 z-50 animate-fade-in" style="display:none;">
+                    <div class="px-3.5 py-2 border-b border-slate-100 mb-1 flex items-center justify-between">
+                        <p class="text-xs font-bold text-slate-900">Notifikasi</p>
+                        <span class="text-[11px] text-slate-500">{{ $notificationTotal }} baru</span>
+                    </div>
+
+                    @if($notificationTotal === 0)
+                        <p class="px-3.5 py-6 text-center text-[12.5px] text-slate-500">Tidak ada notifikasi baru.</p>
+                    @else
+                        <a href="{{ route('admin.verification.index') }}" class="flex items-start gap-2.5 px-3.5 py-2.5 hover:bg-slate-50 transition-colors">
+                            <span class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
+                                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 3h.01M10.3 3.6 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0Z"/></svg>
+                            </span>
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-[13px] font-semibold text-slate-800">Verifikasi akun</span>
+                                <span class="block text-[11.5px] text-slate-500">{{ $pendingVerifications }} akun menunggu persetujuan</span>
+                            </span>
+                            @if($pendingVerifications > 0)<span class="mt-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-[18px] text-center">{{ $pendingVerifications }}</span>@endif
+                        </a>
+                        <a href="{{ route('admin.events.index', ['status' => 'pending']) }}" class="flex items-start gap-2.5 px-3.5 py-2.5 hover:bg-slate-50 transition-colors">
+                            <span class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path stroke-linecap="round" d="M16 2v4M8 2v4M3 10h18"/></svg>
+                            </span>
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-[13px] font-semibold text-slate-800">Event menunggu</span>
+                                <span class="block text-[11.5px] text-slate-500">{{ $pendingEvents }} event perlu ditinjau</span>
+                            </span>
+                            @if($pendingEvents > 0)<span class="mt-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-[18px] text-center">{{ $pendingEvents }}</span>@endif
+                        </a>
+                        <a href="{{ route('admin.applications.index', ['status' => 'pending']) }}" class="flex items-start gap-2.5 px-3.5 py-2.5 hover:bg-slate-50 transition-colors">
+                            <span class="mt-0.5 w-7 h-7 shrink-0 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Zm0 0v6h6"/></svg>
+                            </span>
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-[13px] font-semibold text-slate-800">Lamaran pending</span>
+                                <span class="block text-[11.5px] text-slate-500">{{ $pendingApplications }} lamaran menunggu</span>
+                            </span>
+                            @if($pendingApplications > 0)<span class="mt-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-[18px] text-center">{{ $pendingApplications }}</span>@endif
+                        </a>
+                    @endif
+                </div>
+            </div>
+        @endif
 
         <div class="h-7 w-[1px] bg-slate-200 mx-1"></div>
 
@@ -291,6 +352,8 @@
                 var isHidden = menu.style.display === 'none';
                 menu.style.display = isHidden ? 'block' : 'none';
                 btn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+                var notifMenu = document.getElementById('admin-notif-menu');
+                if (notifMenu) notifMenu.style.display = 'none';
             });
             document.addEventListener('click', function(e) {
                 if (!btn.contains(e.target) && !menu.contains(e.target)) {
@@ -302,6 +365,31 @@
                 if (e.key === 'Escape') {
                     menu.style.display = 'none';
                     btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        var notifBtn = document.getElementById('admin-notif-btn');
+        var notifMenu = document.getElementById('admin-notif-menu');
+        if (notifBtn && notifMenu) {
+            notifBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var isHidden = notifMenu.style.display === 'none';
+                notifMenu.style.display = isHidden ? 'block' : 'none';
+                notifBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+                var userMenu = document.getElementById('admin-user-menu');
+                if (userMenu) userMenu.style.display = 'none';
+            });
+            document.addEventListener('click', function(e) {
+                if (!notifBtn.contains(e.target) && !notifMenu.contains(e.target)) {
+                    notifMenu.style.display = 'none';
+                    notifBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    notifMenu.style.display = 'none';
+                    notifBtn.setAttribute('aria-expanded', 'false');
                 }
             });
         }

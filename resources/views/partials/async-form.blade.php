@@ -130,7 +130,7 @@
 
                 clearFieldErrors(form);
 
-                notify('success', 'Berhasil', payload.message || 'Data berhasil disimpan.');
+                if (payload.message) notify('success', 'Berhasil', payload.message);
 
                 if (form.hasAttribute('data-async-reset')) form.reset();
 

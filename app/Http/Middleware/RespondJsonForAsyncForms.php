@@ -47,7 +47,7 @@ class RespondJsonForAsyncForms
         }
 
         return response()->json([
-            'message' => $message ?? 'Data berhasil disimpan.',
+            'message' => $message,
             'redirect' => $response->getTargetUrl(),
         ]);
     }
