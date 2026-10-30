@@ -353,4 +353,26 @@ class CommunityTest extends TestCase
         $response->assertSee(route('community.my'));
         $response->assertSee('Komunitas Saya');
     }
+
+    public function test_community_index_is_paginated_and_renders_pagination_links(): void
+    {
+        for ($i = 1; $i <= 8; $i++) {
+            Community::create([
+                'name' => "Komunitas Tech {$i}",
+                'category' => 'Technology',
+                'members' => $i * 10,
+                'status' => 'active',
+            ]);
+        }
+
+        $response = $this->get(route('community.index'));
+        $response->assertOk();
+        $response->assertSee('cmty-pagination');
+        $response->assertSee('Komunitas Tech 8');
+
+        $pageTwo = $this->get(route('community.index', ['page' => 2]));
+        $pageTwo->assertOk();
+        $pageTwo->assertSee('Komunitas Tech 2');
+        $pageTwo->assertSee('Komunitas Tech 1');
+    }
 }

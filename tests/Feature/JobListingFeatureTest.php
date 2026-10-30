@@ -352,4 +352,49 @@ class JobListingFeatureTest extends TestCase
             'status' => 'aktif',
         ]);
     }
+
+    public function test_career_index_page_is_paginated_and_renders_pagination_links(): void
+    {
+        for ($i = 1; $i <= 8; $i++) {
+            $this->createSampleJob([
+                'title' => "Software Engineer {$i}",
+            ]);
+        }
+
+        $response = $this->get(route('career.index'));
+        $response->assertOk();
+        $response->assertSee('cr-pagination');
+        $response->assertSee('Software Engineer 8');
+        $response->assertDontSee('Software Engineer 2');
+
+        $pageTwo = $this->get(route('career.index', ['page' => 2]));
+        $pageTwo->assertOk();
+        $pageTwo->assertSee('Software Engineer 2');
+        $pageTwo->assertSee('Software Engineer 1');
+    }
+
+    public function test_career_kerja_tab_is_paginated_and_renders_pagination_links(): void
+    {
+        for ($i = 1; $i <= 8; $i++) {
+            JobSeeker::create([
+                'name' => "Kandidat {$i}",
+                'email' => "kandidat{$i}@example.com",
+                'job_title' => "Developer {$i}",
+                'experience_level' => 'Mid',
+                'availability' => 'Segera',
+                'status' => 'aktif',
+            ]);
+        }
+
+        $response = $this->get(route('career.index', ['type' => 'kerja']));
+        $response->assertOk();
+        $response->assertSee('sk-pagination');
+        $response->assertSee('Kandidat 8');
+        $response->assertDontSee('Kandidat 2');
+
+        $pageTwo = $this->get(route('career.index', ['type' => 'kerja', 'page' => 2]));
+        $pageTwo->assertOk();
+        $pageTwo->assertSee('Kandidat 2');
+        $pageTwo->assertSee('Kandidat 1');
+    }
 }

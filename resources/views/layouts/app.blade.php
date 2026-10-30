@@ -994,9 +994,9 @@
             flex-shrink: 0;
             line-height: 0;
         }
-        .it-ci-icon.email    { background: #dbeafe; color: #2563eb; }
-        .it-ci-icon.phone    { background: #dcfce7; color: #16a34a; }
-        .it-ci-icon.location { background: #fee2e2; color: #dc2626; }
+        .it-ci-icon.email    { background: #f1f5f9; color: #64748b; }
+        .it-ci-icon.phone    { background: #f1f5f9; color: #64748b; }
+        .it-ci-icon.location { background: #f1f5f9; color: #64748b; }
 
         .it-footer-bottom {
             margin-top: 48px;

@@ -56,7 +56,8 @@ class EducationDirectoryTest extends TestCase
 
         $this->get(route('campus.index'))
             ->assertOk()
-            ->assertSee('Universitas Test');
+            ->assertSee('Universitas Test')
+            ->assertSee('campusSearchInput');
 
         $this->get(route('campus.show', '87654321'))
             ->assertOk()
@@ -113,7 +114,7 @@ class EducationDirectoryTest extends TestCase
             'gallery' => [$galleryPhoto1, $galleryPhoto2],
         ]);
 
-        $response->assertRedirect(route('admin.schools.index'));
+        $response->assertRedirect(route('admin.schools.edit', $school->id));
         $response->assertSessionHas('success');
 
         $school->refresh();

@@ -297,7 +297,7 @@
 
     {{-- Toolbar --}}
     <div class="sk-toolbar">
-        <p class="sk-count"><strong>{{ $seekers->count() }}</strong> pencari kerja aktif terdaftar</p>
+        <p class="sk-count"><strong>{{ $seekers->total() }}</strong> pencari kerja aktif terdaftar</p>
         <form class="sk-search" method="GET" action="{{ route('career.index') }}">
             <input type="hidden" name="type" value="kerja">
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -387,5 +387,12 @@
             </div>
         @endforelse
     </div>
+
+    {{-- Pagination (Centered) --}}
+    @if($seekers->hasPages())
+        <div class="sk-pagination mt-10 mb-4 flex justify-center w-full">
+            {{ $seekers->withQueryString()->links('vendor.pagination.tailwind') }}
+        </div>
+    @endif
 </div>
 @endsection

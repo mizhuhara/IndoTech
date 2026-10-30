@@ -489,7 +489,7 @@
             <button type="button" class="cr-filter-toggle" id="cr-filter-toggle">Tampilkan Filter</button>
 
             <div class="cr-toolbar">
-                <p class="cr-count"><strong>{{ count($jobs) }}</strong> {{ count($jobs) === 1 ? 'lowongan' : 'lowongan' }} tersedia</p>
+                <p class="cr-count"><strong>{{ $jobs->total() }}</strong> lowongan tersedia</p>
                 <form class="cr-search" method="GET" action="{{ route('career.index') }}">
                     <input type="hidden" name="type" value="{{ $tab }}">
                     @foreach((array) request('job_type', []) as $v)
@@ -523,6 +523,13 @@
                         @include('career._job-card', ['job' => $job, 'tabs' => $tabs])
                     @endforeach
                 </div>
+
+                {{-- Pagination (Centered) --}}
+                @if($jobs->hasPages())
+                    <div class="cr-pagination mt-10 mb-4 flex justify-center w-full">
+                        {{ $jobs->withQueryString()->links('vendor.pagination.tailwind') }}
+                    </div>
+                @endif
             @endif
         </div>
     </div>

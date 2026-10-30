@@ -132,6 +132,7 @@
     </section>
 
     {{-- ===== CTA ===== --}}
+    @guest
     <section class="mx-auto max-w-6xl px-6 pb-16">
         <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 px-8 py-14 text-center text-white sm:px-14">
             <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Build Your Future in Technology</h2>
@@ -149,4 +150,5 @@
             </div>
         </div>
     </section>
+    @endguest
 @endsection
