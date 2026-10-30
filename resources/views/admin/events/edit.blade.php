@@ -235,7 +235,7 @@
                     @if($isSchool)
                         @php
                             $instName = $event->organizer;
-                            $instType = isset($univ) && $univ ? 'Universitas (University)' : 'Sekolah (School)';
+                            $instType = $event->organizer_type ?: ((isset($company) && $company) || (isset($userRole) && $userRole === 'company') ? 'Perusahaan (Company)' : (isset($univ) && $univ ? 'Universitas (University)' : 'Sekolah (School)'));
                         @endphp
                         {{-- Institution Info Box --}}
                         <div class="p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-xl space-y-1">

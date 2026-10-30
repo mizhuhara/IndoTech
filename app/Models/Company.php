@@ -31,6 +31,9 @@ class Company extends Model
         'tags',
         'total_employees',
         'founded',
+        'projects_completed',
+        'specialties',
+        'tech_stack',
         'gallery',
         'latitude',
         'longitude',
@@ -39,6 +42,8 @@ class Company extends Model
 
     protected $casts = [
         'tags' => 'array',
+        'specialties' => 'array',
+        'tech_stack' => 'array',
         'gallery' => 'array',
         'total_employees' => 'integer',
         'founded' => 'integer',

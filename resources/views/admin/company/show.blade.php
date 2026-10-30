@@ -1,8 +1,8 @@
 @extends('admin.layouts.app')
 
-@section('title', ($company['name'] ?? 'Company Details') . ' — IndoTech')
-@section('header_title', $company['name'] ?? 'Company Details')
-@section('header_breadcrumb', 'Detail Company')
+@section('title', ($company['name'] ?? 'Detail Perusahaan') . ' — IndoTech')
+@section('header_title', $company['name'] ?? 'Detail Perusahaan')
+@section('header_breadcrumb', 'Detail Perusahaan')
 @section('header_subtitle', 'Informasi profil dan status legalitas mitra industri')
 
 @section('content')
@@ -36,7 +36,7 @@
                             <line x1="10" y1="11" x2="10" y2="17"/>
                             <line x1="14" y1="11" x2="14" y2="17"/>
                         </svg>
-                        Delete
+                        Hapus
                     </button>
                 </form>
             </div>
@@ -49,24 +49,24 @@
         {{-- LEFT COLUMN (8 cols) --}}
         <div class="lg:col-span-8 space-y-6">
 
-            {{-- Card 1: Basic Information --}}
+            {{-- Card 1: Informasi Dasar --}}
             <div class="card">
                 <div class="flex items-center gap-2.5 mb-6 text-slate-900">
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <rect x="4" y="3" width="16" height="18" rx="2"/>
                         <path stroke-linecap="round" d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
                     </svg>
-                    <h2 class="text-[17px] font-bold text-slate-900">Basic Information</h2>
+                    <h2 class="text-[17px] font-bold text-slate-900">Informasi Dasar Perusahaan</h2>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-5">
                     <div>
-                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Company Code</div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Kode Perusahaan / NIB</div>
                         <div class="text-[15px] font-bold text-slate-900">{{ $company['npsn'] ?? '-' }}</div>
                     </div>
                     
                     <div>
-                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Company Type</div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Tipe Perusahaan</div>
                         <div class="text-[15px] font-bold text-slate-900">
                             @if(($company['type'] ?? '') === 'BUMN')
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-bold bg-red-50 text-red-700">BUMN</span>
@@ -77,13 +77,23 @@
                     </div>
                     
                     <div>
-                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Industry</div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Bidang Industri</div>
                         <div class="text-[15px] font-bold text-slate-900">{{ $company['industry'] ?? '-' }}</div>
                     </div>
                     
                     <div>
-                        <div class="text-[13px] font-semibold text-slate-500 mb-1">City / Province</div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Kota / Provinsi</div>
                         <div class="text-[15px] font-bold text-slate-900">{{ $company['city'] ?? '-' }}, {{ $company['province'] ?? '-' }}</div>
+                    </div>
+
+                    <div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Karyawan & Berdiri</div>
+                        <div class="text-[15px] font-bold text-slate-900">{{ $company['total_employees'] ?? 0 }} Karyawan • Berdiri {{ $company['founded'] ?? '-' }}</div>
+                    </div>
+
+                    <div>
+                        <div class="text-[13px] font-semibold text-slate-500 mb-1">Portofolio</div>
+                        <div class="text-[15px] font-bold text-slate-900">{{ $company['projects_completed'] ?? '-' }}</div>
                     </div>
                     
                     <div class="sm:col-span-2">
@@ -92,16 +102,43 @@
                             @if(($company['status'] ?? 'active') === 'active')
                                 <span class="inline-flex items-center gap-1.5 text-[14px] font-bold text-slate-800">
                                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                                    Active Partner
+                                    Mitra Aktif
                                 </span>
                             @else
                                 <span class="inline-flex items-center gap-1.5 text-[14px] font-bold text-slate-800">
                                     <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                                    Inactive
+                                    Non-aktif
                                 </span>
                             @endif
                         </div>
                     </div>
+
+                    @if(!empty($company['specialties']))
+                    <div class="sm:col-span-2">
+                        <div class="text-[13px] font-semibold text-slate-500 mb-2">Layanan Utama & Keunggulan</div>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($company['specialties'] as $spec)
+                                <span class="inline-flex items-center gap-1 px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-xl">
+                                    ✓ {{ $spec }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    @if(!empty($company['tech_stack']))
+                    <div class="sm:col-span-2">
+                        <div class="text-[13px] font-semibold text-slate-500 mb-2">Teknologi & Tech Stack</div>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($company['tech_stack'] as $tech)
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold rounded-xl">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+                                    {{ $tech }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -111,11 +148,11 @@
                     <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="2" class="shrink-0">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9z"/>
                     </svg>
-                    <h2 class="text-[17px] font-bold text-slate-900">Company Description</h2>
+                    <h2 class="text-[17px] font-bold text-slate-900">Deskripsi Perusahaan</h2>
                 </div>
                 
-                <div class="text-[14px] text-slate-700 leading-relaxed bg-[#f0f4f9]/50 rounded-xl p-5">
-                    {{ $company['description'] ?? 'Belum ada deskripsi.' }}
+                <div class="prose prose-sm max-w-none text-[14px] text-slate-700 leading-relaxed bg-[#f0f4f9]/50 rounded-xl p-5 overflow-hidden [&_img]:rounded-xl [&_img]:max-w-full [&_img]:h-auto [&_p]:mb-2 [&_p:last-child]:mb-0">
+                    {!! $company['description'] ?? 'Belum ada deskripsi.' !!}
                 </div>
             </div>
 
@@ -127,19 +164,28 @@
                         <circle cx="8.5" cy="8.5" r="1.5"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
                     </svg>
-                    <h2 class="text-[17px] font-bold text-slate-900">Company Gallery</h2>
+                    <h2 class="text-[17px] font-bold text-slate-900">Galeri Perusahaan</h2>
                 </div>
 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    @for ($i = 0; $i < 4; $i++)
-                        <div class="aspect-square rounded-2xl bg-[#f0f4f9] border border-slate-200/60 flex items-center justify-center text-slate-300">
-                            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
-                                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                                <circle cx="8.5" cy="8.5" r="1.5"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
-                            </svg>
+                    @php
+                        $showGallery = is_array($company['gallery'] ?? null) ? $company['gallery'] : [];
+                    @endphp
+                    @forelse ($showGallery as $photo)
+                        <div class="aspect-square rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden shadow-xs">
+                            <img src="{{ $photo }}" alt="Galeri" class="w-full h-full object-cover hover:scale-105 transition duration-300">
                         </div>
-                    @endfor
+                    @empty
+                        @for ($i = 0; $i < 4; $i++)
+                            <div class="aspect-square rounded-2xl bg-[#f0f4f9] border border-slate-200/60 flex items-center justify-center text-slate-300">
+                                <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 15-5-5L5 21"/>
+                                </svg>
+                            </div>
+                        @endfor
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -149,7 +195,7 @@
 
             {{-- Card 1: Logo Preview --}}
             <div class="card flex flex-col items-center text-center">
-                <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Company Logo</h2>
+                <h2 class="text-[17px] font-bold text-slate-900 self-start mb-5">Logo Perusahaan</h2>
                 
                 <div class="w-full aspect-[4/3] rounded-2xl bg-[#f0f4f9] border border-slate-200/70 flex items-center justify-center p-6 mb-4 relative overflow-hidden">
                     <div class="w-24 h-24 rounded-full bg-blue-50 flex items-center justify-center shadow-sm border border-white text-brand-600 font-extrabold text-2xl overflow-hidden">
@@ -164,7 +210,7 @@
 
             {{-- Card 2: Contact Info --}}
             <div class="card">
-                <h2 class="text-[17px] font-bold text-slate-900 mb-5">Contact Information</h2>
+                <h2 class="text-[17px] font-bold text-slate-900 mb-5">Informasi Kontak</h2>
 
                 <div class="space-y-5">
                     <div class="flex items-start gap-3">
@@ -202,7 +248,7 @@
                             </svg>
                         </div>
                         <div>
-                            <div class="text-[13px] font-semibold text-slate-500 mb-0.5">Phone</div>
+                            <div class="text-[13px] font-semibold text-slate-500 mb-0.5">Telepon</div>
                             <div class="text-[14px] font-bold text-slate-900">{{ $company['phone'] ?? '-' }}</div>
                         </div>
                     </div>
@@ -211,7 +257,7 @@
 
             {{-- Card 3: Address Details --}}
             <div class="card">
-                <h2 class="text-[17px] font-bold text-slate-900 mb-4">Address</h2>
+                <h2 class="text-[17px] font-bold text-slate-900 mb-4">Alamat Lengkap</h2>
                 <div class="flex items-start gap-3">
                     <div class="mt-0.5 text-slate-400">
                         <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

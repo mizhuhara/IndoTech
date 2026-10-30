@@ -19,8 +19,10 @@
                 Buat Event Baru
             </h1>
             <p class="text-xs text-slate-500 mt-0.5">
-                @if($isSchool)
-                    Publikasikan agenda event atau workshop sekolah. Event yang dibuat akan diverifikasi oleh Admin.
+                @if(($userRole ?? auth()->user()?->role) === 'company')
+                    Publikasikan agenda event, workshop, webinar, atau job fair perusahaan Anda. Event yang dibuat akan diverifikasi oleh Admin.
+                @elseif($isSchool)
+                    Publikasikan agenda event atau workshop institusi Anda. Event yang dibuat akan diverifikasi oleh Admin.
                 @else
                     Publikasikan agenda event, webinar, atau kompetisi teknologi.
                 @endif
@@ -223,8 +225,8 @@
 
                     @if($isSchool)
                         @php
-                            $institutionName = $school?->name ?? $univ?->name ?? auth()->user()->name;
-                            $institutionType = $school ? 'Sekolah (School)' : 'Universitas (University)';
+                            $institutionName = $company?->name ?? $school?->name ?? $univ?->name ?? auth()->user()->name;
+                            $institutionType = $company ? 'Perusahaan (Company)' : ($univ ? 'Universitas (University)' : 'Sekolah (School)');
                         @endphp
                         {{-- Institution Info Box --}}
                         <div class="p-3.5 bg-blue-50/70 border border-blue-200/80 rounded-xl space-y-1">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Models\School;
@@ -19,7 +20,7 @@ class AdminEventController extends Controller
     public function index(Request $request): View
     {
         $user = $request->user();
-        $isInstitution = $user && in_array($user->role, ['school', 'university'], true);
+        $isInstitution = $user && in_array($user->role, ['school', 'university', 'company'], true);
         $isSchool = $user && $user->role === 'school';
         $query = $this->visibleEvents();
 
@@ -56,6 +57,7 @@ class AdminEventController extends Controller
             'activeStatus' => $status,
             'searchQuery' => $searchQuery,
             'isSchool' => $isInstitution,
+            'userRole' => $user?->role,
             'totalEntries' => (clone $visible)->count(),
             'pendingCount' => (clone $visible)->where('status', 'Pending')->count(),
             'approvedCount' => (clone $visible)->where('status', 'Approved')->count(),
@@ -69,15 +71,18 @@ class AdminEventController extends Controller
     public function create(): View
     {
         $user = auth()->user();
-        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university', 'company'], true), 403, 'Akses ditolak.');
 
         $school = $user->role === 'school' ? School::where('user_id', $user->id)->first() : null;
         $univ = $user->role === 'university' ? University::where('user_id', $user->id)->first() : null;
-        $isInstitution = in_array($user->role, ['school', 'university'], true);
+        $company = $user->role === 'company' ? Company::where('user_id', $user->id)->first() : null;
+        $isInstitution = in_array($user->role, ['school', 'university', 'company'], true);
 
         return view('admin.events.create', [
             'school' => $school,
             'univ' => $univ,
+            'company' => $company,
+            'userRole' => $user->role,
             'isSchool' => $isInstitution,
         ]);
     }
@@ -88,7 +93,7 @@ class AdminEventController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $user = $request->user();
-        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university', 'company'], true), 403, 'Akses ditolak.');
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -122,6 +127,12 @@ class AdminEventController extends Controller
             $organizerType = 'University';
             $status = 'Pending';
             $isVerified = false;
+        } elseif ($user->role === 'company') {
+            $company = Company::where('user_id', $user->id)->first();
+            $organizer = $company ? $company->name : $user->name;
+            $organizerType = 'Company';
+            $status = 'Pending';
+            $isVerified = false;
         } else {
             $organizer = $request->input('organizer', $user->name);
             $organizerType = $request->input('organizer_type', 'Company');
@@ -152,7 +163,7 @@ class AdminEventController extends Controller
             'is_verified' => $isVerified,
         ]);
 
-        $msg = in_array($user->role, ['school', 'university'], true)
+        $msg = in_array($user->role, ['school', 'university', 'company'], true)
             ? "Event '{$event->title}' berhasil dibuat dan sedang menunggu verifikasi admin."
             : "Event '{$event->title}' berhasil dipublikasikan.";
 
@@ -188,7 +199,8 @@ class AdminEventController extends Controller
             'event' => $event,
             'registrations' => $registrations,
             'searchQuery' => $request->query('q', ''),
-            'isSchool' => auth()->user()?->role === 'school',
+            'isSchool' => in_array(auth()->user()?->role, ['school', 'university', 'company'], true),
+            'userRole' => auth()->user()?->role,
         ]);
     }
 
@@ -198,17 +210,20 @@ class AdminEventController extends Controller
     public function edit(int $id): View
     {
         $user = auth()->user();
-        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university', 'company'], true), 403, 'Akses ditolak.');
 
         $event = $this->findVisibleEvent($id);
         $school = $user->role === 'school' ? School::where('user_id', $user->id)->first() : null;
         $univ = $user->role === 'university' ? University::where('user_id', $user->id)->first() : null;
-        $isInstitution = in_array($user->role, ['school', 'university'], true);
+        $company = $user->role === 'company' ? Company::where('user_id', $user->id)->first() : null;
+        $isInstitution = in_array($user->role, ['school', 'university', 'company'], true);
 
         return view('admin.events.edit', [
             'event' => $event,
             'school' => $school,
             'univ' => $univ,
+            'company' => $company,
+            'userRole' => $user->role,
             'isSchool' => $isInstitution,
         ]);
     }
@@ -219,7 +234,7 @@ class AdminEventController extends Controller
     public function update(Request $request, int $id): RedirectResponse
     {
         $user = $request->user();
-        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university', 'company'], true), 403, 'Akses ditolak.');
 
         $event = $this->findVisibleEvent($id);
 
@@ -329,7 +344,7 @@ class AdminEventController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $user = auth()->user();
-        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university'], true), 403, 'Akses ditolak.');
+        abort_if(! in_array($user->role, ['super_admin', 'admin', 'school', 'university', 'company'], true), 403, 'Akses ditolak.');
 
         $event = $this->findVisibleEvent($id);
         $title = $event->title;
@@ -341,15 +356,22 @@ class AdminEventController extends Controller
 
     /**
      * Query events visible to the current user:
-     * - role school / university: only their own events
+     * - role school / university / company: only their own events
      * - super_admin / admin: all events
      */
     private function visibleEvents()
     {
         $user = auth()->user();
 
-        if ($user && in_array($user->role, ['school', 'university'], true)) {
-            return Event::where('user_id', $user->id);
+        if ($user && in_array($user->role, ['school', 'university', 'company'], true)) {
+            $company = $user->role === 'company' ? Company::where('user_id', $user->id)->first() : null;
+
+            return Event::where(function ($q) use ($user, $company) {
+                $q->where('user_id', $user->id);
+                if ($company && ! empty($company->name)) {
+                    $q->orWhere('organizer', $company->name);
+                }
+            });
         }
 
         return Event::query();

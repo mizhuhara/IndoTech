@@ -24,9 +24,9 @@ class EnsureUserIsAdmin
         }
 
         $manageable = [
-            'school' => ['/admin/schools', '/admin/articles', '/admin/events'],
-            'university' => ['/admin/univ', '/admin/articles', '/admin/events'],
-            'company' => ['/admin/company'],
+            'school' => ['/admin/schools', '/admin/articles', '/admin/events', '/admin/editor-upload'],
+            'university' => ['/admin/univ', '/admin/articles', '/admin/events', '/admin/editor-upload'],
+            'company' => ['/admin/company', '/admin/jobs', '/admin/articles', '/admin/events', '/admin/editor-upload'],
         ];
 
         $path = '/'.$request->path();

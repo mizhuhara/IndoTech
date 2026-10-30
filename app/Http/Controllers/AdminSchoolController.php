@@ -306,6 +306,20 @@ class AdminSchoolController extends Controller
         }
     }
 
+    /**
+     * Handle Summernote image upload — saves to storage and returns URL (avoids base64 in DB).
+     */
+    public function editorUpload(Request $request): JsonResponse
+    {
+        $request->validate([
+            'file' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,webp,svg', 'max:25600'],
+        ]);
+
+        $path = $request->file('file')->store('editor', 'public');
+
+        return response()->json(['url' => Storage::url($path)]);
+    }
+
     private function validateSchool(Request $request): array
     {
         $validated = $request->validate([

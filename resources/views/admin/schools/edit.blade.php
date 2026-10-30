@@ -677,6 +677,27 @@
             callbacks: {
                 onChange: function(contents) {
                     $('#schoolDescription').val(contents);
+                },
+                onImageUpload: function(files) {
+                    var formData = new FormData();
+                    formData.append('file', files[0]);
+                    formData.append('_token', '{{ csrf_token() }}');
+                    $.ajax({
+                        url: '{{ route('admin.editor.upload') }}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            $('#schoolDescription').summernote('insertImage', data.url);
+                        },
+                        error: function(xhr) {
+                            var msg = xhr.responseJSON && xhr.responseJSON.message 
+                                ? xhr.responseJSON.message 
+                                : 'Gagal mengunggah gambar. Pastikan format berkas JPG, PNG, atau WebP (maksimal 25MB).';
+                            alert(msg);
+                        }
+                    });
                 }
             }
         });

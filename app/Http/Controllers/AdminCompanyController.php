@@ -13,15 +13,26 @@ class AdminCompanyController extends Controller
 {
     /**
      * Display a listing of companies with search & filter support.
+     * Role company langsung diarahkan ke edit perusahaannya atau create jika belum ada.
      */
-    public function index(Request $request): View
+    public function index(Request $request): View|RedirectResponse
     {
-        $query = Company::query();
+        $user = $request->user();
 
-        // Institusi hanya melihat data miliknya sendiri
-        if (in_array($request->user()->role, ['school', 'university', 'company'], true)) {
-            $query->where('user_id', $request->user()->id);
+        // Akun perusahaan langsung diarahkan ke data perusahaannya
+        if ($user->role === 'company') {
+            $ownedCompany = Company::where('user_id', $user->id)->first();
+
+            if ($ownedCompany) {
+                return redirect()->route('admin.company.edit', $ownedCompany->id)
+                    ->with('info', 'Silakan perbarui informasi perusahaan Anda di bawah ini.');
+            }
+
+            return redirect()->route('admin.company.create')
+                ->with('info', 'Lengkapi data perusahaan Anda untuk mulai menampilkan profil perusahaan.');
         }
+
+        $query = Company::query();
 
         // Search Filter (Nama, NPSN/Kode, Kota, Provinsi, Industri, Lokasi)
         if ($request->filled('search')) {
@@ -84,9 +95,20 @@ class AdminCompanyController extends Controller
     /**
      * Show the form for creating a new company.
      */
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
-        abort_if(auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+        $user = auth()->user();
+
+        // Jika role company sudah punya perusahaan, arahkan ke edit
+        if ($user->role === 'company') {
+            $existing = Company::where('user_id', $user->id)->first();
+            if ($existing) {
+                return redirect()->route('admin.company.edit', $existing->id)
+                    ->with('info', 'Anda sudah memiliki data perusahaan. Silakan edit informasi berikut.');
+            }
+        } else {
+            abort_if($user->role !== 'super_admin' && $user->role !== 'admin', 403, 'Akses ditolak. Hanya admin.');
+        }
 
         return view('admin.company.create');
     }
@@ -96,7 +118,18 @@ class AdminCompanyController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        abort_if(! in_array($request->user()->role, ['super_admin', 'admin'], true), 403, 'Akses ditolak. Hanya admin.');
+        $user = $request->user();
+
+        // Role company: hanya boleh buat 1 perusahaan, otomatis terikat ke akunnya
+        if ($user->role === 'company') {
+            $existing = Company::where('user_id', $user->id)->first();
+            if ($existing) {
+                return redirect()->route('admin.company.edit', $existing->id)
+                    ->with('info', 'Anda sudah memiliki data perusahaan.');
+            }
+        } else {
+            abort_if(! in_array($user->role, ['super_admin', 'admin'], true), 403, 'Akses ditolak. Hanya admin.');
+        }
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -107,17 +140,26 @@ class AdminCompanyController extends Controller
             'province' => ['nullable', 'string', 'max:100'],
             'location' => ['nullable', 'string', 'max:150'],
             'address' => ['nullable', 'string'],
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric'],
             'email' => ['nullable', 'email', 'max:255'],
             'website' => ['nullable', 'url', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
             'description' => ['nullable', 'string'],
             'total_employees' => ['nullable', 'integer', 'min:0'],
             'founded' => ['nullable', 'integer', 'min:1800', 'max:2030'],
-            'status' => ['required', 'string'],
+            'projects_completed' => ['nullable', 'string', 'max:100'],
+            'specialties' => ['nullable', 'array'],
+            'specialties.*' => ['string', 'max:255'],
+            'tech_stack' => ['nullable', 'array'],
+            'tech_stack.*' => ['string', 'max:100'],
+            'status' => [$user->role === 'company' ? 'nullable' : 'required', 'string'],
             'map_link' => ['nullable', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'gallery' => ['nullable', 'array'],
             'gallery.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'existing_gallery' => ['nullable', 'array'],
+            'existing_gallery.*' => ['string'],
         ], [
             'name.required' => 'Nama perusahaan wajib diisi.',
             'industry.required' => 'Bidang industri wajib diisi.',
@@ -147,8 +189,11 @@ class AdminCompanyController extends Controller
             }
         }
 
-        // Normalize Google Maps embed url if link provided
+        // Normalize Google Maps embed url if link provided or build from coordinates
         $mapLink = $this->formatMapLink($validated['map_link'] ?? null);
+        if (empty($mapLink) && ! empty($validated['latitude']) && ! empty($validated['longitude'])) {
+            $mapLink = "https://www.google.com/maps?q={$validated['latitude']},{$validated['longitude']}";
+        }
 
         // Standardize status: Active / Inactive
         $user = $request->user();
@@ -159,7 +204,7 @@ class AdminCompanyController extends Controller
             return back()->withErrors(['name' => 'Akun Anda sudah memiliki data perusahaan. Hanya diperbolehkan 1 data per akun.']);
         }
 
-        $status = $isInstitution ? 'Pending' : (strtolower($validated['status']) === 'inactive' ? 'Inactive' : 'Active');
+        $status = $isInstitution ? 'Pending' : (strtolower($validated['status'] ?? 'active') === 'inactive' ? 'Inactive' : 'Active');
 
         $company = Company::create([
             'name' => $validated['name'],
@@ -170,18 +215,28 @@ class AdminCompanyController extends Controller
             'province' => $validated['province'] ?? null,
             'location' => $location,
             'address' => $validated['address'] ?? null,
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
             'email' => $validated['email'] ?? null,
             'website' => $validated['website'] ?? null,
             'phone' => $validated['phone'] ?? null,
             'description' => $validated['description'] ?? null,
             'total_employees' => $validated['total_employees'] ?? null,
             'founded' => $validated['founded'] ?? null,
+            'projects_completed' => $validated['projects_completed'] ?? null,
+            'specialties' => ! empty($validated['specialties']) ? array_values(array_filter($validated['specialties'])) : null,
+            'tech_stack' => ! empty($validated['tech_stack']) ? array_values(array_filter($validated['tech_stack'])) : null,
             'status' => $status,
             'logo_url' => $logoUrl,
             'gallery' => $galleryPaths,
             'map_link' => $mapLink,
             'user_id' => $isInstitution ? $user->id : null,
         ]);
+
+        if ($user->role === 'company') {
+            return redirect()->route('admin.company.edit', $company->id)
+                ->with('success', "Data perusahaan \"{$company->name}\" berhasil disimpan. Anda bisa melengkapi informasi lebih lanjut di sini.");
+        }
 
         return redirect()->route('admin.company.index')
             ->with('success', "Perusahaan \"{$company->name}\" berhasil ditambahkan.");
@@ -241,17 +296,26 @@ class AdminCompanyController extends Controller
             'province' => ['nullable', 'string', 'max:100'],
             'location' => ['nullable', 'string', 'max:150'],
             'address' => ['nullable', 'string'],
+            'latitude' => ['nullable', 'numeric'],
+            'longitude' => ['nullable', 'numeric'],
             'email' => ['nullable', 'email', 'max:255'],
             'website' => ['nullable', 'url', 'max:255'],
             'phone' => ['nullable', 'string', 'max:30'],
             'description' => ['nullable', 'string'],
             'total_employees' => ['nullable', 'integer', 'min:0'],
             'founded' => ['nullable', 'integer', 'min:1800', 'max:2030'],
-            'status' => ['required', 'string'],
+            'projects_completed' => ['nullable', 'string', 'max:100'],
+            'specialties' => ['nullable', 'array'],
+            'specialties.*' => ['string', 'max:255'],
+            'tech_stack' => ['nullable', 'array'],
+            'tech_stack.*' => ['string', 'max:100'],
+            'status' => [$request->user()->role === 'company' ? 'nullable' : 'required', 'string'],
             'map_link' => ['nullable', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'gallery' => ['nullable', 'array'],
             'gallery.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'existing_gallery' => ['nullable', 'array'],
+            'existing_gallery.*' => ['string'],
             'remove_gallery' => ['nullable', 'array'],
         ], [
             'name.required' => 'Nama perusahaan wajib diisi.',
@@ -266,10 +330,16 @@ class AdminCompanyController extends Controller
             $location = ! empty($parts) ? implode(', ', $parts) : ($company->location ?: 'Indonesia');
         }
 
-        $status = strtolower($validated['status']) === 'inactive' ? 'Inactive' : 'Active';
+        $status = strtolower($validated['status'] ?? 'active') === 'inactive' ? 'Inactive' : 'Active';
         $user = $request->user();
         if (in_array($user->role, ['school', 'university', 'company'], true)) {
             $status = $company->status; // institusi tidak boleh mengubah status
+        }
+
+        // Normalize map link or generate from coordinates
+        $mapLink = $this->formatMapLink($validated['map_link'] ?? null);
+        if (empty($mapLink) && ! empty($validated['latitude']) && ! empty($validated['longitude'])) {
+            $mapLink = "https://www.google.com/maps?q={$validated['latitude']},{$validated['longitude']}";
         }
 
         $payload = [
@@ -281,14 +351,19 @@ class AdminCompanyController extends Controller
             'province' => $validated['province'] ?? null,
             'location' => $location,
             'address' => $validated['address'] ?? null,
+            'latitude' => $validated['latitude'] ?? null,
+            'longitude' => $validated['longitude'] ?? null,
             'email' => $validated['email'] ?? null,
             'website' => $validated['website'] ?? null,
             'phone' => $validated['phone'] ?? null,
             'description' => $validated['description'] ?? null,
             'total_employees' => $validated['total_employees'] ?? null,
             'founded' => $validated['founded'] ?? null,
+            'projects_completed' => $validated['projects_completed'] ?? null,
+            'specialties' => ! empty($validated['specialties']) ? array_values(array_filter($validated['specialties'])) : null,
+            'tech_stack' => ! empty($validated['tech_stack']) ? array_values(array_filter($validated['tech_stack'])) : null,
             'status' => $status,
-            'map_link' => $this->formatMapLink($validated['map_link'] ?? null),
+            'map_link' => $mapLink,
         ];
 
         // Handle logo update
@@ -301,30 +376,34 @@ class AdminCompanyController extends Controller
             $payload['logo_url'] = Storage::url($path);
         }
 
-        // Handle gallery updates (remove selected images & add new images)
-        $currentGallery = $company->gallery ?? [];
+        // Handle gallery updates: keep retained existing ones + add newly uploaded ones
+        $gallery = $request->input('existing_gallery', []);
+        if (! is_array($gallery)) {
+            $gallery = [];
+        }
+
+        // Also support remove_gallery for backward compatibility
         if (! empty($validated['remove_gallery'])) {
-            foreach ($validated['remove_gallery'] as $imgToRemove) {
-                if (($key = array_search($imgToRemove, $currentGallery)) !== false) {
-                    unset($currentGallery[$key]);
-                    if (str_contains($imgToRemove, 'storage/company-gallery/')) {
-                        $oldPath = str_replace('/storage/', '', parse_url($imgToRemove, PHP_URL_PATH));
-                        Storage::disk('public')->delete($oldPath);
-                    }
-                }
-            }
-            $currentGallery = array_values($currentGallery);
+            $gallery = array_values(array_diff($gallery, $validated['remove_gallery']));
         }
 
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $file) {
                 $path = $file->store('company-gallery', 'public');
-                $currentGallery[] = Storage::url($path);
+                $gallery[] = Storage::url($path);
             }
         }
-        $payload['gallery'] = $currentGallery;
+
+        if ($request->has('existing_gallery') || $request->hasFile('gallery')) {
+            $payload['gallery'] = array_values($gallery);
+        }
 
         $company->update($payload);
+
+        if ($user->role === 'company') {
+            return redirect()->route('admin.company.edit', $company->id)
+                ->with('success', "Data perusahaan \"{$company->name}\" berhasil diperbarui.");
+        }
 
         return redirect()->route('admin.company.index')
             ->with('success', "Data perusahaan \"{$company->name}\" berhasil diperbarui.");

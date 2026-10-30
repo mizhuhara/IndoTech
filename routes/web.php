@@ -122,6 +122,7 @@ Route::middleware(['admin', 'verified', 'throttle:120,1'])->group(function () {
     Route::get('/admin/schools', [AdminSchoolController::class, 'index'])->name('admin.schools.index');
     Route::get('/admin/schools/create', [AdminSchoolController::class, 'create'])->name('admin.schools.create');
     Route::post('/admin/schools', [AdminSchoolController::class, 'store'])->name('admin.schools.store');
+    Route::post('/admin/editor-upload', [AdminSchoolController::class, 'editorUpload'])->name('admin.editor.upload');
     Route::get('/admin/schools/{id}', [AdminSchoolController::class, 'show'])->name('admin.schools.show');
     Route::get('/admin/schools/{id}/edit', [AdminSchoolController::class, 'edit'])->name('admin.schools.edit');
     Route::put('/admin/schools/{id}', [AdminSchoolController::class, 'update'])->name('admin.schools.update');

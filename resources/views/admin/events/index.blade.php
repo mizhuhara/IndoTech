@@ -1,6 +1,32 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Event Verification — IndoTech Admin')
+@php
+    $role = $userRole ?? auth()->user()?->role;
+    $isClientRole = in_array($role, ['school', 'university', 'company'], true);
+
+    $pageHeading = match($role) {
+        'company' => 'Manajemen Event Perusahaan',
+        'university' => 'Manajemen Event Universitas',
+        'school' => 'Manajemen Event Sekolah',
+        default => 'Verifikasi & Manajemen Event',
+    };
+
+    $pageSub = match($role) {
+        'company' => 'Kelola agenda kegiatan, workshop, webinar, atau job fair yang diselenggarakan oleh perusahaan Anda.',
+        'university' => 'Kelola agenda kegiatan, seminar, atau kompetisi teknologi kampus Anda.',
+        'school' => 'Kelola agenda kegiatan, workshop, atau webinar yang diselenggarakan oleh sekolah Anda.',
+        default => 'Kelola dan verifikasi pengajuan event dari sekolah, universitas, maupun perusahaan mitra.',
+    };
+
+    $badgeLabel = match($role) {
+        'company' => 'Event Milik Perusahaan Anda',
+        'university' => 'Event Milik Universitas Anda',
+        'school' => 'Event Milik Sekolah Anda',
+        default => null,
+    };
+@endphp
+
+@section('title', $pageHeading . ' — IndoTech Admin')
 
 @section('content')
 <div class="space-y-6">
@@ -9,10 +35,10 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
             <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                {{ $isSchool ? 'Manajemen Event Sekolah' : 'Verifikasi & Manajemen Event' }}
+                {{ $pageHeading }}
             </h1>
             <p class="text-xs text-slate-500 mt-0.5">
-                {{ $isSchool ? 'Kelola agenda kegiatan, workshop, atau webinar yang diselenggarakan oleh sekolah Anda.' : 'Kelola dan verifikasi pengajuan event dari sekolah, universitas, maupun perusahaan mitra.' }}
+                {{ $pageSub }}
             </p>
         </div>
 
@@ -33,7 +59,7 @@
         {{-- Filter Toolbar: Segmented Pills + Search --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             
-            @if(!$isSchool)
+            @if(!$isClientRole)
                 {{-- Left: Filter By Pills (Admin only) --}}
                 <div class="flex items-center gap-3 overflow-x-auto pb-1 md:pb-0">
                     <span class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0 select-none">
@@ -69,10 +95,22 @@
             @else
                 <div class="flex items-center gap-2">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                        Event Milik Sekolah Anda
+                        @if($role === 'company')
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <rect x="4" y="3" width="16" height="18" rx="2"/>
+                                <path d="M9 7h2m2 0h2m-6 4h2m2 0h2m-6 4h2m2 0h2M9 21v-3h6v3"/>
+                            </svg>
+                        @elseif($role === 'university')
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                            </svg>
+                        @else
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        @endif
+                        {{ $badgeLabel }}
                     </span>
                 </div>
             @endif
@@ -102,12 +140,12 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="text-slate-400 text-[11px] font-extrabold uppercase tracking-wider border-b border-slate-100">
-                        <th class="pb-3.5 pr-4 font-extrabold">EVENT NAME</th>
-                        <th class="pb-3.5 px-4 font-extrabold">ORGANIZER</th>
-                        <th class="pb-3.5 px-4 font-extrabold">TYPE</th>
-                        <th class="pb-3.5 px-4 font-extrabold">PROPOSED DATE</th>
+                        <th class="pb-3.5 pr-4 font-extrabold">NAMA EVENT</th>
+                        <th class="pb-3.5 px-4 font-extrabold">PENYELENGGARA</th>
+                        <th class="pb-3.5 px-4 font-extrabold">TIPE</th>
+                        <th class="pb-3.5 px-4 font-extrabold">TANGGAL PELAKSANAAN</th>
                         <th class="pb-3.5 px-4 font-extrabold">STATUS</th>
-                        <th class="pb-3.5 pl-4 text-right font-extrabold">ACTIONS</th>
+                        <th class="pb-3.5 pl-4 text-right font-extrabold">AKSI</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs">
@@ -184,7 +222,7 @@
                                         </svg>
                                     </a>
 
-                                    @if(!$isSchool)
+                                    @if(!$isClientRole)
                                         {{-- Approve Form (Admin only) --}}
                                         <form action="{{ route('admin.events.approve', $event['id']) }}" method="POST" data-async data-async-reload class="inline">
                                             @csrf
@@ -229,7 +267,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="py-10 text-center text-slate-400 font-medium">
-                                No event requests found.
+                                Tidak ada data event yang ditemukan.
                             </td>
                         </tr>
                     @endforelse
@@ -240,7 +278,7 @@
         {{-- Table Footer / Pagination --}}
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 text-xs font-semibold text-slate-500">
             <div>
-                Showing {{ $events->firstItem() }} to {{ $events->lastItem() }} of {{ $events->total() }} entries
+                Menampilkan {{ $events->firstItem() ?? 0 }} sampai {{ $events->lastItem() ?? 0 }} dari total {{ $events->total() }} event
             </div>
 
             {{-- Pagination Controls --}}
